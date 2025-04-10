@@ -1,0 +1,34 @@
+{
+  "name": "llama-web-server",
+  "version": "1.0.0",
+  "description": "Web server implementation of Llama",
+  "author": "Leonardo Javier Russo",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "prettier": "prettier --check .",
+    "prettier:fix": "prettier --write .",
+    "start": "node ./src/server.js",
+    "forever": "forever start -a -l /dev/null -c node ./src/server.js > /dev/null 2>&1",
+    "stop": "forever stop -a -l /dev/null -c node ./src/server.js > /dev/null 2>&1"
+  },
+  "dependencies": {
+    "@awmottaz/prettier-plugin-void-html": "1.5.0",
+    "node-llama-cpp": "3.6.0",
+    "pre-commit": "1.2.2",
+    "prettier": "3.2.5"
+  },
+  "prettier": {
+    "arrowParens": "always",
+    "plugins": [
+      "@awmottaz/prettier-plugin-void-html"
+    ],
+    "printWidth": 85,
+    "semi": false,
+    "tabWidth": 2,
+    "trailingComma": "es5"
+  },
+  "pre-commit": [
+    "prettier"
+  ]
+}
