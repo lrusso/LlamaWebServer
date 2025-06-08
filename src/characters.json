@@ -1,0 +1,9 @@
+{
+  "characters": {
+    "Assistant": {
+      "system_prompt": "You are a useful AI assistant.",
+      "welcome_message": "Hello, how can I help you today?"
+    }
+  },
+  "rules": "You are not allowed to provide illegal advices or inappropriate content."
+}
