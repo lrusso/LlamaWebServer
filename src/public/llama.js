@@ -1,4 +1,5 @@
 let customRegexRules = []
+let customPrefix = ""
 let rendering = false
 let history = null
 let lastContent = ""
@@ -30,6 +31,8 @@ const ask = async (prompt, hidePrompt) => {
   const inputbox = document.getElementById("inputbox")
 
   prompt = prompt.trim()
+  customPrefix = customPrefix.trim()
+  customPrefix = customPrefix ? customPrefix + " " : ""
 
   if (isMobileDevice()) {
     inputbox.blur()
@@ -40,7 +43,7 @@ const ask = async (prompt, hidePrompt) => {
   lastContent = content.innerHTML
   lastPrompt = prompt
   lastHidePrompt = hidePrompt
-  history.push({ type: "user", text: prompt })
+  history.push({ type: "user", text: customPrefix + prompt })
 
   if (!hidePrompt) {
     const promptContainer = createComponent("div", "prompt")
