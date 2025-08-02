@@ -5,6 +5,14 @@ import fs from "fs"
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
 
+const fileExists = (filePath) => {
+  return fs.existsSync(filePath)
+}
+
+const modelAlreadyDownloaded = () => {
+  return fs.readdirSync(__dirname + "/model/").find((file) => file.endsWith(".gguf"))
+}
+
 const deleteOldModels = (newModelName) => {
   try {
     const path = __dirname + "/model"
@@ -33,6 +41,13 @@ const getFilenameFromUrl = (url) => {
 
 const downloadModel = async (url) => {
   try {
+    const modelName = getFilenameFromUrl(url)
+
+    if (fileExists(__dirname + "/model/" + modelName)) {
+      console.log("The " + modelName + " file was already downloaded.")
+      return
+    }
+
     const chunks = []
 
     const response = await fetch(url)
@@ -73,7 +88,6 @@ const downloadModel = async (url) => {
       )
     }
 
-    const modelName = getFilenameFromUrl(url)
     const modelBuffer = Buffer.concat(chunks)
     fs.writeFileSync(__dirname + "/model/" + modelName, modelBuffer)
     process.stdout.write("\n")
@@ -85,6 +99,7 @@ const downloadModel = async (url) => {
 }
 
 const args = process.argv?.slice(2)
+const requestedModel = args[0].toLocaleLowerCase()
 
 const MODEL_Q3_URL =
   "https://huggingface.co/bartowski/Meta-Llama-3.1-8B-Instruct-GGUF/resolve/main/Meta-Llama-3.1-8B-Instruct-Q3_K_L.gguf?download=true"
@@ -92,4 +107,11 @@ const MODEL_Q3_URL =
 const MODEL_Q8_URL =
   "https://huggingface.co/bartowski/Meta-Llama-3.1-8B-Instruct-GGUF/resolve/main/Meta-Llama-3.1-8B-Instruct-Q8_0.gguf?download=true"
 
-downloadModel(args[0].toLowerCase() === "q3" ? MODEL_Q3_URL : MODEL_Q8_URL)
+if (requestedModel === "postinstall") {
+  // IF THERE ISN'T AN AI MODEL DOWNLOADED, DOWNLOADING THE Q8 AI MODEL FILE
+  if (!modelAlreadyDownloaded()) {
+    downloadModel(MODEL_Q8_URL)
+  }
+} else {
+  downloadModel(requestedModel === "q3" ? MODEL_Q3_URL : MODEL_Q8_URL)
+}
