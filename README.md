@@ -33,6 +33,7 @@ The system prompt is defined in the [strings.js](https://github.com/lrusso/Llama
 
 - Run `npm install`
 - Run `npm run download:q3`
+- Run `npm run start`
 - Browse to `http://localhost`
 
 ## Disclaimer
