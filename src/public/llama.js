@@ -20,14 +20,14 @@ const createComponent = (tag, className = "", innerHTML = "", innerText) => {
 }
 
 const appendMessage = (className, innerHTML) => {
-  const container = document.getElementById("content")
+  const content = document.querySelector(".content")
   const message = createComponent("span", className, innerHTML)
-  container.appendChild(message)
+  content.appendChild(message)
   return message
 }
 
 const ask = async (prompt, hidePrompt) => {
-  const content = document.getElementById("content")
+  const content = document.querySelector(".content")
   const inputbox = document.getElementById("inputbox")
 
   prompt = prompt.trim()
@@ -358,7 +358,7 @@ window.addEventListener("blur", () => {
       // the pointer is rendered and if that's the case, calling the function that
       // shows the error message. Thank you again iOS.
       if (document.querySelector(".pointer")) {
-        const content = document.getElementById("content")
+        const content = document.querySelector(".content")
         const replyCounter = document.getElementsByClassName("reply").length - 1
         const lastReply = document.getElementsByClassName("reply")[replyCounter]
         handleReply(content, "", lastReply, lastPrompt, lastHidePrompt)
@@ -369,7 +369,7 @@ window.addEventListener("blur", () => {
 
 window.addEventListener("load", async () => {
   if (window.top === window.self) {
-    const content = document.getElementById("content")
+    const content = document.querySelector(".content")
     const headerName = document.querySelector(".header_name")
     const inputWrapper = document.querySelector(".input_wrapper")
     const inputBackground = document.querySelector(".input_background")
