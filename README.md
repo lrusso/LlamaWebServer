@@ -23,13 +23,6 @@ This is a web server implementation of Llama that lets you run a GGUF model file
 - Browse to `http://localhost`
 - To stop the server, run `npm run stop`
 
-## How to run the server on systems with limited RAM
-
-- Run `npm install`
-- Run `npm run download:q3`
-- Run `npm run start`
-- Browse to `http://localhost`
-
 ## Forcing the light and dark modes
 
 - Browse to `http://localhost/?lightmode`
