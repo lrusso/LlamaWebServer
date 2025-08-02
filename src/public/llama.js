@@ -60,16 +60,13 @@ const ask = async (prompt, hidePrompt) => {
   if (!hidePrompt) {
     document.querySelector(".action_container")?.remove()
 
-    promptResult = appendMessage(
-      "reply",
-      '<div id="pointer" class="thinking"></div>'
-    )
+    promptResult = appendMessage("reply", '<div id="pointer"></div>')
   } else {
     promptResult =
       document.getElementsByClassName("reply")[
         document.getElementsByClassName("reply").length - 1
       ]
-    promptResult.innerHTML = '<div id="pointer" class="thinking"></div>'
+    promptResult.innerHTML = '<div id="pointer"></div>'
   }
 
   document.title = t("title") + " - " + t("thinking")

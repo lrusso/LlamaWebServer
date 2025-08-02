@@ -32,9 +32,8 @@ span,code{line-height:28px;display:inline-block;padding:10px;border-radius:10px;
 
 .highlighted{display:inline-block;padding-left:4px;padding-right:4px;border-radius:4px}
 
-#pointer{line-height:16px;display:inline-block;border-radius:6px;width:12px;height:12px;overflow:hidden}
+#pointer{line-height:16px;display:inline-block;border-radius:6px;width:12px;height:12px;overflow:hidden;animation:processing 1s ease-in-out infinite}
 
-.thinking{animation:processing 1s ease-in-out infinite}
 .regenerate{display:block}
 
 @keyframes processing{0%{transform:scale(1)}50%{transform:scale(1.4)}100%{transform:scale(1)}}
