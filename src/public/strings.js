@@ -13,7 +13,7 @@ const APP_STRINGS = {
     thinking: "Pensando...",
     writing: "Escribiendo...",
     placeholder: "Escribe un mensaje",
-    system_prompt: "Eres un eficiente asistente AI.",
+    system_prompt: "T\u00FA eres un \u00FAtil asistente AI.",
     system_welcome: "Hola, \u00BFc\u00F3mo puedo ayudarte hoy?",
     system_error: "Error del sistema. Por favor intente de nuevo.",
   },
