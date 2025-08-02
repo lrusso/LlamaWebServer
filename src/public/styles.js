@@ -24,7 +24,7 @@ span,code{line-height:28px;display:inline-block;padding:10px;border-radius:10px;
 .action_button{display:flex;text-align:center;border-radius:10px;padding:12px;margin-left:10px;margin-bottom:10px;cursor:pointer;outline:0 solid;border:0;box-shadow:0 5px 5px rgba(0,0,0,0.1);white-space:nowrap;overflow:hidden;justify-content:center;align-items:center}
 .action_button:focus{outline-width:2px;outline-style:solid}
 
-.prompt{margin-bottom:10px;margin-left:10px;text-align:right;word-break:break-word}
+.prompt_container{margin-bottom:10px;margin-left:10px;text-align:right;word-break:break-word}
 .prompt_background{box-shadow:0 5px 5px rgba(0,0,0,0.1)}
 .prompt_content{display:block}
 

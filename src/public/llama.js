@@ -46,7 +46,7 @@ const ask = async (prompt, hidePrompt) => {
   history.push({ type: "user", text: customPrefix + prompt })
 
   if (!hidePrompt) {
-    const promptContainer = createComponent("div", "prompt")
+    const promptContainer = createComponent("div", "prompt_container")
     const promptBackground = createComponent("span", "prompt_background")
     const promptContent = createComponent("div", "prompt_content", "", prompt)
 
