@@ -14,11 +14,13 @@ Web server implementation of Llama. It's able to load and run a GGUF model file 
 - Run `npm run start 8080`
 - Browse to `http://localhost:8080`
 
-## Running the Web server in the background
+## How to run the server in the background
 
-1. Install Forever: `npm install -g forever`
-2. Start the server: `npm run forever`
-3. Stop the server: `npm run stop`
+- Run `npm install -g forever`
+- Run `npm install`
+- Run `npm run forever`
+- Browse to `http://localhost`
+- To stop the server, run `npm run stop`
 
 ## Forcing the light and dark modes
 
