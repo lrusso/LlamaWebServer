@@ -12,6 +12,7 @@ This is a web server implementation of Llama that lets you run a GGUF model file
 ## How to run the server using a different port
 
 - Run `npm install`
+- Run `npm run download:q8` or `npm run download:q3` (for systems with limited RAM)
 - Run `npm run start 8080`
 - Browse to `http://localhost:8080`
 
@@ -19,6 +20,7 @@ This is a web server implementation of Llama that lets you run a GGUF model file
 
 - Run `npm install -g forever`
 - Run `npm install`
+- Run `npm run download:q8` or `npm run download:q3` (for systems with limited RAM)
 - Run `npm run forever`
 - Browse to `http://localhost`
 - To stop the server, run `npm run stop`
