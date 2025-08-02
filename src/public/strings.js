@@ -14,14 +14,16 @@ const APP_STRINGS = {
     writing: "Escribiendo...",
     placeholder: "Escribe un mensaje",
     system_prompt: "Eres un eficiente asistente AI.",
-    system_welcome: String.fromCharCode(191) + "Puedo ayudarte en algo?",
+    system_welcome: "\u00BFPuedo ayudarte en algo?",
     system_error: "Error del sistema. Por favor intente de nuevo.",
   },
 }
 
-const LANG = window.navigator.language.substring(0, 2).toLowerCase()
+const USER_LANG = window.navigator.language.substring(0, 2).toLowerCase()
 const GET_APP_STRING =
-  typeof APP_STRINGS[LANG] === "undefined" ? APP_STRINGS["en"] : APP_STRINGS[LANG]
+  typeof APP_STRINGS[USER_LANG] === "undefined"
+    ? APP_STRINGS["en"]
+    : APP_STRINGS[USER_LANG]
 
 const t = (stringName) => {
   return GET_APP_STRING[stringName] || ""
