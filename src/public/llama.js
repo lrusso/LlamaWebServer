@@ -373,7 +373,7 @@ window.addEventListener("load", async () => {
   if (window.top === window.self) {
     const content = document.querySelector(".content")
     const headerName = document.querySelector(".header_name")
-    const inputWrapper = document.querySelector(".input_wrapper")
+    const inputWrapper = document.querySelector(".input_container")
     const inputBackground = document.querySelector(".input_background")
     const inputTextbox = document.querySelector(".input_textbox")
     const inputSend = document.querySelector(".input_send")

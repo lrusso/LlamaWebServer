@@ -13,7 +13,7 @@ span,code{line-height:28px;display:inline-block;padding:10px;border-radius:10px;
 .content::-webkit-scrollbar{height:8px;width:8px}
 .content::-webkit-scrollbar-thumb{-webkit-border-radius:0;-webkit-box-shadow:0 1px 2px rgba(0, 0, 0, 0.75)}
 
-.input_wrapper{display:none;width:100%}
+.input_container{display:none;width:100%}
 .input_background{display:flex;flex-grow:1;margin:0 10px 10px 10px;padding:14px;border-radius:10px;box-shadow:0 5px 5px rgba(0,0,0,0.1)}
 .input_textbox{flex-grow:1;resize:none;outline:none;border:0}
 .input_textbox:disabled{cursor:default}
