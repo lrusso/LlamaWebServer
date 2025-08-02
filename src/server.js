@@ -22,8 +22,17 @@ const modelFilename = fs
   .readdirSync(__dirname + "/model/")
   .find((file) => file.endsWith(".gguf"))
 
+const countGGUFFiles = fs
+  .readdirSync(__dirname + "/model/")
+  .filter((file) => file.endsWith(".gguf")).length
+
 if (!modelFilename) {
   console.log("Error: Please put a GGUF file in the model folder.")
+  process.exit(1)
+}
+
+if (countGGUFFiles > 1) {
+  console.log("Error: You can have only 1 GGUF file in the model folder.")
   process.exit(1)
 }
 
