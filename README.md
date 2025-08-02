@@ -10,6 +10,7 @@ Web server implementation of Llama. It's able to load and run a GGUF model file 
 
 ## How to run the server using a different port
 
+- Run `npm install`
 - Run `npm run start 8080`
 - Browse to `http://localhost:8080`
 
