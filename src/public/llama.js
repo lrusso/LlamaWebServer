@@ -28,14 +28,14 @@ const appendMessage = (className, innerHTML) => {
 
 const ask = async (prompt, hidePrompt) => {
   const content = document.querySelector(".content")
-  const inputbox = document.getElementById("inputbox")
+  const inputTextbox = document.querySelector(".input_textbox")
 
   prompt = prompt.trim()
   customPrefix = customPrefix.trim()
   customPrefix = customPrefix ? customPrefix + " " : ""
 
   if (isMobileDevice()) {
-    inputbox.blur()
+    inputTextbox.blur()
   }
 
   rendering = true
@@ -137,6 +137,8 @@ const ask = async (prompt, hidePrompt) => {
 }
 
 const handleReply = (content, reply, promptResult, prompt) => {
+  const inputTextbox = document.querySelector(".input_textbox")
+
   if (reply === "") {
     reply = t("system_error")
     promptResult.innerHTML = t("system_error")
@@ -226,7 +228,7 @@ const handleReply = (content, reply, promptResult, prompt) => {
   setTimeout(() => {
     rendering = false
     if (!isMobileDevice()) {
-      inputbox.focus()
+      inputTextbox.focus()
     }
   }, 250)
 }
@@ -311,21 +313,21 @@ const getLineHeight = (element) => {
 
 const resizeInputText = () => {
   try {
-    const inputbox = document.getElementById("inputbox")
+    const inputTextbox = document.querySelector(".input_textbox")
     const inputBackground = document.querySelector(".input_background")
 
-    inputbox.rows = 1
-    inputbox.style.height = "auto"
+    inputTextbox.rows = 1
+    inputTextbox.style.height = "auto"
     inputBackground.style.height = "auto"
 
-    const scrollHeight = inputbox.scrollHeight
+    const scrollHeight = inputTextbox.scrollHeight
 
-    if (scrollHeight > inputbox.clientHeight) {
-      let newRows = Math.floor(scrollHeight / getLineHeight(inputbox))
+    if (scrollHeight > inputTextbox.clientHeight) {
+      let newRows = Math.floor(scrollHeight / getLineHeight(inputTextbox))
       newRows = Math.min(newRows, 5)
-      inputbox.rows = newRows
+      inputTextbox.rows = newRows
 
-      inputBackground.style.height = inputbox.clientHeight + "px"
+      inputBackground.style.height = inputTextbox.clientHeight + "px"
     } else {
       inputBackground.style.height = "auto"
     }
@@ -373,38 +375,38 @@ window.addEventListener("load", async () => {
     const headerName = document.querySelector(".header_name")
     const inputWrapper = document.querySelector(".input_wrapper")
     const inputBackground = document.querySelector(".input_background")
-    const inputbox = document.getElementById("inputbox")
+    const inputTextbox = document.querySelector(".input_textbox")
     const inputSend = document.querySelector(".input_send")
 
     headerName.innerText = t("title")
     content.innerHTML = ""
 
-    inputbox.placeholder = t("placeholder")
-    inputbox.disabled = false
-    inputbox.value = ""
-    inputbox.addEventListener("input", resizeInputText)
-    inputbox.addEventListener("keydown", (event) => {
+    inputTextbox.placeholder = t("placeholder")
+    inputTextbox.disabled = false
+    inputTextbox.value = ""
+    inputTextbox.addEventListener("input", resizeInputText)
+    inputTextbox.addEventListener("keydown", (event) => {
       if (event.key === "Enter") {
         event.preventDefault()
       }
     })
-    inputbox.addEventListener("keyup", (event) => {
+    inputTextbox.addEventListener("keyup", (event) => {
       if (event.key === "Enter") {
         event.preventDefault()
-        sendPrompt(inputbox.value)
-        inputbox.value = ""
+        sendPrompt(inputTextbox.value)
+        inputTextbox.value = ""
         resizeInputText()
       }
     })
 
     inputSend.addEventListener("click", () => {
-      sendPrompt(inputbox.value)
-      inputbox.value = ""
+      sendPrompt(inputTextbox.value)
+      inputTextbox.value = ""
       resizeInputText()
     })
 
     inputBackground.addEventListener("click", () => {
-      inputbox.focus()
+      inputTextbox.focus()
     })
     inputWrapper.style.display = "flex"
 
@@ -427,7 +429,7 @@ window.addEventListener("load", async () => {
     appendMessage("reply", t("system_welcome"))
 
     if (!isMobileDevice()) {
-      inputbox.focus()
+      inputTextbox.focus()
     }
 
     document.body.style.display = "block"
