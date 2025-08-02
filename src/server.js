@@ -420,6 +420,11 @@ const handleRequest = (req, res) => {
   }
 }
 
+console.log("Server running.\n")
+console.log(
+  "Browse to http://localhost" + (serverPort !== 80 ? ":" + serverPort : "") + "\n"
+)
+
 try {
   http.createServer(handleRequest).listen(serverPort)
 } catch (err) {
