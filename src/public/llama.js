@@ -60,13 +60,13 @@ const ask = async (prompt, hidePrompt) => {
   if (!hidePrompt) {
     document.querySelector(".action_container")?.remove()
 
-    promptResult = appendMessage("reply", '<div id="pointer"></div>')
+    promptResult = appendMessage("reply", '<div class="pointer"></div>')
   } else {
     promptResult =
       document.getElementsByClassName("reply")[
         document.getElementsByClassName("reply").length - 1
       ]
-    promptResult.innerHTML = '<div id="pointer"></div>'
+    promptResult.innerHTML = '<div class="pointer"></div>'
   }
 
   document.title = t("title") + " - " + t("thinking")
@@ -109,7 +109,7 @@ const ask = async (prompt, hidePrompt) => {
                   .replace(/^\),/, "")
                   .trim()
                 promptResult.innerHTML =
-                  markdownToHTML(resultText) + '<div id="pointer"></div>'
+                  markdownToHTML(resultText) + '<div class="pointer"></div>'
                 scrollToBottom()
 
                 read()
@@ -221,7 +221,7 @@ const handleReply = (content, reply, promptResult, prompt) => {
 
   scrollToBottom()
 
-  document.getElementById("pointer")?.remove()
+  document.querySelector(".pointer")?.remove()
 
   setTimeout(() => {
     rendering = false
@@ -357,7 +357,7 @@ window.addEventListener("blur", () => {
       // have enough time to call the handleReply function. So I need to check if
       // the pointer is rendered and if that's the case, calling the function that
       // shows the error message. Thank you again iOS.
-      if (document.getElementById("pointer")) {
+      if (document.querySelector(".pointer")) {
         const content = document.getElementById("content")
         const replyCounter = document.getElementsByClassName("reply").length - 1
         const lastReply = document.getElementsByClassName("reply")[replyCounter]
