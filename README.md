@@ -38,7 +38,6 @@ Web server implementation of Llama. It's able to load and run a GGUF model file 
 
 The system prompt is defined in the [strings.js](https://github.com/lrusso/LlamaWebServer/blob/main/src/public/strings.js#L8) file.
 
-
 ## Disclaimer
 
 You are legally responsible for any damage that you could cause with this software.
