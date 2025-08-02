@@ -5,7 +5,6 @@ Web server implementation of Llama. It's able to load and run a GGUF model file 
 ## How to run the server
 
 - Run `npm install`
-- Run `npm run download:q8` or `npm run download:q3` (lightweight AI model)
 - Run `npm run start`
 - Browse to `http://localhost`
 
@@ -28,6 +27,12 @@ Web server implementation of Llama. It's able to load and run a GGUF model file 
 ## System prompt
 
 The system prompt is defined in the [strings.js](https://github.com/lrusso/LlamaWebServer/blob/main/src/public/strings.js#L8) file.
+
+## For systems with limited RAM that cannot run the Q8 model
+
+- Run `npm install`
+- Run `npm run download:q3`
+- Browse to `http://localhost`
 
 ## Disclaimer
 
