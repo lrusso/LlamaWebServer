@@ -14,7 +14,7 @@ const APP_STRINGS = {
     writing: "Escribiendo...",
     placeholder: "Escribe un mensaje",
     system_prompt: "Eres un eficiente asistente AI.",
-    system_welcome: "\u00BFPuedo ayudarte en algo?",
+    system_welcome: "Hola, \u00BFc\u00F3mo puedo ayudarte hoy?",
     system_error: "Error del sistema. Por favor intente de nuevo.",
   },
 }
