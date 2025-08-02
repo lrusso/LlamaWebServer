@@ -339,6 +339,14 @@ const resizeInputText = () => {
   }
 }
 
+const sendPrompt = (prompt) => {
+  prompt = prompt.trim()
+  if (prompt && !rendering) {
+    replies = []
+    ask(prompt)
+  }
+}
+
 window.addEventListener("blur", () => {
   // Workaround for iOS. iOS kills all the promises after 5 seconds
   // when moving Safari to the background. Thank you iOS.
@@ -364,11 +372,12 @@ window.addEventListener("blur", () => {
 
 window.addEventListener("load", async () => {
   if (window.top === window.self) {
-    const inputbox = document.getElementById("inputbox")
     const content = document.getElementById("content")
     const headerName = document.querySelector(".header_name")
     const inputWrapper = document.querySelector(".input_wrapper")
     const inputBackground = document.querySelector(".input_background")
+    const inputbox = document.getElementById("inputbox")
+    const inputSend = document.querySelector(".input_send")
 
     headerName.innerText = t("title")
     content.innerHTML = ""
@@ -385,14 +394,16 @@ window.addEventListener("load", async () => {
     inputbox.addEventListener("keyup", (event) => {
       if (event.key === "Enter") {
         event.preventDefault()
-        const textValue = inputbox.value.trim()
-        if (textValue !== "" && !rendering) {
-          inputbox.value = ""
-          replies = []
-          ask(textValue)
-          resizeInputText()
-        }
+        sendPrompt(inputbox.value)
+        inputbox.value = ""
+        resizeInputText()
       }
+    })
+
+    inputSend.addEventListener("click", () => {
+      sendPrompt(inputbox.value)
+      inputbox.value = ""
+      resizeInputText()
     })
 
     inputBackground.addEventListener("click", () => {

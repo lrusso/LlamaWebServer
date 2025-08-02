@@ -18,6 +18,7 @@ span,code{line-height:28px;display:inline-block;padding:10px;border-radius:10px;
 #inputbox{flex-grow:1;resize:none;outline:none;border:0}
 #inputbox:disabled{cursor:default}
 #inputbox::placeholder{opacity:0.4}
+.input_send{display:block;padding-left:10px;cursor:pointer}
 
 .action_container{display:flex;justify-content:flex-end}
 .action_button{display:flex;text-align:center;border-radius:10px;padding:12px;margin-left:10px;margin-bottom:10px;cursor:pointer;outline:0 solid;border:0;box-shadow:0 5px 5px rgba(0,0,0,0.1);white-space:nowrap;overflow:hidden;justify-content:center;align-items:center}
@@ -61,6 +62,7 @@ span,code{background-color:#ECECEC}
 .input_background{background-color:#FFF;border:1px solid rgba(206,206,206,0.4)}
 #inputbox{background-color:#FFF}
 #inputbox:disabled{background-color:#FFF}
+.input_send{fill:#000}
 
 .action_button{background-color:#FFF;color:#000}
 .action_button:focus{outline-color:#C8C8C8}
@@ -93,6 +95,7 @@ span,code{background-color:#2C1D0E !important;color:#9CDCFE !important}
 .input_background{background-color:#202C33;border:1px solid rgba(206,206,206,0.1)}
 #inputbox{background-color:#202C33;color:#FFF}
 #inputbox:disabled{background-color:#202C33}
+.input_send{fill:#FFF}
 
 .action_button{background-color:#202C33;color:#FFF}
 .action_button:focus{outline-color:#858DA2}
