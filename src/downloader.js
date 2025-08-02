@@ -107,12 +107,4 @@ const MODEL_Q3_URL =
 const MODEL_Q8_URL =
   "https://huggingface.co/bartowski/Meta-Llama-3.1-8B-Instruct-GGUF/resolve/main/Meta-Llama-3.1-8B-Instruct-Q8_0.gguf?download=true"
 
-// CHECKING IF THE SCRIPT WAS CALLED AFTER RUNNING 'NPM INSTALL'
-if (requestedModel === "postinstall") {
-  // IF THERE ISN'T AN AI MODEL DOWNLOADED, DOWNLOADING THE Q8 AI MODEL
-  if (!modelAlreadyDownloaded()) {
-    downloadModel(MODEL_Q8_URL)
-  }
-} else {
-  downloadModel(requestedModel === "q3" ? MODEL_Q3_URL : MODEL_Q8_URL)
-}
+downloadModel(requestedModel === "q3" ? MODEL_Q3_URL : MODEL_Q8_URL)

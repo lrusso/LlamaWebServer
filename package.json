@@ -12,8 +12,7 @@
     "forever": "forever start -a -l /dev/null -c node ./src/server.js > /dev/null 2>&1",
     "stop": "forever stop -a -l /dev/null -c node ./src/server.js > /dev/null 2>&1",
     "download:q3": "node ./src/downloader.js q3",
-    "download:q8": "node ./src/downloader.js q8",
-    "postinstall": "node ./src/downloader.js postinstall"
+    "download:q8": "node ./src/downloader.js q8"
   },
   "dependencies": {
     "@awmottaz/prettier-plugin-void-html": "1.5.0",
