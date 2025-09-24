@@ -1,0 +1,8 @@
+# dependencies
+node_modules
+
+# models
+*.gguf
+
+# misc
+.DS_Store

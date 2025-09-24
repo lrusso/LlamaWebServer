@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title>Llama</title>
+    <meta name="theme-color" content="#FFFFFF">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <link rel="icon" sizes="16x16" type="image/png" href="favIcon16x16.png">
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, interactive-widget=resizes-content"
+    >
+    <style>
+      body {
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wallpaper"></div>
+    <div class="header_container">
+      <div class="header_image"></div>
+      <div class="header_name"></div>
+    </div>
+    <div class="content"></div>
+    <div class="input_container">
+      <textarea class="input_textbox" name="input" rows="1" disabled></textarea>
+      <svg class="input_send" width="24" height="24" viewBox="0 0 24 24">
+        <path
+          d="M1.101,21.757L23.8,12.028L1.101,2.3l0.011,7.912l13.623,1.816L1.112,13.845 L1.101,21.757z"
+        ></path>
+      </svg>
+    </div>
+    <script src="llama.js"></script>
+    <script src="strings.js"></script>
+    <script src="styles.js"></script>
+  </body>
+</html>
