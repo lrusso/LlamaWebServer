@@ -33,6 +33,51 @@ This is a web server implementation of Llama that lets you run a GGUF model file
 - 8K context: replace `"auto"` with `8192`.
 - 16K context: replace `"auto"` with `16384`.
 
+## How to launch the server on startup (MacOS)
+
+- Run `nano ~/Library/LaunchAgents/com.lrusso.server.plist`
+- Assuming that you have the server folder path in `/Users/lrusso/server`, you must write:
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.lrusso.server</string>
+
+    <key>ProgramArguments</key>
+    <array>
+        <string>/usr/local/bin/node</string>
+        <string>/Users/lrusso/Server/src/server.js</string>
+    </array>
+
+    <key>WorkingDirectory</key>
+    <string>/Users/lrusso/Server</string>
+
+    <key>EnvironmentVariables</key>
+    <dict>
+        <key>PATH</key>
+        <string>/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/homebrew/bin</string>
+    </dict>
+
+    <key>RunAtLoad</key>
+    <true/>
+
+    <key>KeepAlive</key>
+    <true/>
+
+    <key>StandardErrorPath</key>
+    <string>/dev/null</string>
+    <key>StandardOutPath</key>
+    <string>/dev/null</string>
+</dict>
+</plist>
+```
+
+- Run `chmod 644 ~/Library/LaunchAgents/com.lrusso.server.plist`
+- Run `launchctl load ~/Library/LaunchAgents/com.lrusso.server.plist`
+
 ## Special keys:
 
 | Action     | macOS Shortcut | Windows Shortcut | Safari Shortcut |
