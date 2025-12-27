@@ -36,7 +36,7 @@ This is a web server implementation of Llama that lets you run a GGUF model file
 ## How to launch the server on startup (MacOS)
 
 - Run `nano ~/Library/LaunchAgents/com.lrusso.server.plist`
-- Assuming that you have the server folder path in `/Users/lrusso/server`, you must write:
+- Assuming that you have the server folder path in `/Users/lrusso/Server`, you must write:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
