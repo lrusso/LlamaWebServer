@@ -1,5 +1,6 @@
 let customRegexRules = []
 let customPrefix = ""
+let renderCompleteWords = false
 let rendering = false
 let chatHistory = []
 let lastContent = ""
@@ -106,11 +107,34 @@ const ask = async (prompt, hidePrompt) => {
                 const newText = decoder.decode(value)
                 reply = reply + newText
 
-                const resultText = reply
+                let resultText = reply
                   .replace(/\</g, "&#60;")
                   .trim()
                   .replace(/^\),/, "")
                   .trim()
+
+                if (renderCompleteWords) {
+                  const BREAKING_CHARS = [
+                    " ",
+                    ".",
+                    ",",
+                    ":",
+                    ";",
+                    "?",
+                    "!",
+                    ")",
+                    "]",
+                  ]
+
+                  const breakingPoint = Math.max(
+                    ...BREAKING_CHARS.map((char) => resultText.lastIndexOf(char))
+                  )
+
+                  if (breakingPoint !== resultText.length - 1) {
+                    resultText = resultText.substring(0, breakingPoint + 1)
+                  }
+                }
+
                 promptResult.innerHTML =
                   markdownToHTML(resultText) + '<div class="pointer"></div>'
                 scrollToBottom()
@@ -479,6 +503,38 @@ window.addEventListener("load", async () => {
       inputTextbox.focus()
     })
     inputContainer.style.display = "flex"
+
+    document.addEventListener("keydown", function (event) {
+      const KEY_CTRL = event.ctrlKey || event.metaKey
+      const KEY_1 = event.code === "Digit1"
+      const KEY_2 = event.code === "Digit2"
+
+      if (KEY_CTRL && KEY_1) {
+        event.preventDefault()
+        try {
+          document.getElementsByTagName("button")[0].click()
+          setTimeout(() => {
+            inputTextbox.blur()
+            inputTextbox.focus()
+          }, 25)
+        } catch (err) {
+          //
+        }
+      }
+
+      if (KEY_CTRL && KEY_2) {
+        event.preventDefault()
+        try {
+          document.getElementsByTagName("button")[1].click()
+          setTimeout(() => {
+            inputTextbox.blur()
+            inputTextbox.focus()
+          }, 25)
+        } catch (err) {
+          //
+        }
+      }
+    })
 
     const currentURL = new URL(window.location.href).searchParams
     const requiredLightMode = currentURL.has("lightmode")
