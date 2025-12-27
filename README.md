@@ -28,6 +28,13 @@ This is a web server implementation of Llama that lets you run a GGUF model file
 - 8K context: replace `"auto"` with `8192`.
 - 16K context: replace `"auto"` with `16384`.
 
+## Special keys:
+
+| Action     | macOS Shortcut | Windows Shortcut | Safari Shortcut |
+| :--------- | :------------: | :--------------: | :-------------: |
+| Next reply |  Command + 1   |     Ctrl + 1     |    Ctrl + 1     |
+| Regenerate |  Command + 2   |     Ctrl + 2     |    Ctrl + 2     |
+
 ## Forcing the light and dark modes
 
 - Browse to `http://localhost/?lightmode`
