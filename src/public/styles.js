@@ -1,6 +1,6 @@
 const BASE_STYLES = `
 *{font-family:Arial;font-size:16px;font-family:ui-sans-serif, -apple-system, system-ui, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"}
-html,body{margin:0;padding:0}
+html,body{margin:0;padding:0;overscroll-behavior:none}
 span{line-height:28px;display:inline-block;padding:10px;border-radius:10px;white-space:pre-wrap}
 code{line-height:28px;display:block;padding:10px;border-radius:10px;white-space:pre-wrap}
 
