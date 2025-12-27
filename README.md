@@ -21,6 +21,11 @@ This is a web server implementation of Llama that lets you run a GGUF model file
 - Browse to `http://localhost`
 - To stop the server, run `npm run stop`
 
+## How to force the light and dark modes
+
+- Browse to `http://localhost/?lightmode`
+- Browse to `http://localhost/?darkmode`
+
 ## How to set a custom context size
 
 - Edit the [server.js](https://github.com/lrusso/LlamaWebServer/blob/main/src/server.js#L49) file.
@@ -34,11 +39,6 @@ This is a web server implementation of Llama that lets you run a GGUF model file
 | :--------- | :------------: | :--------------: | :-------------: |
 | Next reply |  Command + 1   |     Ctrl + 1     |    Ctrl + 1     |
 | Regenerate |  Command + 2   |     Ctrl + 2     |    Ctrl + 2     |
-
-## Forcing the light and dark modes
-
-- Browse to `http://localhost/?lightmode`
-- Browse to `http://localhost/?darkmode`
 
 ## System prompt
 
