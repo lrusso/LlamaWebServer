@@ -104,7 +104,9 @@ const askLlama = async (req, res) => {
       let reply = ""
 
       await session.prompt(chatHistory[chatHistory.length - 1].content, {
-        temperature: 0.2,
+        temperature: 0.8,
+        topP: 0.9,
+        topK: 40,
         async onTextChunk(chunk) {
           res.write(chunk)
           reply = reply + chunk
