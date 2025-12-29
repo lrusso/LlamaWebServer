@@ -1,4 +1,9 @@
-import { getLlama, LlamaChatSession } from "node-llama-cpp"
+import {
+  getLlama,
+  LlamaChatSession,
+  HarmonyChatWrapper,
+  readGgufFileInfo,
+} from "node-llama-cpp"
 import { TaskQueue } from "./taskQueue.js"
 import { fileURLToPath } from "url"
 import { dirname } from "path"
@@ -36,10 +41,14 @@ if (countGGUFFiles > 1) {
   process.exit(1)
 }
 
+console.log("Loading AI model, please wait...")
+
 const llama = await getLlama()
 const model = await llama.loadModel({
   modelPath: __dirname + "/model/" + modelFilename,
 })
+const modelMetadata = await readGgufFileInfo(__dirname + "/model/" + modelFilename)
+const modelArchitecture = modelMetadata.metadata["general.architecture"]
 
 const sleep = (ms) => new Promise((res) => setTimeout(res, ms))
 
@@ -90,10 +99,25 @@ const askLlama = async (req, res) => {
     try {
       const chatHistory = JSON.parse(body)
       context = await getContext()
-      session = new LlamaChatSession({
-        contextSequence: context.getSequence(),
-        systemPrompt: chatHistory[0].content,
-      })
+
+      if (modelArchitecture === "gpt2" || modelArchitecture === "gpt-neox") {
+        // any chatgpt model (oss) provided by openai
+        session = new LlamaChatSession({
+          contextSequence: context.getSequence(),
+          reasoningFormat: "auto",
+          chatWrapper: new HarmonyChatWrapper({
+            modelIdentity:
+              "You are ChatGPT, a large language model trained by OpenAI.",
+            reasoningEffort: "high",
+          }),
+        })
+      } else {
+        // any llama model
+        session = new LlamaChatSession({
+          contextSequence: context.getSequence(),
+          systemPrompt: chatHistory[0].content,
+        })
+      }
 
       session.setChatHistory(chatHistory)
 
@@ -107,9 +131,14 @@ const askLlama = async (req, res) => {
         temperature: 0.8,
         topP: 0.9,
         topK: 40,
-        async onTextChunk(chunk) {
-          res.write(chunk)
-          reply = reply + chunk
+        async onResponseChunk({ segmentType, text }) {
+          if (segmentType) {
+            return
+          }
+
+          res.write(text)
+          reply = reply + text
+
           if (reply.length > 100) {
             const toFind = reply.substring(reply.length - 30, reply.length)
             const repeatedText = reply.split(toFind).length - 1
@@ -442,7 +471,7 @@ const handleRequest = (req, res) => {
   }
 }
 
-console.log("Server running.\n")
+console.log("\nServer running.\n")
 console.log(
   "Browse to http://localhost" + (serverPort !== 80 ? ":" + serverPort : "") + "\n"
 )
