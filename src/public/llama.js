@@ -308,6 +308,39 @@ const markdownToHTML = (markdown) => {
     return "%%CODELLAMABLOCK" + (codeBlocks.length - 1) + "%%"
   })
 
+  // PARSING MARKDOWN TABLES
+  markdown = markdown.replace(
+    /^(\|.+\|)\r?\n(\|[-:\s|]+\|)\r?\n((?:\|.+\|\r?\n?)+)/gm,
+    (match, headerRow, separatorRow, bodyRows) => {
+      const parseRow = (row) =>
+        row
+          .split("|")
+          .slice(1, -1)
+          .map((cell) => cell.trim())
+
+      const headers = parseRow(headerRow)
+      const rows = bodyRows
+        .trim()
+        .split(/\r?\n/)
+        .map((row) => parseRow(row))
+
+      let html = "<table><thead><tr>"
+      headers.forEach((header) => {
+        html += "<th>" + header + "</th>"
+      })
+      html += "</tr></thead><tbody>"
+      rows.forEach((row) => {
+        html += "<tr>"
+        row.forEach((cell) => {
+          html += "<td>" + cell + "</td>"
+        })
+        html += "</tr>"
+      })
+      html += "</tbody></table>"
+      return html
+    }
+  )
+
   // SETTING THE MARKDOWN RULES
   let rules = [
     { regex: /\*\*(.*?)\*\*/g, replacement: "<strong>$1</strong>" },

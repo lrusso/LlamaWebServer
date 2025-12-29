@@ -34,6 +34,9 @@ code{line-height:28px;display:block;padding:10px;border-radius:10px;white-space:
 
 .highlighted{display:inline-block;padding-left:4px;padding-right:4px;border-radius:4px}
 
+table{border-collapse:collapse;margin:10px 0}
+table th,table td{border:1px solid silver;padding:8px}
+
 .pointer{line-height:16px;display:inline-block;border-radius:6px;width:12px;height:12px;overflow:hidden;animation:processing 1s ease-in-out infinite}
 
 .regenerate{display:block}
