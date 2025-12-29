@@ -106,8 +106,7 @@ const askLlama = async (req, res) => {
           contextSequence: context.getSequence(),
           reasoningFormat: "auto",
           chatWrapper: new HarmonyChatWrapper({
-            modelIdentity:
-              "You are ChatGPT, a large language model trained by OpenAI.",
+            modelIdentity: chatHistory[0].content,
             reasoningEffort: "high",
           }),
         })
