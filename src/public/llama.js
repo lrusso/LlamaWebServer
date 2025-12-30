@@ -1,12 +1,12 @@
 let customRegexRules = []
 let customPrefix = ""
-let renderCompleteWords = false
+let renderFullWords = false
 let rendering = false
 let chatHistory = []
-let fetchController = null
-let isFocusEventHandled = false
 let replies = []
 let selectedReply = 0
+let fetchController = null
+let isFocusEventHandled = false
 
 const createComponent = (tag, className = "", innerHTML = "", innerText) => {
   const element = document.createElement(tag)
@@ -107,7 +107,7 @@ const ask = async (prompt, hidePrompt) => {
                   .replace(/^\),/, "")
                   .trim()
 
-                if (renderCompleteWords) {
+                if (renderFullWords) {
                   const BREAKING_CHARS = [
                     " ",
                     ".",
