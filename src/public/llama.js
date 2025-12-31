@@ -191,6 +191,10 @@ const handleReply = (content, reply, promptResult, prompt) => {
       return
     }
 
+    if (buttonNext.style.display === "none") {
+      return
+    }
+
     stopSpeak()
 
     chatHistory.pop()
