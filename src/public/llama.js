@@ -485,7 +485,6 @@ const speakText = (text) => {
       variant: "f1",
     })
   } catch (err) {
-    console.log(err)
     //
   }
 }
