@@ -236,9 +236,11 @@ const handleReply = (content, reply, promptResult, prompt) => {
 
     buttonRegenerate.children[0].classList.remove("active")
     buttonRegenerate.disabled = true
+    buttonRegenerate.style.cursor = "default"
 
     buttonSpeak.children[0].classList.remove("active")
     buttonSpeak.disabled = true
+    buttonSpeak.style.cursor = "default"
 
     chatHistory.pop()
     chatHistory.pop()
@@ -278,8 +280,10 @@ const handleReply = (content, reply, promptResult, prompt) => {
   buttonNext.disabled = false
   buttonRegenerate.children[0].classList.add("active")
   buttonRegenerate.disabled = false
+  buttonRegenerate.style.cursor = "pointer"
   buttonSpeak.children[0].classList.add("active")
   buttonSpeak.disabled = false
+  buttonSpeak.style.cursor = "pointer"
 
   content.appendChild(buttonsContainer)
 
