@@ -80,10 +80,11 @@ This is a web server implementation of Llama that lets you run a GGUF model file
 
 ## Special keys:
 
-| Action     | macOS Shortcut | Windows Shortcut | Safari Shortcut |
-| :--------- | :------------: | :--------------: | :-------------: |
-| Next reply |  Command + 1   |     Ctrl + 1     |    Ctrl + 1     |
-| Regenerate |  Command + 2   |     Ctrl + 2     |    Ctrl + 2     |
+| Action        | macOS Shortcut | Windows Shortcut | Safari Shortcut |
+| :------------ | :------------: | :--------------: | :-------------: |
+| Next reply    |  Command + 1   |     Ctrl + 1     |    Ctrl + 1     |
+| Regenerate    |  Command + 2   |     Ctrl + 2     |    Ctrl + 2     |
+| Read response |  Command + 3   |     Ctrl + 3     |    Ctrl + 3     |
 
 ## System prompt
 

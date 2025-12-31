@@ -40,6 +40,7 @@ table th,table td{border:1px solid silver;padding:8px}
 .pointer{line-height:16px;display:inline-block;border-radius:6px;width:12px;height:12px;overflow:hidden;animation:processing 1s ease-in-out infinite}
 
 .regenerate{display:block}
+.speak{display:block}
 
 @keyframes processing{0%{transform:scale(1)}50%{transform:scale(1.4)}100%{transform:scale(1)}}
 
@@ -52,6 +53,7 @@ table th,table td{border:1px solid silver;padding:8px}
 const COLORS_LIGHT_MODE = `
 body{background-color:#EFEAE2}
 span,code{background-color:#ECECEC}
+em{color:#808080}
 
 .wallpaper{background-color:#EFEAE2;opacity:0.4}
 
@@ -83,11 +85,14 @@ span,code{background-color:#ECECEC}
 
 .regenerate{fill:#C8C8C8}
 .regenerate.active{fill:#000}
+.speak{fill:#C8C8C8}
+.speak.active{fill:#000}
 `
 
 const COLORS_DARK_MODE = `
 body{background-color:#0B141A}
 span,code{background-color:#2C1D0E !important;color:#9CDCFE !important}
+em{color:#8D8D8D}
 
 .wallpaper{background-color:#0B141A;opacity:0.06}
 
@@ -119,6 +124,8 @@ span,code{background-color:#2C1D0E !important;color:#9CDCFE !important}
 
 .regenerate{fill:rgba(206,206,206,0.2)}
 .regenerate.active{fill:#FFF}
+.speak{fill:rgba(206,206,206,0.2)}
+.speak.active{fill:#FFF}
 `
 
 const STYLES_LIGHT_MODE = BASE_STYLES + COLORS_LIGHT_MODE
