@@ -1,4 +1,5 @@
-let customRegexRules = []
+let customResponseRegexRules = []
+let customPromptRegexRules = []
 let customPrefix = ""
 let renderFullWords = false
 let rendering = false
@@ -50,7 +51,12 @@ const ask = async (prompt, hidePrompt) => {
 
   rendering = true
 
-  chatHistory.push({ type: "user", text: customPrefix + prompt })
+  let formattedPrompt = prompt
+  customPromptRegexRules.forEach(({ regex, replacement }) => {
+    formattedPrompt = formattedPrompt.replace(regex, replacement)
+  })
+
+  chatHistory.push({ type: "user", text: customPrefix + formattedPrompt })
 
   if (!hidePrompt) {
     const promptContainer = createComponent("div", "prompt_container")
@@ -387,7 +393,7 @@ const markdownToHTML = (markdown) => {
     { regex: /^[\*\-\+] (.+)$/gm, replacement: (match, item) => "&#8226; " + item },
   ]
 
-  rules = rules.concat(customRegexRules)
+  rules = rules.concat(customResponseRegexRules)
 
   // APPLYING THE MARKDOWN RULES
   rules.forEach(({ regex, replacement }) => {
