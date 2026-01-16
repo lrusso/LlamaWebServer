@@ -470,13 +470,27 @@ const handleRequest = (req, res) => {
   }
 }
 
-console.log("\nServer running.\n")
-console.log(
-  "Browse to http://localhost" + (serverPort !== 80 ? ":" + serverPort : "") + "\n"
-)
+const server = http.createServer(handleRequest)
 
-try {
-  http.createServer(handleRequest).listen(serverPort)
-} catch (err) {
-  console.log(err)
-}
+server.on("error", async (err) => {
+  if (err.code === "EADDRINUSE") {
+    console.log("\nError: Port " + serverPort + " is already in use.\n")
+    console.log(
+      "Please close the application using that port or choose a different port.\n"
+    )
+  } else {
+    console.log(err)
+  }
+  await model.dispose()
+  await llama.dispose()
+  process.exit(1)
+})
+
+server.on("listening", () => {
+  console.log("\nServer running.\n")
+  console.log(
+    "Browse to http://localhost" + (serverPort !== 80 ? ":" + serverPort : "") + "\n"
+  )
+})
+
+server.listen(serverPort)
