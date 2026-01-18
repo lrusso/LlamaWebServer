@@ -572,6 +572,8 @@ window.addEventListener("blur", () => {
 
 window.addEventListener("load", async () => {
   if (window.top === window.self) {
+    const pleaseWait = document.querySelector(".pleasewait")
+    const container = document.getElementById("container")
     const content = document.querySelector(".content")
     const headerName = document.querySelector(".header_name")
     const inputContainer = document.querySelector(".input_container")
@@ -693,7 +695,8 @@ window.addEventListener("load", async () => {
 
     appendMessage("reply", t("system_welcome"))
 
-    document.body.style.display = "block"
+    pleaseWait.style.display = "none"
+    container.style.display = "block"
 
     resizeInputText()
 
