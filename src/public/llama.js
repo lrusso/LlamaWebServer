@@ -10,10 +10,31 @@ let isSpeaking = false
 let fetchController = null
 let isFocusEventHandled = false
 
-const SPEAK_ICON =
-  '<svg class="speak" width="24" height="24" viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>'
-const STOP_ICON =
-  '<svg class="speak" width="24" height="24" viewBox="0 0 24 24"><path d="M6 6h12v12H6z"/></svg>'
+const ICON_SPEAK = () => {
+  const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg")
+  svg.setAttribute("class", "speak")
+  svg.setAttribute("width", "24")
+  svg.setAttribute("height", "24")
+  svg.setAttribute("viewBox", "0 0 24 24")
+  const path = document.createElementNS("http://www.w3.org/2000/svg", "path")
+  path.setAttribute(
+    "d",
+    "M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"
+  )
+  svg.appendChild(path)
+  return svg
+}
+const ICON_STOP = () => {
+  const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg")
+  svg.setAttribute("class", "speak")
+  svg.setAttribute("width", "24")
+  svg.setAttribute("height", "24")
+  svg.setAttribute("viewBox", "0 0 24 24")
+  const path = document.createElementNS("http://www.w3.org/2000/svg", "path")
+  path.setAttribute("d", "M6 6h12v12H6z")
+  svg.appendChild(path)
+  return svg
+}
 
 const createComponent = (tag, className, innerHTML, innerText) => {
   const element = document.createElement(tag)
@@ -35,7 +56,11 @@ const appendMessage = (className, innerHTML) => {
 const ask = async (prompt, hidePrompt) => {
   stopSpeak()
   if (document.getElementsByTagName("button")[2]) {
-    document.getElementsByTagName("button")[2].innerHTML = SPEAK_ICON
+    const button = document.getElementsByTagName("button")[2]
+    while (button.firstChild) {
+      button.removeChild(button.firstChild)
+    }
+    button.appendChild(ICON_SPEAK())
   }
 
   const content = document.querySelector(".content")
@@ -222,8 +247,13 @@ const handleReply = (content, reply, promptResult, prompt) => {
 
     stopSpeak()
     if (document.getElementsByTagName("button")[2]) {
-      document.getElementsByTagName("button")[2].innerHTML = SPEAK_ICON
-      document.getElementsByTagName("button")[2].children[0].classList.add("active")
+      const button = document.getElementsByTagName("button")[2]
+      while (button.firstChild) {
+        button.removeChild(button.firstChild)
+      }
+      const icon = ICON_SPEAK()
+      icon.classList.add("active")
+      button.appendChild(icon)
     }
 
     chatHistory.pop()
@@ -295,7 +325,7 @@ const handleReply = (content, reply, promptResult, prompt) => {
   })
 
   buttonSpeak.type = "button"
-  buttonSpeak.innerHTML = SPEAK_ICON
+  buttonSpeak.appendChild(ICON_SPEAK())
   buttonSpeak.addEventListener("click", () => {
     if (rendering) {
       return
@@ -506,8 +536,13 @@ const speakText = (text) => {
   try {
     if (isSpeaking) {
       stopSpeak()
-      document.getElementsByTagName("button")[2].innerHTML = SPEAK_ICON
-      document.getElementsByTagName("button")[2].children[0].classList.add("active")
+      const button = document.getElementsByTagName("button")[2]
+      while (button.firstChild) {
+        button.removeChild(button.firstChild)
+      }
+      const icon = ICON_SPEAK()
+      icon.classList.add("active")
+      button.appendChild(icon)
       return
     }
 
@@ -525,8 +560,13 @@ const speakText = (text) => {
     }
 
     isSpeaking = true
-    document.getElementsByTagName("button")[2].innerHTML = STOP_ICON
-    document.getElementsByTagName("button")[2].children[0].classList.add("active")
+    const buttonStart = document.getElementsByTagName("button")[2]
+    while (buttonStart.firstChild) {
+      buttonStart.removeChild(buttonStart.firstChild)
+    }
+    const iconStop = ICON_STOP()
+    iconStop.classList.add("active")
+    buttonStart.appendChild(iconStop)
     meSpeak.speak(
       cleanText,
       {
@@ -538,10 +578,13 @@ const speakText = (text) => {
       },
       () => {
         isSpeaking = false
-        document.getElementsByTagName("button")[2].innerHTML = SPEAK_ICON
-        document
-          .getElementsByTagName("button")[2]
-          .children[0].classList.add("active")
+        const buttonEnd = document.getElementsByTagName("button")[2]
+        while (buttonEnd.firstChild) {
+          buttonEnd.removeChild(buttonEnd.firstChild)
+        }
+        const iconSpeak = ICON_SPEAK()
+        iconSpeak.classList.add("active")
+        buttonEnd.appendChild(iconSpeak)
       }
     )
   } catch (err) {
