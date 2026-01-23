@@ -15,10 +15,10 @@ const SPEAK_ICON =
 const STOP_ICON =
   '<svg class="speak" width="24" height="24" viewBox="0 0 24 24"><path d="M6 6h12v12H6z"/></svg>'
 
-const createComponent = (tag, className = "", innerHTML = "", innerText) => {
+const createComponent = (tag, className, innerHTML, innerText) => {
   const element = document.createElement(tag)
-  element.className = className
-  element.innerHTML = innerHTML
+  element.className = className || ""
+  element.innerHTML = innerHTML || ""
   if (innerText) {
     element.innerText = innerText
   }
