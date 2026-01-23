@@ -205,7 +205,12 @@ const handleReply = (content, reply, promptResult, prompt) => {
   const buttonSpeak = createComponent("button", "action_button")
 
   buttonNext.type = "button"
-  buttonNext.innerHTML = selectedReply + "/" + replies.length
+  while (buttonNext.firstChild) {
+    buttonNext.removeChild(buttonNext.firstChild)
+  }
+  buttonNext.appendChild(
+    document.createTextNode(selectedReply + "/" + replies.length)
+  )
   buttonNext.addEventListener("click", () => {
     if (rendering) {
       return
