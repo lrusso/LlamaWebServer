@@ -10,6 +10,21 @@ let isSpeaking = false
 let fetchController = null
 let isFocusEventHandled = false
 
+const ICON_REGENERATE = () => {
+  const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg")
+  svg.setAttribute("class", "regenerate")
+  svg.setAttribute("width", "24")
+  svg.setAttribute("height", "24")
+  svg.setAttribute("viewBox", "0 0 24 24")
+  const path = document.createElementNS("http://www.w3.org/2000/svg", "path")
+  path.setAttribute(
+    "d",
+    "M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.76 0 3.39.77 4.54 2.05L14 10h6V4l-2.35 2.35z"
+  )
+  svg.appendChild(path)
+  return svg
+}
+
 const ICON_SPEAK = () => {
   const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg")
   svg.setAttribute("class", "speak")
@@ -290,8 +305,7 @@ const handleReply = (content, reply, promptResult, prompt) => {
   })
 
   buttonRegenerate.type = "button"
-  buttonRegenerate.innerHTML =
-    '<svg class="regenerate" width="24" height="24" viewBox="0 0 24 24"><path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.76 0 3.39.77 4.54 2.05L14 10h6V4l-2.35 2.35z"/></svg>'
+  buttonRegenerate.appendChild(ICON_REGENERATE())
   buttonRegenerate.addEventListener("click", () => {
     if (rendering) {
       return
