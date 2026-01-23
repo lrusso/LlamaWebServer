@@ -236,7 +236,12 @@ const handleReply = (content, reply, promptResult, prompt) => {
       selectedReply = selectedReply + 1
     }
 
-    buttonNext.innerHTML = selectedReply + 1 + "/" + replies.length
+    while (buttonNext.firstChild) {
+      buttonNext.removeChild(buttonNext.firstChild)
+    }
+    buttonNext.appendChild(
+      document.createTextNode(selectedReply + 1 + "/" + replies.length)
+    )
 
     const newReply = replies[selectedReply]
 
