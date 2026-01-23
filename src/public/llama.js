@@ -80,7 +80,12 @@ const ask = async (prompt, hidePrompt) => {
         document.getElementsByClassName("reply").length - 1
       ]
     if (promptResult.innerHTML !== '<div class="pointer"></div>') {
-      promptResult.innerHTML = '<div class="pointer"></div>'
+      while (promptResult.firstChild) {
+        promptResult.removeChild(promptResult.firstChild)
+      }
+      const pointer = document.createElement("div")
+      pointer.className = "pointer"
+      promptResult.appendChild(pointer)
     }
   }
 
