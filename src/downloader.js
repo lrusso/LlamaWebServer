@@ -95,10 +95,10 @@ const downloadModel = async (url) => {
 const args = process.argv?.slice(2)
 const requestedModel = args[0].toLocaleLowerCase()
 
-const MODEL_Q3_URL =
-  "https://huggingface.co/bartowski/Meta-Llama-3.1-8B-Instruct-GGUF/resolve/main/Meta-Llama-3.1-8B-Instruct-Q3_K_L.gguf?download=true"
+const MODEL_Q4_URL =
+  "https://huggingface.co/unsloth/gemma-3-4b-it-GGUF/resolve/main/gemma-3-4b-it-Q4_K_M.gguf?download=true"
 
 const MODEL_Q8_URL =
-  "https://huggingface.co/bartowski/Meta-Llama-3.1-8B-Instruct-GGUF/resolve/main/Meta-Llama-3.1-8B-Instruct-Q8_0.gguf?download=true"
+  "https://huggingface.co/unsloth/gemma-3-4b-it-GGUF/resolve/main/gemma-3-4b-it-Q8_0.gguf?download=true"
 
-downloadModel(requestedModel === "q3" ? MODEL_Q3_URL : MODEL_Q8_URL)
+downloadModel(requestedModel === "q4" ? MODEL_Q4_URL : MODEL_Q8_URL)

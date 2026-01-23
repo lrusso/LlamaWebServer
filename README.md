@@ -5,7 +5,7 @@ This is a web server implementation of Llama that lets you run a GGUF model file
 ## How to run the server
 
 - Run `npm install`
-- Run `npm run download:q8` or `npm run download:q3` (for systems with limited RAM)
+- Run `npm run download:q8` or `npm run download:q4` (for systems with limited RAM)
 - Run `npm run start`
 - Browse to `http://localhost`
 
