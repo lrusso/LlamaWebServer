@@ -24,7 +24,6 @@ const ICON_REGENERATE = () => {
   svg.appendChild(path)
   return svg
 }
-
 const ICON_SPEAK = () => {
   const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg")
   svg.setAttribute("class", "speak")
@@ -119,7 +118,10 @@ const ask = async (prompt, hidePrompt) => {
       document.getElementsByClassName("reply")[
         document.getElementsByClassName("reply").length - 1
       ]
-    if (promptResult.innerHTML !== '<div class="pointer"></div>') {
+    const hasOnlyPointer =
+      promptResult.children.length === 1 &&
+      promptResult.firstElementChild?.classList.contains("pointer")
+    if (!hasOnlyPointer) {
       while (promptResult.firstChild) {
         promptResult.removeChild(promptResult.firstChild)
       }
