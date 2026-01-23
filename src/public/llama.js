@@ -269,7 +269,12 @@ const handleReply = (content, reply, promptResult, prompt) => {
 
     buttonNext.style.display = "block"
     buttonNext.disabled = true
-    buttonNext.innerHTML = replies.length + 1 + "/" + (replies.length + 1)
+    while (buttonNext.firstChild) {
+      buttonNext.removeChild(buttonNext.firstChild)
+    }
+    buttonNext.appendChild(
+      document.createTextNode(replies.length + 1 + "/" + (replies.length + 1))
+    )
     buttonNext.classList.remove("active")
 
     buttonRegenerate.children[0].classList.remove("active")
@@ -579,7 +584,9 @@ window.addEventListener("blur", () => {
       if (document.querySelector(".pointer")) {
         const replyCounter = document.getElementsByClassName("reply").length - 1
         const lastReply = document.getElementsByClassName("reply")[replyCounter]
-        lastReply.innerHTML = '<div class="pointer"></div>'
+        const pointer = document.createElement("div")
+        pointer.className = "pointer"
+        lastReply.appendChild(pointer)
       }
     }, 200)
   }
@@ -596,7 +603,9 @@ window.addEventListener("load", async () => {
     const inputSend = document.querySelector(".input_send")
 
     headerName.innerText = t("title")
-    content.innerHTML = ""
+    while (content.firstChild) {
+      content.removeChild(content.firstChild)
+    }
 
     inputTextbox.placeholder = t("placeholder")
     inputTextbox.disabled = false
