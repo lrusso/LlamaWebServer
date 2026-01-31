@@ -87,6 +87,8 @@ em{color:#808080}
 .regenerate.active{fill:#000}
 .speak{fill:#C8C8C8}
 .speak.active{fill:#000}
+
+a{color:#3a76b1}
 `
 
 const COLORS_DARK_MODE = `
@@ -126,6 +128,8 @@ em{color:#8D8D8D}
 .regenerate.active{fill:#FFF}
 .speak{fill:rgba(206,206,206,0.2)}
 .speak.active{fill:#FFF}
+
+a{color:#699cce}
 `
 
 const STYLES_LIGHT_MODE = BASE_STYLES + COLORS_LIGHT_MODE
