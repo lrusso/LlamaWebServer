@@ -376,12 +376,7 @@ const handleReply = (content, reply, promptResult, prompt) => {
 
   document.querySelector(".pointer")?.remove()
 
-  setTimeout(() => {
-    rendering = false
-    if (!isMobileDevice()) {
-      inputTextbox.focus()
-    }
-  }, 250)
+  rendering = false
 }
 
 const scrollToBottom = () => {
