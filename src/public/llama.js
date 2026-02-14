@@ -195,7 +195,6 @@ const ask = async (prompt, hidePrompt) => {
 
                 promptResult.innerHTML =
                   markdownToHTML(resultText) + '<div class="pointer"></div>'
-                scrollToBottom()
 
                 read()
               })
@@ -374,8 +373,6 @@ const handleReply = (content, reply, promptResult, prompt) => {
   buttonSpeak.style.cursor = "pointer"
 
   content.appendChild(buttonsContainer)
-
-  scrollToBottom()
 
   document.querySelector(".pointer")?.remove()
 
