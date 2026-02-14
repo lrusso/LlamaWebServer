@@ -67,6 +67,65 @@ const appendMessage = (className, innerHTML) => {
   return message
 }
 
+const patchDOM = (target, newHTML) => {
+  const temp = document.createElement("div")
+  temp.innerHTML = newHTML
+  reconcileChildren(target, temp)
+}
+
+const reconcileChildren = (existing, updated) => {
+  const existingChildren = Array.from(existing.childNodes)
+  const updatedChildren = Array.from(updated.childNodes)
+
+  for (let i = 0; i < updatedChildren.length; i++) {
+    if (i < existingChildren.length) {
+      reconcileNode(existing, existingChildren[i], updatedChildren[i])
+    } else {
+      existing.appendChild(updatedChildren[i].cloneNode(true))
+    }
+  }
+
+  for (let i = existingChildren.length - 1; i >= updatedChildren.length; i--) {
+    existing.removeChild(existingChildren[i])
+  }
+}
+
+const reconcileNode = (parent, existingNode, newNode) => {
+  if (
+    existingNode.nodeType !== newNode.nodeType ||
+    existingNode.nodeName !== newNode.nodeName
+  ) {
+    parent.replaceChild(newNode.cloneNode(true), existingNode)
+    return
+  }
+
+  if (existingNode.nodeType === Node.TEXT_NODE) {
+    if (existingNode.textContent !== newNode.textContent) {
+      existingNode.textContent = newNode.textContent
+    }
+    return
+  }
+
+  if (existingNode.nodeType === Node.ELEMENT_NODE) {
+    const existingAttrs = existingNode.attributes
+    const newAttrs = newNode.attributes
+
+    for (let i = existingAttrs.length - 1; i >= 0; i--) {
+      if (!newNode.hasAttribute(existingAttrs[i].name)) {
+        existingNode.removeAttribute(existingAttrs[i].name)
+      }
+    }
+
+    for (let i = 0; i < newAttrs.length; i++) {
+      if (existingNode.getAttribute(newAttrs[i].name) !== newAttrs[i].value) {
+        existingNode.setAttribute(newAttrs[i].name, newAttrs[i].value)
+      }
+    }
+
+    reconcileChildren(existingNode, newNode)
+  }
+}
+
 const ask = async (prompt, hidePrompt) => {
   stopSpeak()
   if (document.getElementsByTagName("button")[2]) {
@@ -193,8 +252,10 @@ const ask = async (prompt, hidePrompt) => {
                   }
                 }
 
-                promptResult.innerHTML =
+                patchDOM(
+                  promptResult,
                   markdownToHTML(resultText) + '<div class="pointer"></div>'
+                )
 
                 read()
               })
