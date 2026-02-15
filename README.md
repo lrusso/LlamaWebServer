@@ -2,6 +2,8 @@
 
 This is a web server implementation of Llama that lets you run a GGUF model file locally. It includes a user interface that's similar to WhatsApp. You can use the default GGUF model file that is downloaded during the installation process or you can download a GGUF model file from [HuggingFace.co](https://huggingface.co) and place it in the `model` folder.
 
+![demo](https://github.com/lrusso/LlamaWebServer/blob/main/README.gif?raw=true)
+
 ## How to run the server
 
 - Run `npm install`
