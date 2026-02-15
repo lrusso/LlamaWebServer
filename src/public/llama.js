@@ -24,6 +24,7 @@ const ICON_REGENERATE = () => {
   svg.appendChild(path)
   return svg
 }
+
 const ICON_SPEAK = () => {
   const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg")
   svg.setAttribute("class", "speak")
@@ -38,6 +39,7 @@ const ICON_SPEAK = () => {
   svg.appendChild(path)
   return svg
 }
+
 const ICON_STOP = () => {
   const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg")
   svg.setAttribute("class", "speak")
