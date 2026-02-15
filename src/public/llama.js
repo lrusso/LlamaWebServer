@@ -6,7 +6,6 @@ let rendering = false
 let chatHistory = []
 let replies = []
 let selectedReply = 0
-let isSpeaking = false
 let fetchController = null
 let isFocusEventHandled = false
 
@@ -21,33 +20,6 @@ const ICON_REGENERATE = () => {
     "d",
     "M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.76 0 3.39.77 4.54 2.05L14 10h6V4l-2.35 2.35z"
   )
-  svg.appendChild(path)
-  return svg
-}
-
-const ICON_SPEAK = () => {
-  const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg")
-  svg.setAttribute("class", "speak")
-  svg.setAttribute("width", "24")
-  svg.setAttribute("height", "24")
-  svg.setAttribute("viewBox", "0 0 24 24")
-  const path = document.createElementNS("http://www.w3.org/2000/svg", "path")
-  path.setAttribute(
-    "d",
-    "M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"
-  )
-  svg.appendChild(path)
-  return svg
-}
-
-const ICON_STOP = () => {
-  const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg")
-  svg.setAttribute("class", "speak")
-  svg.setAttribute("width", "24")
-  svg.setAttribute("height", "24")
-  svg.setAttribute("viewBox", "0 0 24 24")
-  const path = document.createElementNS("http://www.w3.org/2000/svg", "path")
-  path.setAttribute("d", "M6 6h12v12H6z")
   svg.appendChild(path)
   return svg
 }
@@ -129,15 +101,6 @@ const reconcileNode = (parent, existingNode, newNode) => {
 }
 
 const ask = async (prompt, hidePrompt) => {
-  stopSpeak()
-  if (document.getElementsByTagName("button")[2]) {
-    const button = document.getElementsByTagName("button")[2]
-    while (button.firstChild) {
-      button.removeChild(button.firstChild)
-    }
-    button.appendChild(ICON_SPEAK())
-  }
-
   const content = document.querySelector(".content")
   const inputTextbox = document.querySelector(".input_textbox")
 
@@ -306,7 +269,6 @@ const handleReply = (content, reply, promptResult, prompt) => {
 
   const buttonNext = createComponent("button", "action_button")
   const buttonRegenerate = createComponent("button", "action_button")
-  const buttonSpeak = createComponent("button", "action_button")
 
   buttonNext.type = "button"
   while (buttonNext.firstChild) {
@@ -322,17 +284,6 @@ const handleReply = (content, reply, promptResult, prompt) => {
 
     if (buttonNext.style.display === "none") {
       return
-    }
-
-    stopSpeak()
-    if (document.getElementsByTagName("button")[2]) {
-      const button = document.getElementsByTagName("button")[2]
-      while (button.firstChild) {
-        button.removeChild(button.firstChild)
-      }
-      const icon = ICON_SPEAK()
-      icon.classList.add("active")
-      button.appendChild(icon)
     }
 
     chatHistory.pop()
@@ -389,30 +340,10 @@ const handleReply = (content, reply, promptResult, prompt) => {
     buttonRegenerate.disabled = true
     buttonRegenerate.style.cursor = "default"
 
-    buttonSpeak.children[0].classList.remove("active")
-    buttonSpeak.disabled = true
-    buttonSpeak.style.cursor = "default"
-
     chatHistory.pop()
     chatHistory.pop()
     ask(prompt, true)
 
-    if (!isMobileDevice()) {
-      inputTextbox.focus()
-    }
-  })
-
-  buttonSpeak.type = "button"
-  buttonSpeak.appendChild(ICON_SPEAK())
-  buttonSpeak.addEventListener("click", () => {
-    if (rendering) {
-      return
-    }
-
-    const replyCounter = document.getElementsByClassName("reply").length - 1
-    const lastReply = document.getElementsByClassName("reply")[replyCounter]
-    speakText(lastReply.innerText)
-    buttonSpeak.blur()
     if (!isMobileDevice()) {
       inputTextbox.focus()
     }
@@ -424,16 +355,12 @@ const handleReply = (content, reply, promptResult, prompt) => {
 
   buttonsContainer.appendChild(buttonNext)
   buttonsContainer.appendChild(buttonRegenerate)
-  buttonsContainer.appendChild(buttonSpeak)
 
   buttonNext.classList.add("active")
   buttonNext.disabled = false
   buttonRegenerate.children[0].classList.add("active")
   buttonRegenerate.disabled = false
   buttonRegenerate.style.cursor = "pointer"
-  buttonSpeak.children[0].classList.add("active")
-  buttonSpeak.disabled = false
-  buttonSpeak.style.cursor = "pointer"
 
   content.appendChild(buttonsContainer)
 
@@ -600,75 +527,6 @@ const sendPrompt = (prompt) => {
   if (prompt) {
     replies.splice(0, replies.length)
     ask(prompt)
-  }
-}
-
-const speakText = (text) => {
-  try {
-    if (isSpeaking) {
-      stopSpeak()
-      const button = document.getElementsByTagName("button")[2]
-      while (button.firstChild) {
-        button.removeChild(button.firstChild)
-      }
-      const icon = ICON_SPEAK()
-      icon.classList.add("active")
-      button.appendChild(icon)
-      return
-    }
-
-    // clean text for tts
-    const cleanText = text
-      .replace(/<[^>]*>/g, "")
-      .replace(/&nbsp;/g, " ")
-      .replace(/&#\d+;/g, "")
-      .replace(/&[a-z]+;/gi, "")
-      .replace(/[*_~`#]/g, "")
-      .trim()
-
-    if (!cleanText) {
-      return
-    }
-
-    isSpeaking = true
-    const buttonStart = document.getElementsByTagName("button")[2]
-    while (buttonStart.firstChild) {
-      buttonStart.removeChild(buttonStart.firstChild)
-    }
-    const iconStop = ICON_STOP()
-    iconStop.classList.add("active")
-    buttonStart.appendChild(iconStop)
-    meSpeak.speak(
-      cleanText,
-      {
-        amplitude: 100,
-        pitch: 50,
-        speed: 150,
-        wordgap: 0,
-        variant: "f1",
-      },
-      () => {
-        isSpeaking = false
-        const buttonEnd = document.getElementsByTagName("button")[2]
-        while (buttonEnd.firstChild) {
-          buttonEnd.removeChild(buttonEnd.firstChild)
-        }
-        const iconSpeak = ICON_SPEAK()
-        iconSpeak.classList.add("active")
-        buttonEnd.appendChild(iconSpeak)
-      }
-    )
-  } catch (err) {
-    //
-  }
-}
-
-const stopSpeak = () => {
-  try {
-    isSpeaking = false
-    meSpeak.stop()
-  } catch (err) {
-    //
   }
 }
 
@@ -843,7 +701,5 @@ window.addEventListener("load", async () => {
         inputTextbox.focus()
       }, 200)
     }
-
-    initTTS(t("tts"))
   }
 })
