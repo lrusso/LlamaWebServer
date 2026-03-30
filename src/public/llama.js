@@ -375,6 +375,10 @@ const handleReply = (content, reply, promptResult, prompt) => {
   document.querySelector(".pointer")?.remove()
 
   rendering = false
+
+  if (nearBottom && useAutoScroll) {
+    scrollToBottom()
+  }
 }
 
 const scrollToBottom = () => {
