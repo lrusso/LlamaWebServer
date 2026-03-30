@@ -9,7 +9,7 @@ let selectedReply = 0
 let fetchController = null
 let isFocusEventHandled = false
 let useAutoScroll = false
-let nearBottom = true
+let nearBottom = false
 
 const ICON_REGENERATE = () => {
   const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg")
