@@ -53,7 +53,7 @@ table th,table td{border:1px solid silver;padding:8px}
 const COLORS_LIGHT_MODE = `
 body{background-color:#EFEAE2}
 span,code{background-color:#ECECEC}
-em{color:#808080}
+em{font-weight:bold;color:#000}
 
 .wallpaper{background-color:#EFEAE2;opacity:0.4}
 
@@ -94,7 +94,7 @@ a{color:#3a76b1}
 const COLORS_DARK_MODE = `
 body{background-color:#0B141A}
 span,code{background-color:#2C1D0E !important;color:#9CDCFE !important}
-em{color:#8D8D8D}
+em{font-weight:bold;color:#fff}
 
 .wallpaper{background-color:#0B141A;opacity:0.06}
 
