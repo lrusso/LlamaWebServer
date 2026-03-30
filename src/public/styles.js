@@ -3,6 +3,7 @@ const BASE_STYLES = `
 html,body{margin:0;padding:0;overscroll-behavior:none}
 span{line-height:28px;display:inline-block;padding:10px;border-radius:10px;white-space:pre-wrap}
 code{line-height:28px;display:block;padding:10px;border-radius:10px;white-space:pre-wrap}
+em{font-weight:bold}
 
 .wallpaper{position:fixed;left:0;right:0;bottom:0;top:0;z-index:-1;background-image:url(background.png);background-size:412px 749px;background-repeat:repeat}
 
@@ -53,7 +54,7 @@ table th,table td{border:1px solid silver;padding:8px}
 const COLORS_LIGHT_MODE = `
 body{background-color:#EFEAE2}
 span,code{background-color:#ECECEC}
-em{font-weight:bold;color:#000}
+em{color:#000}
 
 .wallpaper{background-color:#EFEAE2;opacity:0.4}
 
@@ -94,7 +95,7 @@ a{color:#3a76b1}
 const COLORS_DARK_MODE = `
 body{background-color:#0B141A}
 span,code{background-color:#2C1D0E !important;color:#9CDCFE !important}
-em{font-weight:bold;color:#fff}
+em{color:#fff}
 
 .wallpaper{background-color:#0B141A;opacity:0.06}
 
