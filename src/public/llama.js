@@ -8,6 +8,8 @@ let replies = []
 let selectedReply = 0
 let fetchController = null
 let isFocusEventHandled = false
+let useAutoScroll = false
+let nearBottom = true
 
 const ICON_REGENERATE = () => {
   const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg")
@@ -38,6 +40,9 @@ const appendMessage = (className, innerHTML) => {
   const content = document.querySelector(".content")
   const message = createComponent("span", className, innerHTML)
   content.appendChild(message)
+  if (nearBottom && useAutoScroll) {
+    scrollToBottom()
+  }
   return message
 }
 
@@ -45,6 +50,9 @@ const patchDOM = (target, newHTML) => {
   const temp = document.createElement("div")
   temp.innerHTML = newHTML
   reconcileChildren(target, temp)
+  if (nearBottom && useAutoScroll) {
+    scrollToBottom()
+  }
 }
 
 const reconcileChildren = (existing, updated) => {
@@ -690,6 +698,16 @@ window.addEventListener("load", async () => {
     chatHistory.push({ type: "system", text: t("system_prompt") })
 
     appendMessage("reply", t("system_welcome"))
+
+    if (useAutoScroll) {
+      window.addEventListener("scroll", function () {
+        const lineHeight = parseFloat(getComputedStyle(content).lineHeight) || 24
+        const pixelsLeft =
+          document.documentElement.scrollHeight -
+          (window.scrollY + window.innerHeight)
+        nearBottom = pixelsLeft <= lineHeight * 1.5
+      })
+    }
 
     pleaseWait.style.display = "none"
     container.style.display = "block"
