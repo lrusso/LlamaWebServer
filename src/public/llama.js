@@ -9,7 +9,7 @@ let selectedReply = 0
 let fetchController = null
 let isFocusEventHandled = false
 let useAutoScroll = false
-let nearBottom = false
+let nearBottom = true
 
 const ICON_REGENERATE = () => {
   const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg")
@@ -706,8 +706,16 @@ window.addEventListener("load", async () => {
     if (useAutoScroll) {
       window.addEventListener("scroll", function () {
         const lineHeight = parseFloat(getComputedStyle(content).lineHeight) || 24
+        const inputContainerStyle = getComputedStyle(inputContainer)
+        const inputContainerTotalHeight =
+          inputContainer.offsetHeight +
+          parseFloat(inputContainerStyle.marginTop) +
+          parseFloat(inputContainerStyle.marginBottom) +
+          parseFloat(inputContainerStyle.paddingTop) +
+          parseFloat(inputContainerStyle.paddingBottom)
         const pixelsLeft =
           document.documentElement.scrollHeight -
+          inputContainerTotalHeight -
           (window.scrollY + window.innerHeight)
         nearBottom = pixelsLeft <= lineHeight * 1.5
       })
