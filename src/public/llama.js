@@ -9,7 +9,6 @@ let selectedReply = 0
 let fetchController = null
 let isFocusEventHandled = false
 let useAutoScroll = false
-let nearBottom = true
 
 const ICON_REGENERATE = () => {
   const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg")
@@ -40,7 +39,7 @@ const appendMessage = (className, innerHTML) => {
   const content = document.querySelector(".content")
   const message = createComponent("span", className, innerHTML)
   content.appendChild(message)
-  if (nearBottom && useAutoScroll) {
+  if (useAutoScroll) {
     scrollToBottom()
   }
   return message
@@ -50,7 +49,7 @@ const patchDOM = (target, newHTML) => {
   const temp = document.createElement("div")
   temp.innerHTML = newHTML
   reconcileChildren(target, temp)
-  if (nearBottom && useAutoScroll) {
+  if (useAutoScroll) {
     scrollToBottom()
   }
 }
@@ -376,19 +375,19 @@ const handleReply = (content, reply, promptResult, prompt) => {
 
   rendering = false
 
-  if (nearBottom && useAutoScroll) {
+  if (useAutoScroll) {
     scrollToBottom()
   }
 }
 
-const scrollToBottom = () => {
+const scrollToBottom = (forcedScroll) => {
   const totalHeight = document.documentElement.scrollHeight
   const viewportHeight = window.innerHeight
   const scrollYPosition = window.scrollY
   const pixelsLeft = totalHeight - (scrollYPosition + viewportHeight)
   const finalDistance = Math.max(0, pixelsLeft)
 
-  if (finalDistance > 0) {
+  if (finalDistance > 0 && (useAutoScroll || forcedScroll)) {
     window.scrollTo({
       top: document.body.scrollHeight,
     })
@@ -531,7 +530,7 @@ const resizeInputText = () => {
     //
   }
 
-  scrollToBottom()
+  scrollToBottom(true)
 }
 
 const sendPrompt = (prompt) => {
@@ -702,24 +701,6 @@ window.addEventListener("load", async () => {
     chatHistory.push({ type: "system", text: t("system_prompt") })
 
     appendMessage("reply", t("system_welcome"))
-
-    if (useAutoScroll) {
-      window.addEventListener("scroll", function () {
-        const lineHeight = parseFloat(getComputedStyle(content).lineHeight) || 24
-        const inputContainerStyle = getComputedStyle(inputContainer)
-        const inputContainerTotalHeight =
-          inputContainer.offsetHeight +
-          parseFloat(inputContainerStyle.marginTop) +
-          parseFloat(inputContainerStyle.marginBottom) +
-          parseFloat(inputContainerStyle.paddingTop) +
-          parseFloat(inputContainerStyle.paddingBottom)
-        const pixelsLeft =
-          document.documentElement.scrollHeight -
-          inputContainerTotalHeight -
-          (window.scrollY + window.innerHeight)
-        nearBottom = pixelsLeft <= lineHeight * 1.5
-      })
-    }
 
     pleaseWait.style.display = "none"
     container.style.display = "block"
