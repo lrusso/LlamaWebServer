@@ -584,6 +584,7 @@ window.addEventListener("load", async () => {
     const inputContainer = document.querySelector(".input_container")
     const inputTextbox = document.querySelector(".input_textbox")
     const inputSend = document.querySelector(".input_send")
+    const labelDisclaimer = document.querySelector(".disclaimer")
 
     headerName.innerText = t("title")
     while (content.firstChild) {
@@ -637,6 +638,8 @@ window.addEventListener("load", async () => {
       inputTextbox.focus()
     })
     inputContainer.style.display = "flex"
+
+    labelDisclaimer.innerText = t("disclaimer")
 
     document.addEventListener("keydown", function (event) {
       const KEY_CTRL = event.ctrlKey || event.metaKey

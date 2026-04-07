@@ -42,6 +42,8 @@ table th,table td{border:1px solid silver;padding:8px}
 
 .regenerate{display:block}
 
+.disclaimer{flex:1;text-align:center;margin-bottom:10px;margin-left:10px;margin-right:10px}
+
 @keyframes processing{0%{transform:scale(1)}50%{transform:scale(1.4)}100%{transform:scale(1)}}
 
 @media screen and (min-width:800px) {
@@ -86,6 +88,8 @@ em{color:#000}
 .regenerate{fill:#C8C8C8}
 .regenerate.active{fill:#000}
 
+.disclaimer{color:gray}
+
 a{color:#3a76b1}
 `
 
@@ -124,6 +128,8 @@ em{color:#fff}
 
 .regenerate{fill:rgba(206,206,206,0.2)}
 .regenerate.active{fill:#FFF}
+
+.disclaimer{color:#9a9a9a}
 
 a{color:#699cce}
 `
