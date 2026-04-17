@@ -39,9 +39,7 @@ const appendMessage = (className, innerHTML) => {
   const content = document.querySelector(".content")
   const message = createComponent("span", className, innerHTML)
   content.appendChild(message)
-  if (useAutoScroll) {
-    scrollToBottom()
-  }
+  scrollToBottom()
   return message
 }
 
@@ -49,9 +47,7 @@ const patchDOM = (target, newHTML) => {
   const temp = document.createElement("div")
   temp.innerHTML = newHTML
   reconcileChildren(target, temp)
-  if (useAutoScroll) {
-    scrollToBottom()
-  }
+  scrollToBottom()
 }
 
 const reconcileChildren = (existing, updated) => {
@@ -375,9 +371,7 @@ const handleReply = (content, reply, promptResult, prompt) => {
 
   rendering = false
 
-  if (useAutoScroll) {
-    scrollToBottom()
-  }
+  scrollToBottom()
 }
 
 const scrollToBottom = (forcedScroll) => {
