@@ -111,7 +111,7 @@ em{color:#fff}
 .input_container{background-color:#202C33;border:1px solid rgba(206,206,206,0.1)}
 .input_textbox{background-color:#202C33;color:#FFF}
 .input_textbox:disabled{background-color:#202C33}
-.input_textbox::placeholder{color:rgba(255,255,255,0.4);opacity:1}
+.input_textbox::placeholder{color:rgba(255,255,255,0.2);opacity:1}
 .input_send{fill:rgba(206,206,206,0.2)}
 .input_send.active{fill:#FFF}
 
