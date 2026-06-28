@@ -18,7 +18,6 @@ em{font-weight:bold}
 .input_container{display:none;flex-grow:1;align-items:end;height:auto;margin:0 10px 10px 10px;padding:14px;border-radius:10px;box-shadow:0 5px 5px rgba(0,0,0,0.1)}
 .input_textbox{flex-grow:1;resize:none;outline:none;border:0;line-height:normal !important}
 .input_textbox:disabled{cursor:default}
-.input_textbox::placeholder{opacity:0.4}
 .input_send{display:block;margin-left:10px;margin-bottom:2px;cursor:default}
 .input_send.active{cursor:pointer}
 
@@ -70,6 +69,7 @@ em{color:#000}
 .input_container{background-color:#FFF;border:1px solid rgba(206,206,206,0.4)}
 .input_textbox{background-color:#FFF}
 .input_textbox:disabled{background-color:#FFF}
+.input_textbox::placeholder{color:rgba(0,0,0,0.4);opacity:1}
 .input_send{fill:#C8C8C8}
 .input_send.active{fill:#000}
 
@@ -111,6 +111,7 @@ em{color:#fff}
 .input_container{background-color:#202C33;border:1px solid rgba(206,206,206,0.1)}
 .input_textbox{background-color:#202C33;color:#FFF}
 .input_textbox:disabled{background-color:#202C33}
+.input_textbox::placeholder{color:rgba(255,255,255,0.4);opacity:1}
 .input_send{fill:rgba(206,206,206,0.2)}
 .input_send.active{fill:#FFF}
 
