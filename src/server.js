@@ -10,7 +10,7 @@ import { dirname } from "path"
 import http from "http"
 import fs from "fs"
 
-const MODEL_CONTEXT_SIZE = "auto" // 4096, 8192, 16384, 32768, 65536, 131072
+const MODEL_CONTEXT_SIZE = "auto" // "auto", 4096, 8192, 16384, 32768, 65536, 131072
 
 const taskQueue = new TaskQueue()
 
