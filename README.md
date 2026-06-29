@@ -32,6 +32,10 @@ This is a web server implementation of Llama that lets you run a GGUF model file
 
 - Edit the [server.js](https://github.com/lrusso/LlamaWebServer/blob/main/src/server.js#L13) file.
 
+## How to set a custom system prompt
+
+- Edit the [strings.js](https://github.com/lrusso/LlamaWebServer/blob/main/src/public/strings.js#L7) file.
+
 ## How to launch the server on startup (macOS)
 
 - Run `nano ~/Library/LaunchAgents/com.lrusso.server.plist`
@@ -84,7 +88,3 @@ This is a web server implementation of Llama that lets you run a GGUF model file
 | Next reply    |  Command + 1   |     Ctrl + 1     |    Ctrl + 1     |
 | Regenerate    |  Command + 2   |     Ctrl + 2     |    Ctrl + 2     |
 | Read response |  Command + 3   |     Ctrl + 3     |    Ctrl + 3     |
-
-## System prompt
-
-The system prompt is defined in the [strings.js](https://github.com/lrusso/LlamaWebServer/blob/main/src/public/strings.js#L7) file.
