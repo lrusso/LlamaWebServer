@@ -87,4 +87,4 @@ This is a web server implementation of Llama that lets you run a GGUF model file
 
 ## System prompt
 
-The system prompt is defined in the [strings.js](https://github.com/lrusso/LlamaWebServer/blob/main/src/public/strings.js#L8) file.
+The system prompt is defined in the [strings.js](https://github.com/lrusso/LlamaWebServer/blob/main/src/public/strings.js#L7) file.
