@@ -10,6 +10,8 @@ import { dirname } from "path"
 import http from "http"
 import fs from "fs"
 
+const MODEL_CONTEXT_SIZE = "auto" // 4096, 8192, 16384, 32768, 65536, 131072
+
 const taskQueue = new TaskQueue()
 
 const __filename = fileURLToPath(import.meta.url)
@@ -55,7 +57,7 @@ const sleep = (ms) => new Promise((res) => setTimeout(res, ms))
 const getContext = async (retry = 0) => {
   let context = null
   try {
-    context = await model.createContext({ contextSize: "auto" })
+    context = await model.createContext({ contextSize: MODEL_CONTEXT_SIZE })
   } catch (err) {
     if (retry < 10) {
       await sleep(5000)
@@ -219,18 +221,6 @@ const handleRequest = (req, res) => {
       "Accept-Ranges": "bytes",
     })
     readStream.pipe(res)
-    return
-  }
-
-  if (
-    isFolder(requestedPath) &&
-    isFile(indexPath) &&
-    !reqUrl.pathname.endsWith("/")
-  ) {
-    res.writeHead(302, {
-      Location: reqUrl.pathname + "/",
-    })
-    res.end()
     return
   }
 
