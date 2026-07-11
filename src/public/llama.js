@@ -401,7 +401,7 @@ const markdownToHTML = (markdown) => {
   // emphasis rules below, e.g. an underscore inside a URL becoming <em>)
   const links = []
   markdown = markdown.replace(/\[(.*?)\]\((.*?)\)/g, (match, text, url) => {
-    links.push('<a href="' + url + '">' + text + "</a>")
+    links.push('<a href="' + url + '" target="top">' + text + "</a>")
     return "%%CODELLAMALINK" + (links.length - 1) + "%%"
   })
 
