@@ -8,6 +8,9 @@ let replies = []
 let selectedReply = 0
 let fetchController = null
 let isFocusEventHandled = false
+let isFollowingReply = false
+
+// set to true to enable auto-scroll to bottom when a response is being rendered.
 let useAutoScroll = false
 
 const ICON_REGENERATE = () => {
@@ -116,6 +119,9 @@ const ask = async (prompt, hidePrompt) => {
   }
 
   rendering = true
+
+  // a new response starts pinned to the bottom (only if the feature is enabled)
+  isFollowingReply = useAutoScroll
 
   let formattedPrompt = prompt
   customPromptRegexRules.forEach(({ regex, replacement }) => {
@@ -381,7 +387,7 @@ const scrollToBottom = (forcedScroll) => {
   const pixelsLeft = totalHeight - (scrollYPosition + viewportHeight)
   const finalDistance = Math.max(0, pixelsLeft)
 
-  if (finalDistance > 0 && (useAutoScroll || forcedScroll)) {
+  if (finalDistance > 0 && (isFollowingReply || forcedScroll)) {
     window.scrollTo({
       top: document.body.scrollHeight,
     })
@@ -596,6 +602,28 @@ window.addEventListener("load", async () => {
     while (content.firstChild) {
       content.removeChild(content.firstChild)
     }
+
+    // autoscroll yields to the user: while a response renders, the view stays
+    // pinned to the bottom only while the user is at (or very near) the bottom.
+    // scrolling up releases the pin; scrolling back down to the bottom resumes it.
+    // this is a pure position check on purpose: a direction-based check misreads a
+    // content reflow that clamps the scroll position (e.g. a short first answer
+    // whose height dips below the screen) as the user scrolling up, which used to
+    // kill autoscroll. a small threshold keeps it from fighting momentum scrolling.
+    window.addEventListener(
+      "scroll",
+      () => {
+        if (useAutoScroll) {
+          const AUTOSCROLL_BOTTOM_THRESHOLD = 8
+
+          const pixelsLeft =
+            document.documentElement.scrollHeight -
+            (window.scrollY + window.innerHeight)
+          isFollowingReply = pixelsLeft <= AUTOSCROLL_BOTTOM_THRESHOLD
+        }
+      },
+      { passive: true }
+    )
 
     inputTextbox.placeholder = t("placeholder")
     inputTextbox.disabled = false
