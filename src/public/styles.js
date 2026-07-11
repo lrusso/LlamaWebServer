@@ -30,7 +30,7 @@ em{font-weight:bold}
 .prompt_background{box-shadow:0 5px 5px rgba(0,0,0,0.1)}
 .prompt_content{display:block}
 
-.reply{display:table;margin-bottom:10px;word-break:break-word;box-shadow:0 5px 5px rgba(0,0,0,0.1)}
+.reply{display:block;width:fit-content;margin-bottom:10px;word-break:break-word;box-shadow:0 5px 5px rgba(0,0,0,0.1)}
 
 .highlighted{display:inline-block;padding-left:4px;padding-right:4px;border-radius:4px}
 

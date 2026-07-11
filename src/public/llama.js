@@ -397,6 +397,14 @@ const markdownToHTML = (markdown) => {
     return "%%CODELLAMABLOCK" + (codeBlocks.length - 1) + "%%"
   })
 
+  // STORING AND REMOVING ALL THE LINKS (so their URLs are not touched by the
+  // emphasis rules below, e.g. an underscore inside a URL becoming <em>)
+  const links = []
+  markdown = markdown.replace(/\[(.*?)\]\((.*?)\)/g, (match, text, url) => {
+    links.push('<a href="' + url + '">' + text + "</a>")
+    return "%%CODELLAMALINK" + (links.length - 1) + "%%"
+  })
+
   // PARSING MARKDOWN TABLES
   markdown = markdown.replace(
     /^(\|.+\|)\r?\n(\|[-:\s|]+\|)\r?\n((?:\|.+\|\r?\n?)+)/gm,
@@ -436,7 +444,6 @@ const markdownToHTML = (markdown) => {
     { regex: /\*(.*?)\*/g, replacement: "<em>$1</em>" },
     { regex: /__(.*?)__/g, replacement: "<strong>$1</strong>" },
     { regex: /_(.*?)_/g, replacement: "<em>$1</em>" },
-    { regex: /\[(.*?)\]\((.*?)\)/g, replacement: '<a href="$2">$1</a>' },
     { regex: /`(.*?)`/g, replacement: '<div class="highlighted">$1</div>' },
     {
       regex: /^(#{1,6})\s*(.*)$/gm,
@@ -451,6 +458,11 @@ const markdownToHTML = (markdown) => {
   // APPLYING THE MARKDOWN RULES
   rules.forEach(({ regex, replacement }) => {
     markdown = markdown.replace(regex, replacement)
+  })
+
+  // RESTORING ALL THE LINKS
+  markdown = markdown.replace(/%%CODELLAMALINK(\d+)%%/g, (match, index) => {
+    return links[index]
   })
 
   // RESTORING ALL THE CODE BLOCKS
