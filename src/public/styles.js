@@ -37,13 +37,11 @@ em{font-weight:bold}
 table{border-collapse:collapse;margin:10px 0}
 table th,table td{border:1px solid silver;padding:8px}
 
-.pointer{line-height:16px;display:inline-block;border-radius:6px;width:12px;height:12px;overflow:hidden;animation:processing 1s ease-in-out infinite}
+.pointer{line-height:16px;display:inline-block;border-radius:6px;width:12px;height:12px}
 
 .regenerate{display:block}
 
 .disclaimer{flex:1;text-align:center;margin-bottom:10px;margin-left:10px;margin-right:10px}
-
-@keyframes processing{0%{transform:scale(1)}50%{transform:scale(1.4)}100%{transform:scale(1)}}
 
 @media screen and (min-width:800px) {
   body{margin-left:15vw;margin-right:15vw}
@@ -83,7 +81,8 @@ em{color:#000}
 
 .highlighted{background-color:#ECECEC}
 
-.pointer{background-color:#000}
+.pointer{background-color:#000;animation:processing_light 1s ease-in-out infinite}
+@keyframes processing_light{0%{box-shadow:0 0 0 0 #000}50%{box-shadow:0 0 0 2.4px #000}100%{box-shadow:0 0 0 0 #000}}
 
 .regenerate{fill:#C8C8C8}
 .regenerate.active{fill:#000}
@@ -125,7 +124,8 @@ em{color:#fff}
 
 .highlighted{background-color:#2C1D0E !important}
 
-.pointer{background-color:#FFF}
+.pointer{background-color:#FFF;animation:processing_dark 1s ease-in-out infinite}
+@keyframes processing_dark{0%{box-shadow:0 0 0 0 #FFF}50%{box-shadow:0 0 0 2.4px #FFF}100%{box-shadow:0 0 0 0 #FFF}}
 
 .regenerate{fill:rgba(206,206,206,0.2)}
 .regenerate.active{fill:#FFF}
