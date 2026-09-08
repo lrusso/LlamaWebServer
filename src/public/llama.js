@@ -598,7 +598,9 @@ window.addEventListener("load", async () => {
     const inputSend = document.querySelector(".input_send")
     const labelDisclaimer = document.querySelector(".disclaimer")
 
+    document.title = t("title")
     headerName.innerText = t("title")
+
     while (content.firstChild) {
       content.removeChild(content.firstChild)
     }
