@@ -739,7 +739,7 @@ window.addEventListener("load", async () => {
 
     chatHistory.push({ type: "system", text: t("system_prompt") })
 
-    appendMessage("reply", t("system_welcome"))
+    appendMessage("reply", markdownToHTML(t("system_welcome")))
 
     pleaseWait.style.display = "none"
     container.style.display = "block"
