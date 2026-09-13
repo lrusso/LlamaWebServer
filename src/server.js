@@ -2,7 +2,8 @@ import {
   getLlama,
   LlamaChatSession,
   HarmonyChatWrapper,
-  readGgufFileInfo,
+  GgufArchitectureType,
+  LlamaLogLevel,
 } from "node-llama-cpp"
 import { TaskQueue } from "./taskQueue.js"
 import { fileURLToPath } from "url"
@@ -45,12 +46,14 @@ if (countGGUFFiles > 1) {
 
 console.log("Loading AI model, please wait...")
 
-const llama = await getLlama()
+const llama = await getLlama({
+  logLevel: LlamaLogLevel.error,
+})
 const model = await llama.loadModel({
   modelPath: __dirname + "/model/" + modelFilename,
 })
-const modelMetadata = await readGgufFileInfo(__dirname + "/model/" + modelFilename)
-const modelArchitecture = modelMetadata.metadata["general.architecture"]
+const modelArchitecture = model.fileInfo.metadata?.general?.architecture
+const isGptOssModel = modelArchitecture === GgufArchitectureType.gptOss
 
 const sleep = (ms) => new Promise((res) => setTimeout(res, ms))
 
@@ -100,15 +103,13 @@ const askLlama = async (req, res) => {
 
     try {
       const chatHistory = JSON.parse(body)
+      const userPrompt = chatHistory.pop().text
       context = await getContext()
 
-      if (modelArchitecture === "gpt2" || modelArchitecture === "gpt-neox") {
-        // any chatgpt model (oss) provided by openai
+      if (isGptOssModel) {
         session = new LlamaChatSession({
           contextSequence: context.getSequence(),
-          reasoningFormat: "auto",
           chatWrapper: new HarmonyChatWrapper({
-            modelIdentity: chatHistory[0].content,
             reasoningEffort: "high",
           }),
         })
@@ -116,7 +117,7 @@ const askLlama = async (req, res) => {
         // any llama model
         session = new LlamaChatSession({
           contextSequence: context.getSequence(),
-          systemPrompt: chatHistory[0].content,
+          systemPrompt: chatHistory[0].text,
         })
       }
 
@@ -128,7 +129,7 @@ const askLlama = async (req, res) => {
 
       let reply = ""
 
-      await session.prompt(chatHistory[chatHistory.length - 1].content, {
+      await session.prompt(userPrompt, {
         temperature: 0.8,
         topP: 0.9,
         topK: 40,
