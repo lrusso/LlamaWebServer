@@ -133,7 +133,7 @@ const askLlama = async (req, res) => {
         topP: 0.9,
         topK: 40,
         async onResponseChunk({ segmentType, text }) {
-          if (segmentType) {
+          if (segmentType || !text) {
             return
           }
 
