@@ -1,7 +1,7 @@
 {
   "name": "llama-web-server",
   "version": "1.0.0",
-  "description": "Web server implementation of Llama",
+  "description": "Web server for running GGUF models locally, such as Llama, Gemma and gpt-oss",
   "author": "Leonardo Javier Russo",
   "type": "module",
   "main": "index.js",
