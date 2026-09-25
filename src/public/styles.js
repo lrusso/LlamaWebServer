@@ -37,6 +37,8 @@ em{font-weight:bold}
 table{border-collapse:collapse;margin:10px 0}
 table th,table td{border:1px solid silver;padding:8px}
 
+hr{border:none;margin:10px 0}
+
 .pointer{line-height:16px;display:inline-block;border-radius:6px;width:12px;height:12px}
 
 .regenerate{display:block}
@@ -90,6 +92,8 @@ em{color:#000}
 .disclaimer{color:gray}
 
 a{color:#3a76b1}
+
+hr{border-top:1px solid black}
 `
 
 const COLORS_DARK_MODE = `
@@ -133,6 +137,8 @@ em{color:#fff}
 .disclaimer{color:#9a9a9a}
 
 a{color:#699cce}
+
+hr{border-top:1px solid white}
 `
 
 const STYLES_LIGHT_MODE = BASE_STYLES + COLORS_LIGHT_MODE

@@ -446,6 +446,7 @@ const markdownToHTML = (markdown) => {
 
   // SETTING THE MARKDOWN RULES
   let rules = [
+    { regex: /^ {0,3}([-*_])( *\1){2,} *$\n?/gm, replacement: "<hr>" },
     { regex: /\*\*(.*?)\*\*/g, replacement: "<strong>$1</strong>" },
     { regex: /\*(.*?)\*/g, replacement: "<em>$1</em>" },
     { regex: /__(.*?)__/g, replacement: "<strong>$1</strong>" },
