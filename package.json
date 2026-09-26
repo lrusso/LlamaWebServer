@@ -17,7 +17,7 @@
   "dependencies": {
     "@awmottaz/prettier-plugin-void-html": "1.5.0",
     "node-llama-cpp": "3.20.0",
-    "pre-commit": "1.2.2",
+    "pre-commit": "2.0.0",
     "prettier": "3.2.5"
   },
   "prettier": {
