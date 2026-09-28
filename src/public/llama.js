@@ -138,7 +138,7 @@ const ask = async (prompt, hidePrompt) => {
 
     promptResult = appendMessage("reply", '<div class="pointer"></div>')
 
-    window.scrollTo(0, document.documentElement.scrollHeight)
+    content.scrollTop = content.scrollHeight
   } else {
     promptResult =
       document.getElementsByClassName("reply")[
@@ -501,7 +501,7 @@ const resizeInputText = () => {
 
     // checked before resizing, so a user at the bottom stays at the bottom
     const pixelsLeft =
-      document.documentElement.scrollHeight - (window.scrollY + window.innerHeight)
+      content.scrollHeight - (content.scrollTop + content.clientHeight)
     const isAtBottom = pixelsLeft <= 1
 
     inputTextbox.rows = 1
@@ -521,11 +521,13 @@ const resizeInputText = () => {
 
     inputTextbox.style.height = newHeight + "px"
 
-    // the footer floats over the content, so the content leaves room for it
-    content.style.paddingBottom = footerContainer.offsetHeight + "px"
+    // the chat scrolls inside the content, which ends where the footer starts.
+    // the window itself never scrolls, because on iOS scrolling it while the
+    // keyboard is open makes the whole page jump
+    content.style.bottom = footerContainer.offsetHeight + "px"
 
     if (isAtBottom) {
-      window.scrollTo(0, document.documentElement.scrollHeight)
+      content.scrollTop = content.scrollHeight
     }
   } catch (err) {
     //
@@ -608,6 +610,9 @@ window.addEventListener("load", async () => {
         if (!rendering) {
           sendPrompt(inputTextbox.value)
           inputTextbox.value = ""
+          if (isMobileDevice()) {
+            inputTextbox.blur()
+          }
           resizeInputText()
           if (inputSend.classList.contains("active")) {
             inputSend.classList.remove("active")
@@ -629,6 +634,9 @@ window.addEventListener("load", async () => {
       if (!rendering) {
         sendPrompt(inputTextbox.value)
         inputTextbox.value = ""
+        if (isMobileDevice()) {
+          inputTextbox.blur()
+        }
         resizeInputText()
         if (inputSend.classList.contains("active")) {
           inputSend.classList.remove("active")

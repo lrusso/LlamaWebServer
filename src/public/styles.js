@@ -12,9 +12,7 @@ em{font-weight:bold}
 .header_image{float:left;margin-left:15px;margin-right:15px;border-radius:20px;width:40px;height:40px;background-image:url(favIcon512x512.png);background-size:40px;background-position:center center;background-repeat:no-repeat}
 .header_name{float:left}
 
-.content{display:block;margin-top:65px;padding-left:25px;padding-right:25px;padding-top:10px;overflow-y:auto;overflow-x:hidden}
-.content::-webkit-scrollbar{height:8px;width:8px}
-.content::-webkit-scrollbar-thumb{-webkit-border-radius:0;-webkit-box-shadow:0 1px 2px rgba(0, 0, 0, 0.75)}
+.content{display:block;position:fixed;top:65px;left:0;right:0;bottom:0;padding-left:25px;padding-right:25px;padding-top:10px;overflow-y:auto;overflow-x:hidden;overscroll-behavior:none;overflow-anchor:none}
 
 .footer_container{position:fixed;left:0;right:0;bottom:0;z-index:990}
 .footer_container::before{content:"";position:absolute;left:0;right:0;top:0;bottom:0;z-index:-1}
@@ -50,7 +48,7 @@ hr{border:none;margin:10px 0}
 .disclaimer{flex:1;text-align:center;margin-bottom:10px;margin-left:10px;margin-right:10px}
 
 @media screen and (min-width:800px) {
-  body{margin-left:15vw;margin-right:15vw}
+  .content{padding-left:calc(15vw + 25px);padding-right:calc(15vw + 25px)}
   .header_container,.footer_container{padding-left:15vw;padding-right:15vw}
 }
 `
@@ -66,10 +64,6 @@ em{color:#000}
 .header_container{background-color:#F0F2F5;border-bottom:1px solid rgba(206,206,206,0.4)}
 .header_image{background-color:#FFF;border:1px solid #E3E4E6}
 .header_name{color:#000}
-
-.content::-webkit-scrollbar{background:#F2F2F2}
-.content::-webkit-scrollbar-thumb{background:#C8C8C8}
-.content::-webkit-scrollbar-corner{background:#C8C8C8}
 
 .input_container{background-color:#FFF;border:1px solid rgba(206,206,206,0.4)}
 .input_textbox{background-color:#FFF}
@@ -112,10 +106,6 @@ em{color:#fff}
 .header_container{background-color:#202C33;border-bottom:1px solid rgba(206,206,206,0.1)}
 .header_image{background-color:#000;border:1px solid #353F46}
 .header_name{color:#FFF;font-weight:bold}
-
-.content::-webkit-scrollbar{background:#202C33}
-.content::-webkit-scrollbar-thumb{background:#545B6D}
-.content::-webkit-scrollbar-corner{background:#545B6D}
 
 .input_container{background-color:#202C33;border:1px solid rgba(206,206,206,0.1)}
 .input_textbox{background-color:#202C33;color:#FFF}
