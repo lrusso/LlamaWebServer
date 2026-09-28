@@ -13,8 +13,8 @@ const APP_STRINGS = {
     thinking: "Pensando...",
     writing: "Escribiendo...",
     placeholder: "Escribe un mensaje",
-    system_prompt: "T\u00FA eres un \u00FAtil asistente AI.",
-    system_welcome: "Hola, \u00BFc\u00F3mo puedo ayudarte hoy?",
+    system_prompt: "T\xFA eres un \xFAtil asistente AI.",
+    system_welcome: "Hola, \xBFc\xF3mo puedo ayudarte hoy?",
     disclaimer: "Llama es una IA y puede cometer errores.",
   },
 }
