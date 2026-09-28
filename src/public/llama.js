@@ -655,7 +655,6 @@ window.addEventListener("load", async () => {
       const KEY_CTRL = event.ctrlKey || event.metaKey
       const KEY_1 = event.code === "Digit1"
       const KEY_2 = event.code === "Digit2"
-      const KEY_3 = event.code === "Digit3"
 
       if (KEY_CTRL && KEY_1) {
         event.preventDefault()
@@ -674,19 +673,6 @@ window.addEventListener("load", async () => {
         event.preventDefault()
         try {
           document.getElementsByTagName("button")[1].click()
-          setTimeout(() => {
-            inputTextbox.blur()
-            inputTextbox.focus()
-          }, 25)
-        } catch (err) {
-          //
-        }
-      }
-
-      if (KEY_CTRL && KEY_3) {
-        event.preventDefault()
-        try {
-          document.getElementsByTagName("button")[2].click()
           setTimeout(() => {
             inputTextbox.blur()
             inputTextbox.focus()
