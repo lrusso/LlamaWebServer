@@ -98,7 +98,7 @@ hr{border-top:1px solid black}
 const COLORS_DARK_MODE = `
 body{background-color:#0B141A}
 span,code{background-color:#2C1D0E !important;color:#9CDCFE !important}
-em{color:#fff}
+em{color:#FFF}
 
 .wallpaper,.footer_container::before{background-color:#0B141A;opacity:0.06}
 .footer_container{background-color:#0B141A}
