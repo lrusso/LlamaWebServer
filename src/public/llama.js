@@ -251,7 +251,7 @@ const handleReply = (content, reply, promptResult, prompt) => {
 
   if (reply === "") {
     setTimeout(() => {
-      // REMOVING THE LAST USER PROMPT AND RE-ASKING
+      // removing the last user prompt and re-asking
       chatHistory.pop()
       ask(prompt, true)
     }, 500)
@@ -371,21 +371,21 @@ const handleReply = (content, reply, promptResult, prompt) => {
 const markdownToHTML = (markdown) => {
   const codeBlocks = []
 
-  // STORING AND REMOVING ALL THE CODE BLOCKS
+  // storing and removing all the code blocks
   markdown = markdown.replace(/\`\`\`.*?\n([\s\S]*?)\`\`\`/g, (match, group) => {
     codeBlocks.push(group)
     return "%%CODELLAMABLOCK" + (codeBlocks.length - 1) + "%%"
   })
 
-  // STORING AND REMOVING ALL THE LINKS (so their URLs are not touched by the
-  // emphasis rules below, e.g. an underscore inside a URL becoming <em>)
+  // storing and removing all the links (so their urls are not touched by the
+  // emphasis rules below, e.g. an underscore inside a url becoming <em>)
   const links = []
   markdown = markdown.replace(/\[(.*?)\]\((.*?)\)/g, (match, text, url) => {
     links.push('<a href="' + url + '" target="top">' + text + "</a>")
     return "%%CODELLAMALINK" + (links.length - 1) + "%%"
   })
 
-  // PARSING MARKDOWN TABLES
+  // parsing markdown tables
   markdown = markdown.replace(
     /^(\|.+\|)\r?\n(\|[-:\s|]+\|)\r?\n((?:\|.+\|\r?\n?)+)/gm,
     (match, headerRow, separatorRow, bodyRows) => {
@@ -418,7 +418,7 @@ const markdownToHTML = (markdown) => {
     }
   )
 
-  // SETTING THE MARKDOWN RULES
+  // setting the markdown rules
   let rules = [
     { regex: /^---$\n?/gm, replacement: "<hr>" },
     { regex: /\*\*(.*?)\*\*/g, replacement: "<strong>$1</strong>" },
@@ -436,17 +436,17 @@ const markdownToHTML = (markdown) => {
 
   rules = rules.concat(customResponseRegexRules)
 
-  // APPLYING THE MARKDOWN RULES
+  // applying the markdown rules
   rules.forEach(({ regex, replacement }) => {
     markdown = markdown.replace(regex, replacement)
   })
 
-  // RESTORING ALL THE LINKS
+  // restoring all the links
   markdown = markdown.replace(/%%CODELLAMALINK(\d+)%%/g, (match, index) => {
     return links[index]
   })
 
-  // RESTORING ALL THE CODE BLOCKS
+  // restoring all the code blocks
   markdown = markdown.replace(/%%CODELLAMABLOCK(\d+)%%/g, (match, index) => {
     return "<code>" + codeBlocks[index].replace(/```/g, "") + "</code>"
   })
@@ -522,7 +522,7 @@ const resizeInputText = () => {
     inputTextbox.style.height = newHeight + "px"
 
     // the chat scrolls inside the content, which ends where the footer starts.
-    // the window itself never scrolls, because on iOS scrolling it while the
+    // the window itself never scrolls, because on ios scrolling it while the
     // keyboard is open makes the whole page jump
     content.style.bottom = footerContainer.offsetHeight + "px"
 
@@ -544,8 +544,8 @@ const sendPrompt = (prompt) => {
 
 window.addEventListener("focus", () => {
   if (isUsingiOS() && rendering && !isFocusEventHandled) {
-    // WORKAROUND FOR IOS. IOS KILLS ALL THE NETWORK REQUESTS IN PROGRESS
-    // AFTER 5 SECONDS WHEN MOVING SAFARI TO THE BACKGROUND. THANK YOU IOS.
+    // workaround for ios. ios kills all the network requests in progress
+    // after 5 seconds when moving safari to the background. thank you ios.
     if (fetchController) {
       fetchController.abort()
     }
@@ -554,8 +554,8 @@ window.addEventListener("focus", () => {
 })
 
 window.addEventListener("blur", () => {
-  // WORKAROUND FOR IOS. IOS KILLS ALL THE NETWORK REQUESTS IN PROGRESS
-  // AFTER 5 SECONDS WHEN MOVING SAFARI TO THE BACKGROUND. THANK YOU IOS.
+  // workaround for ios. ios kills all the network requests in progress
+  // after 5 seconds when moving safari to the background. thank you ios.
   if (isUsingiOS() && rendering) {
     isFocusEventHandled = false
 
@@ -564,7 +564,7 @@ window.addEventListener("blur", () => {
     }
 
     setTimeout(() => {
-      // CLEARING ANY INCOMPLETE RESPONSE (IF ANY)
+      // clearing any incomplete response (if any)
       if (document.querySelector(".pointer")) {
         const replyCounter = document.getElementsByClassName("reply").length - 1
         const lastReply = document.getElementsByClassName("reply")[replyCounter]

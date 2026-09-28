@@ -18,7 +18,7 @@ export class TaskQueue extends EventEmitter {
         this.emit("error", error)
       } finally {
         this.running--
-        this.processTask() // PROCESS NEXT TASK IF AVAILABLE
+        this.processTask() // process next task if available
       }
     }
   }

@@ -86,7 +86,7 @@ const safeDispose = async (tempSession, tempContext) => {
 
 const askLlama = async (req, res) => {
   taskQueue.enqueue(async () => {
-    // CHECKING IF THE USER CLOSED THE WINDOW
+    // checking if the user closed the window
     if (req.socket.destroyed) {
       return
     }
@@ -96,7 +96,7 @@ const askLlama = async (req, res) => {
       body = body + chunk.toString()
     })
 
-    await new Promise((resolve) => req.on("end", resolve)) // WAITING FOR ALL DATA TO BE RECEIVED
+    await new Promise((resolve) => req.on("end", resolve)) // waiting for all data to be received
 
     let context
     let session
