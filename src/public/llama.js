@@ -1,7 +1,6 @@
 let customResponseRegexRules = []
 let customPromptRegexRules = []
 let customPrefix = ""
-let renderFullWords = false
 let rendering = false
 let chatHistory = []
 let replies = []
@@ -189,33 +188,11 @@ const ask = async (prompt, hidePrompt) => {
                 const newText = decoder.decode(value)
                 reply = reply + newText
 
-                let resultText = reply
+                const resultText = reply
                   .replace(/\</g, "&#60;")
                   .trim()
                   .replace(/^\),/, "")
                   .trim()
-
-                if (renderFullWords) {
-                  const BREAKING_CHARS = [
-                    " ",
-                    ".",
-                    ",",
-                    ":",
-                    ";",
-                    "?",
-                    "!",
-                    ")",
-                    "]",
-                  ]
-
-                  const breakingPoint = Math.max(
-                    ...BREAKING_CHARS.map((char) => resultText.lastIndexOf(char))
-                  )
-
-                  if (breakingPoint !== resultText.length - 1) {
-                    resultText = resultText.substring(0, breakingPoint + 1)
-                  }
-                }
 
                 patchDOM(
                   promptResult,
