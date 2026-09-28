@@ -83,8 +83,7 @@ This is a web server that lets you run GGUF models locally, such as `Llama`, `Ge
 
 ## Special keys:
 
-| Action        | macOS Shortcut | Windows Shortcut | Safari Shortcut |
-| :------------ | :------------: | :--------------: | :-------------: |
-| Next reply    |  Command + 1   |     Ctrl + 1     |    Ctrl + 1     |
-| Regenerate    |  Command + 2   |     Ctrl + 2     |    Ctrl + 2     |
-| Read response |  Command + 3   |     Ctrl + 3     |    Ctrl + 3     |
+| Action     | macOS Shortcut | Windows Shortcut | Safari Shortcut |
+| :--------- | :------------: | :--------------: | :-------------: |
+| Next reply |  Command + 1   |     Ctrl + 1     |    Ctrl + 1     |
+| Regenerate |  Command + 2   |     Ctrl + 2     |    Ctrl + 2     |
