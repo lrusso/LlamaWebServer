@@ -366,20 +366,6 @@ const handleReply = (content, reply, promptResult, prompt) => {
   rendering = false
 }
 
-const scrollToBottom = () => {
-  const totalHeight = document.documentElement.scrollHeight
-  const viewportHeight = window.innerHeight
-  const scrollYPosition = window.scrollY
-  const pixelsLeft = totalHeight - (scrollYPosition + viewportHeight)
-  const finalDistance = Math.max(0, pixelsLeft)
-
-  if (finalDistance > 0) {
-    window.scrollTo({
-      top: document.body.scrollHeight,
-    })
-  }
-}
-
 const markdownToHTML = (markdown) => {
   const codeBlocks = []
 
@@ -507,7 +493,14 @@ const getLineHeight = (element) => {
 
 const resizeInputText = () => {
   try {
+    const content = document.querySelector(".content")
+    const footerContainer = document.querySelector(".footer_container")
     const inputTextbox = document.querySelector(".input_textbox")
+
+    // checked before resizing, so a user at the bottom stays at the bottom
+    const pixelsLeft =
+      document.documentElement.scrollHeight - (window.scrollY + window.innerHeight)
+    const isAtBottom = pixelsLeft <= 1
 
     inputTextbox.rows = 1
     inputTextbox.style.height = "auto"
@@ -525,11 +518,16 @@ const resizeInputText = () => {
     }
 
     inputTextbox.style.height = newHeight + "px"
+
+    // the footer floats over the content, so the content leaves room for it
+    content.style.paddingBottom = footerContainer.offsetHeight + "px"
+
+    if (isAtBottom) {
+      window.scrollTo(0, document.documentElement.scrollHeight)
+    }
   } catch (err) {
     //
   }
-
-  scrollToBottom()
 }
 
 const sendPrompt = (prompt) => {
@@ -595,6 +593,7 @@ window.addEventListener("load", async () => {
     inputTextbox.placeholder = t("placeholder")
     inputTextbox.disabled = false
     inputTextbox.value = ""
+    window.addEventListener("resize", resizeInputText)
     inputTextbox.addEventListener("input", resizeInputText)
     inputTextbox.addEventListener("keydown", (event) => {
       if (event.key === "Enter") {
