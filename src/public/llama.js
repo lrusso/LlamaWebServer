@@ -224,7 +224,7 @@ const ask = async (prompt, hidePrompt) => {
 
                 read()
               })
-              .catch((err) => {
+              .catch((_err) => {
                 reply = ""
                 resolve()
               })
@@ -372,7 +372,7 @@ const markdownToHTML = (markdown) => {
   const codeBlocks = []
 
   // storing and removing all the code blocks
-  markdown = markdown.replace(/\`\`\`.*?\n([\s\S]*?)\`\`\`/g, (match, group) => {
+  markdown = markdown.replace(/\`\`\`.*?\n([\s\S]*?)\`\`\`/g, (_match, group) => {
     codeBlocks.push(group)
     return "%%CODELLAMABLOCK" + (codeBlocks.length - 1) + "%%"
   })
@@ -380,7 +380,7 @@ const markdownToHTML = (markdown) => {
   // storing and removing all the links (so their urls are not touched by the
   // emphasis rules below, e.g. an underscore inside a url becoming <em>)
   const links = []
-  markdown = markdown.replace(/\[(.*?)\]\((.*?)\)/g, (match, text, url) => {
+  markdown = markdown.replace(/\[(.*?)\]\((.*?)\)/g, (_match, text, url) => {
     links.push('<a href="' + url + '" target="top">' + text + "</a>")
     return "%%CODELLAMALINK" + (links.length - 1) + "%%"
   })
@@ -388,7 +388,7 @@ const markdownToHTML = (markdown) => {
   // parsing markdown tables
   markdown = markdown.replace(
     /^(\|.+\|)\r?\n(\|[-:\s|]+\|)\r?\n((?:\|.+\|\r?\n?)+)/gm,
-    (match, headerRow, separatorRow, bodyRows) => {
+    (_match, headerRow, _separatorRow, bodyRows) => {
       const parseRow = (row) =>
         row
           .split("|")
@@ -428,10 +428,10 @@ const markdownToHTML = (markdown) => {
     { regex: /`(.*?)`/g, replacement: '<div class="highlighted">$1</div>' },
     {
       regex: /^(#{1,6})\s*(.*)$/gm,
-      replacement: (match, hashes, content) =>
+      replacement: (_match, hashes, content) =>
         "<h" + hashes.length + ">" + content + "</h" + hashes.length + ">",
     },
-    { regex: /^[\*\-\+] (.+)$/gm, replacement: (match, item) => "&#8226; " + item },
+    { regex: /^[\*\-\+] (.+)$/gm, replacement: (_match, item) => "&#8226; " + item },
   ]
 
   rules = rules.concat(customResponseRegexRules)
@@ -442,12 +442,12 @@ const markdownToHTML = (markdown) => {
   })
 
   // restoring all the links
-  markdown = markdown.replace(/%%CODELLAMALINK(\d+)%%/g, (match, index) => {
+  markdown = markdown.replace(/%%CODELLAMALINK(\d+)%%/g, (_match, index) => {
     return links[index]
   })
 
   // restoring all the code blocks
-  markdown = markdown.replace(/%%CODELLAMABLOCK(\d+)%%/g, (match, index) => {
+  markdown = markdown.replace(/%%CODELLAMABLOCK(\d+)%%/g, (_match, index) => {
     return "<code>" + codeBlocks[index].replace(/```/g, "") + "</code>"
   })
 
