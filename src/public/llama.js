@@ -137,6 +137,8 @@ const ask = async (prompt, hidePrompt) => {
     document.querySelector(".actions_container")?.remove()
 
     promptResult = appendMessage("reply", '<div class="pointer"></div>')
+
+    window.scrollTo(0, document.documentElement.scrollHeight)
   } else {
     promptResult =
       document.getElementsByClassName("reply")[
