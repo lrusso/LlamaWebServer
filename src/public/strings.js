@@ -6,7 +6,7 @@ const APP_STRINGS = {
     placeholder: "Write a message",
     system_prompt: "You are a useful AI assistant.",
     system_welcome: "Hello, how can I help you today?",
-    disclaimer: "AI may make mistakes. Use at your own risk.",
+    disclaimer: "Llama is AI and can make mistakes.",
   },
   es: {
     title: "Llama",
@@ -15,7 +15,7 @@ const APP_STRINGS = {
     placeholder: "Escribe un mensaje",
     system_prompt: "T\u00FA eres un \u00FAtil asistente AI.",
     system_welcome: "Hola, \u00BFc\u00F3mo puedo ayudarte hoy?",
-    disclaimer: "La IA puede cometer errores. \u00DAsela bajo su propio riesgo.",
+    disclaimer: "Llama es una IA y puede cometer errores.",
   },
 }
 
