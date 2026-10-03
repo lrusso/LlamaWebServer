@@ -27,8 +27,8 @@ const ICON_REGENERATE = () => {
 const ICON_COPY = () => {
   const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg")
   svg.setAttribute("class", "copy")
-  svg.setAttribute("width", "24")
-  svg.setAttribute("height", "24")
+  svg.setAttribute("width", "20")
+  svg.setAttribute("height", "20")
   svg.setAttribute("viewBox", "0 0 24 24")
   const path = document.createElementNS("http://www.w3.org/2000/svg", "path")
   path.setAttribute(
@@ -706,6 +706,7 @@ window.addEventListener("load", async () => {
       const KEY_CTRL = event.ctrlKey || event.metaKey
       const KEY_1 = event.code === "Digit1"
       const KEY_2 = event.code === "Digit2"
+      const KEY_3 = event.code === "Digit3"
 
       if (KEY_CTRL && KEY_1) {
         event.preventDefault()
@@ -724,6 +725,19 @@ window.addEventListener("load", async () => {
         event.preventDefault()
         try {
           document.getElementsByTagName("button")[1].click()
+          setTimeout(() => {
+            inputTextbox.blur()
+            inputTextbox.focus()
+          }, 25)
+        } catch (err) {
+          //
+        }
+      }
+
+      if (KEY_CTRL && KEY_3) {
+        event.preventDefault()
+        try {
+          document.getElementsByTagName("button")[2].click()
           setTimeout(() => {
             inputTextbox.blur()
             inputTextbox.focus()
