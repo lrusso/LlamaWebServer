@@ -7,6 +7,7 @@ const APP_STRINGS = {
     system_prompt: "You are a useful AI assistant.",
     system_welcome: "Hello, how can I help you today?",
     disclaimer: "Llama is AI and can make mistakes.",
+    copied: "Copied to clipboard.",
   },
   es: {
     title: "Llama",
@@ -16,6 +17,7 @@ const APP_STRINGS = {
     system_prompt: "T\xFA eres un \xFAtil asistente AI.",
     system_welcome: "Hola, \xBFc\xF3mo puedo ayudarte hoy?",
     disclaimer: "Llama es una IA y puede cometer errores.",
+    copied: "Copiado al portapapeles.",
   },
 }
 

@@ -5,6 +5,7 @@ let rendering = false
 let chatHistory = []
 let replies = []
 let selectedReply = 0
+let toastTimeout = null
 let fetchController = null
 let isFocusEventHandled = false
 
@@ -18,6 +19,21 @@ const ICON_REGENERATE = () => {
   path.setAttribute(
     "d",
     "M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.76 0 3.39.77 4.54 2.05L14 10h6V4l-2.35 2.35z"
+  )
+  svg.appendChild(path)
+  return svg
+}
+
+const ICON_COPY = () => {
+  const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg")
+  svg.setAttribute("class", "copy")
+  svg.setAttribute("width", "24")
+  svg.setAttribute("height", "24")
+  svg.setAttribute("viewBox", "0 0 24 24")
+  const path = document.createElementNS("http://www.w3.org/2000/svg", "path")
+  path.setAttribute(
+    "d",
+    "M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"
   )
   svg.appendChild(path)
   return svg
@@ -38,6 +54,18 @@ const appendMessage = (className, innerHTML) => {
   const message = createComponent("span", className, innerHTML)
   content.appendChild(message)
   return message
+}
+
+const showToast = (text) => {
+  const toast = document.querySelector(".toast")
+
+  toast.innerText = text
+  toast.classList.add("active")
+
+  clearTimeout(toastTimeout)
+  toastTimeout = setTimeout(() => {
+    toast.classList.remove("active")
+  }, 2000)
 }
 
 const patchDOM = (target, newHTML) => {
@@ -246,6 +274,7 @@ const handleReply = (content, reply, promptResult, prompt) => {
 
   const buttonNext = createComponent("button", "action_button")
   const buttonRegenerate = createComponent("button", "action_button")
+  const buttonCopy = createComponent("button", "action_button")
 
   buttonNext.type = "button"
   while (buttonNext.firstChild) {
@@ -316,6 +345,10 @@ const handleReply = (content, reply, promptResult, prompt) => {
     buttonRegenerate.disabled = true
     buttonRegenerate.style.cursor = "default"
 
+    buttonCopy.children[0].classList.remove("active")
+    buttonCopy.disabled = true
+    buttonCopy.style.cursor = "default"
+
     chatHistory.pop()
     chatHistory.pop()
     ask(prompt, true)
@@ -325,18 +358,59 @@ const handleReply = (content, reply, promptResult, prompt) => {
     }
   })
 
+  buttonCopy.type = "button"
+  buttonCopy.appendChild(ICON_COPY())
+  buttonCopy.addEventListener("click", () => {
+    if (rendering) {
+      return
+    }
+
+    const lastReply = document.querySelector(".reply:last-of-type")
+
+    if (navigator.clipboard) {
+      // the clipboard api only exists in secure contexts (https or localhost)
+      navigator.clipboard.writeText(lastReply.innerText).then(() => {
+        showToast(t("copied"))
+      })
+    } else {
+      // legacy copy for the insecure contexts (plain http), where the clipboard
+      // api doesn't exist. execCommand copies the current selection, so the
+      // reply is selected first and unselected afterwards
+      const selection = window.getSelection()
+      const range = document.createRange()
+
+      range.selectNodeContents(lastReply)
+      selection.removeAllRanges()
+      selection.addRange(range)
+
+      if (document.execCommand("copy")) {
+        showToast(t("copied"))
+      }
+
+      selection.removeAllRanges()
+    }
+
+    if (!isMobileDevice()) {
+      buttonCopy.blur()
+    }
+  })
+
   if (replies.length === 1) {
     buttonNext.style.display = "none"
   }
 
   buttonsContainer.appendChild(buttonNext)
   buttonsContainer.appendChild(buttonRegenerate)
+  buttonsContainer.appendChild(buttonCopy)
 
   buttonNext.classList.add("active")
   buttonNext.disabled = false
   buttonRegenerate.children[0].classList.add("active")
   buttonRegenerate.disabled = false
   buttonRegenerate.style.cursor = "pointer"
+  buttonCopy.children[0].classList.add("active")
+  buttonCopy.disabled = false
+  buttonCopy.style.cursor = "pointer"
 
   content.appendChild(buttonsContainer)
 

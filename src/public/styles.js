@@ -43,9 +43,12 @@ hr{border:none;margin:10px 0}
 
 .pointer{line-height:16px;display:inline-block;border-radius:6px;width:12px;height:12px}
 
-.regenerate{display:block}
+.regenerate,.copy{display:block}
 
 .disclaimer{flex:1;text-align:center;margin-bottom:10px;margin-left:10px;margin-right:10px}
+
+.toast{position:fixed;left:10px;bottom:10px;z-index:999;line-height:28px;padding:10px;border-radius:10px;box-shadow:0 0 5px 5px rgba(0,0,0,0.1);opacity:0;visibility:hidden;pointer-events:none;transition:opacity 0.3s,visibility 0.3s}
+.toast.active{opacity:1;visibility:visible}
 
 @media screen and (min-width:800px) {
   .content{padding-left:calc(15vw + 25px);padding-right:calc(15vw + 25px)}
@@ -85,10 +88,12 @@ em{color:#000}
 .pointer{background-color:#000;animation:processing_light 1s ease-in-out infinite}
 @keyframes processing_light{0%{box-shadow:0 0 0 0 #000}50%{box-shadow:0 0 0 2.4px #000}100%{box-shadow:0 0 0 0 #000}}
 
-.regenerate{fill:#C8C8C8}
-.regenerate.active{fill:#000}
+.regenerate,.copy{fill:#C8C8C8}
+.regenerate.active,.copy.active{fill:#000}
 
 .disclaimer{color:gray}
+
+.toast{background-color:#FFF}
 
 a{color:#3a76b1}
 
@@ -127,10 +132,12 @@ em{color:#FFF}
 .pointer{background-color:#FFF;animation:processing_dark 1s ease-in-out infinite}
 @keyframes processing_dark{0%{box-shadow:0 0 0 0 #FFF}50%{box-shadow:0 0 0 2.4px #FFF}100%{box-shadow:0 0 0 0 #FFF}}
 
-.regenerate{fill:rgba(206,206,206,0.2)}
-.regenerate.active{fill:#FFF}
+.regenerate,.copy{fill:rgba(206,206,206,0.2)}
+.regenerate.active,.copy.active{fill:#FFF}
 
 .disclaimer{color:#9a9a9a}
+
+.toast{background-color:#202C33 !important;color:#FFF !important;border:1px solid rgba(206,206,206,0.1)}
 
 a{color:#699cce}
 
