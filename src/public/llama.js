@@ -423,8 +423,12 @@ const handleReply = (content, reply, promptResult, prompt) => {
       selection.removeAllRanges()
       selection.addRange(range)
 
-      if (document.execCommand("copy")) {
-        showToast(t("copied"))
+      try {
+        if (document.execCommand("copy")) {
+          showToast(t("copied"))
+        }
+      } catch (err) {
+        //
       }
 
       selection.removeAllRanges()
