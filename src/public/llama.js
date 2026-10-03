@@ -6,6 +6,7 @@ let chatHistory = []
 let replies = []
 let selectedReply = 0
 let toastTimeout = null
+let promptBeforeEdit = ""
 let fetchController = null
 let isFocusEventHandled = false
 
@@ -34,6 +35,21 @@ const ICON_COPY = () => {
   path.setAttribute(
     "d",
     "M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"
+  )
+  svg.appendChild(path)
+  return svg
+}
+
+const ICON_EDIT = () => {
+  const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg")
+  svg.setAttribute("class", "edit")
+  svg.setAttribute("width", "24")
+  svg.setAttribute("height", "24")
+  svg.setAttribute("viewBox", "0 0 24 24")
+  const path = document.createElementNS("http://www.w3.org/2000/svg", "path")
+  path.setAttribute(
+    "d",
+    "M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"
   )
   svg.appendChild(path)
   return svg
@@ -148,15 +164,38 @@ const ask = async (prompt, hidePrompt) => {
 
   chatHistory.push({ type: "user", text: customPrefix + formattedPrompt })
 
+  let buttonEdit = document.querySelector(".edit_container button")
+
   if (!hidePrompt) {
     const promptContainer = createComponent("div", "prompt_container")
     const promptBackground = createComponent("span", "prompt_background")
     const promptContent = createComponent("div", "prompt_content", "", prompt)
+    const editContainer = createComponent("div", "edit_container")
+
+    // only the last prompt can be edited
+    if (buttonEdit) {
+      buttonEdit.parentNode.remove()
+    }
+
+    promptContent.addEventListener("keydown", handlePromptKeydown)
+    promptContent.addEventListener("blur", handlePromptBlur)
+
+    buttonEdit = createComponent("button", "action_button")
+    buttonEdit.type = "button"
+    buttonEdit.appendChild(ICON_EDIT())
+    buttonEdit.addEventListener("click", editPrompt)
 
     promptBackground.appendChild(promptContent)
     promptContainer.appendChild(promptBackground)
+    editContainer.appendChild(buttonEdit)
     content.appendChild(promptContainer)
+    content.appendChild(editContainer)
   }
+
+  // the last prompt can't be edited while the reply is being generated
+  buttonEdit.children[0].classList.remove("active")
+  buttonEdit.disabled = true
+  buttonEdit.style.cursor = "default"
 
   let promptResult = null
 
@@ -275,6 +314,7 @@ const handleReply = (content, reply, promptResult, prompt) => {
   const buttonNext = createComponent("button", "action_button")
   const buttonRegenerate = createComponent("button", "action_button")
   const buttonCopy = createComponent("button", "action_button")
+  const buttonEdit = document.querySelector(".edit_container button")
 
   buttonNext.type = "button"
   while (buttonNext.firstChild) {
@@ -411,12 +451,77 @@ const handleReply = (content, reply, promptResult, prompt) => {
   buttonCopy.children[0].classList.add("active")
   buttonCopy.disabled = false
   buttonCopy.style.cursor = "pointer"
+  buttonEdit.children[0].classList.add("active")
+  buttonEdit.disabled = false
+  buttonEdit.style.cursor = "pointer"
 
   content.appendChild(buttonsContainer)
 
   document.querySelector(".pointer")?.remove()
 
   rendering = false
+}
+
+const editPrompt = () => {
+  if (rendering) {
+    return
+  }
+
+  const prompts = document.querySelectorAll(".prompt_content")
+  const promptContent = prompts[prompts.length - 1]
+  const selection = window.getSelection()
+
+  promptBeforeEdit = promptContent.innerText
+  promptContent.contentEditable = "true"
+  promptContent.focus()
+
+  // moving the caret to the end of the prompt
+  selection.selectAllChildren(promptContent)
+  selection.collapseToEnd()
+}
+
+const handlePromptKeydown = (event) => {
+  const promptContent = event.currentTarget
+
+  if (event.key === "Escape") {
+    promptContent.blur()
+  }
+
+  if (event.key === "Enter") {
+    event.preventDefault()
+
+    const newPrompt = promptContent.innerText.trim()
+
+    if (rendering || newPrompt === "" || newPrompt === promptBeforeEdit) {
+      promptContent.blur()
+      return
+    }
+
+    const actionsContainer = document.querySelector(".actions_container")
+
+    promptBeforeEdit = newPrompt
+    promptContent.blur()
+
+    if (actionsContainer) {
+      actionsContainer.remove()
+    }
+
+    // replacing the last prompt and removing the last reply
+    chatHistory.pop()
+    chatHistory.pop()
+    replies.splice(0, replies.length)
+    ask(newPrompt, true)
+
+    if (!isMobileDevice()) {
+      document.querySelector(".input_textbox").focus()
+    }
+  }
+}
+
+const handlePromptBlur = (event) => {
+  // leaving the prompt ends the edition and discards the unsent changes
+  event.currentTarget.contentEditable = "false"
+  event.currentTarget.innerText = promptBeforeEdit
 }
 
 const markdownToHTML = (markdown) => {
@@ -711,7 +816,7 @@ window.addEventListener("load", async () => {
       if (KEY_CTRL && KEY_1) {
         event.preventDefault()
         try {
-          document.getElementsByTagName("button")[0].click()
+          document.querySelectorAll(".actions_container button")[0].click()
           setTimeout(() => {
             inputTextbox.blur()
             inputTextbox.focus()
@@ -724,7 +829,7 @@ window.addEventListener("load", async () => {
       if (KEY_CTRL && KEY_2) {
         event.preventDefault()
         try {
-          document.getElementsByTagName("button")[1].click()
+          document.querySelectorAll(".actions_container button")[1].click()
           setTimeout(() => {
             inputTextbox.blur()
             inputTextbox.focus()
@@ -737,7 +842,7 @@ window.addEventListener("load", async () => {
       if (KEY_CTRL && KEY_3) {
         event.preventDefault()
         try {
-          document.getElementsByTagName("button")[2].click()
+          document.querySelectorAll(".actions_container button")[2].click()
           setTimeout(() => {
             inputTextbox.blur()
             inputTextbox.focus()
