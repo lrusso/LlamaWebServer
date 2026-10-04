@@ -91,8 +91,8 @@ const patchDOM = (target, newHTML) => {
 }
 
 const reconcileChildren = (existing, updated) => {
-  const existingChildren = Array.from(existing.childNodes)
-  const updatedChildren = Array.from(updated.childNodes)
+  const existingChildren = Array.prototype.slice.call(existing.childNodes)
+  const updatedChildren = Array.prototype.slice.call(updated.childNodes)
 
   for (let i = 0; i < updatedChildren.length; i++) {
     if (i < existingChildren.length) {
@@ -158,8 +158,8 @@ const ask = async (prompt, hidePrompt) => {
   rendering = true
 
   let formattedPrompt = prompt
-  customPromptRegexRules.forEach(({ regex, replacement }) => {
-    formattedPrompt = formattedPrompt.replace(regex, replacement)
+  customPromptRegexRules.forEach((rule) => {
+    formattedPrompt = formattedPrompt.replace(rule.regex, rule.replacement)
   })
 
   chatHistory.push({ type: "user", text: customPrefix + formattedPrompt })
@@ -548,17 +548,22 @@ const markdownToHTML = (markdown) => {
   markdown = markdown.replace(
     /^(\|.+\|)\r?\n(\|[-:\s|]+\|)\r?\n((?:\|.+\|\r?\n?)+)/gm,
     (_match, headerRow, _separatorRow, bodyRows) => {
-      const parseRow = (row) =>
-        row
+      const parseRow = (row) => {
+        return row
           .split("|")
           .slice(1, -1)
-          .map((cell) => cell.trim())
+          .map((cell) => {
+            return cell.trim()
+          })
+      }
 
       const headers = parseRow(headerRow)
       const rows = bodyRows
         .trim()
         .split(/\r?\n/)
-        .map((row) => parseRow(row))
+        .map((row) => {
+          return parseRow(row)
+        })
 
       let html = "<table><thead><tr>"
       headers.forEach((header) => {
@@ -587,17 +592,23 @@ const markdownToHTML = (markdown) => {
     { regex: /`(.*?)`/g, replacement: '<div class="highlighted">$1</div>' },
     {
       regex: /^(#{1,6})\s*(.*)$/gm,
-      replacement: (_match, hashes, content) =>
-        "<h" + hashes.length + ">" + content + "</h" + hashes.length + ">",
+      replacement: (_match, hashes, content) => {
+        return "<h" + hashes.length + ">" + content + "</h" + hashes.length + ">"
+      },
     },
-    { regex: /^[\*\-\+] (.+)$/gm, replacement: (_match, item) => "&#8226; " + item },
+    {
+      regex: /^[\*\-\+] (.+)$/gm,
+      replacement: (_match, item) => {
+        return "&#8226; " + item
+      },
+    },
   ]
 
   rules = rules.concat(customResponseRegexRules)
 
   // applying the markdown rules
-  rules.forEach(({ regex, replacement }) => {
-    markdown = markdown.replace(regex, replacement)
+  rules.forEach((rule) => {
+    markdown = markdown.replace(rule.regex, rule.replacement)
   })
 
   // restoring all the links
