@@ -165,6 +165,7 @@ const ask = async (prompt, hidePrompt) => {
   chatHistory.push({ type: "user", text: customPrefix + formattedPrompt })
 
   let buttonEdit = document.querySelector(".edit_container button")
+  let promptResult = null
 
   if (!hidePrompt) {
     const promptContainer = createComponent("div", "prompt_container")
@@ -190,16 +191,7 @@ const ask = async (prompt, hidePrompt) => {
     editContainer.appendChild(buttonEdit)
     content.appendChild(promptContainer)
     content.appendChild(editContainer)
-  }
 
-  // the last prompt can't be edited while the reply is being generated
-  buttonEdit.children[0].classList.remove("active")
-  buttonEdit.disabled = true
-  buttonEdit.style.cursor = "default"
-
-  let promptResult = null
-
-  if (!hidePrompt) {
     const actionsContainer = document.querySelector(".actions_container")
     if (actionsContainer) {
       actionsContainer.remove()
@@ -226,6 +218,11 @@ const ask = async (prompt, hidePrompt) => {
       promptResult.appendChild(pointer)
     }
   }
+
+  // the last prompt can't be edited while the reply is being generated
+  buttonEdit.children[0].classList.remove("active")
+  buttonEdit.disabled = true
+  buttonEdit.style.cursor = "default"
 
   document.title = t("title") + " - " + t("thinking")
 
