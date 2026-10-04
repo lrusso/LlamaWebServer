@@ -8,6 +8,8 @@ const APP_STRINGS = {
     system_welcome: "Hello, how can I help you today?",
     disclaimer: "Llama is AI and can make mistakes.",
     copied: "Copied to clipboard.",
+    error_empty:
+      "The AI model did not return a response. Check your internet connection.",
   },
   es: {
     title: "Llama",
@@ -18,6 +20,8 @@ const APP_STRINGS = {
     system_welcome: "Hola, \xBFc\xF3mo puedo ayudarte hoy?",
     disclaimer: "Llama es una IA y puede cometer errores.",
     copied: "Copiado al portapapeles.",
+    error_empty:
+      "El modelo de AI no devolvi\xF3 una respuesta. Verifica tu conexi\xF3n a internet.",
   },
 }
 

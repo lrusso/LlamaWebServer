@@ -284,6 +284,12 @@ const ask = async (prompt, hidePrompt) => {
     reply = ""
   }
 
+  // the request failed or the model returned nothing
+  if (reply === "") {
+    promptResult.innerHTML =
+      markdownToHTML(t("error_empty")) + '<div class="pointer"></div>'
+  }
+
   handleReply(content, reply, promptResult, prompt)
 }
 
