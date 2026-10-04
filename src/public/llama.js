@@ -9,6 +9,8 @@ let toastTimeout = null
 let promptBeforeEdit = ""
 let fetchController = null
 let isFocusEventHandled = false
+let lastReply = null
+let lastPrompt = ""
 
 const ICON_REGENERATE = () => {
   const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg")
@@ -164,8 +166,9 @@ const ask = async (prompt, hidePrompt) => {
 
   chatHistory.push({ type: "user", text: customPrefix + formattedPrompt })
 
+  lastPrompt = prompt
+
   let buttonEdit = document.querySelector(".edit_container button")
-  let promptResult = null
 
   if (!hidePrompt) {
     const promptContainer = createComponent("div", "prompt_container")
@@ -197,25 +200,25 @@ const ask = async (prompt, hidePrompt) => {
       actionsContainer.remove()
     }
 
-    promptResult = appendMessage("reply", '<div class="pointer"></div>')
+    lastReply = appendMessage("reply", '<div class="pointer"></div>')
 
     content.scrollTop = content.scrollHeight
   } else {
-    promptResult =
+    lastReply =
       document.getElementsByClassName("reply")[
         document.getElementsByClassName("reply").length - 1
       ]
     const hasOnlyPointer =
-      promptResult.children.length === 1 &&
-      promptResult.firstElementChild &&
-      promptResult.firstElementChild.classList.contains("pointer")
+      lastReply.children.length === 1 &&
+      lastReply.firstElementChild &&
+      lastReply.firstElementChild.classList.contains("pointer")
     if (!hasOnlyPointer) {
-      while (promptResult.firstChild) {
-        promptResult.removeChild(promptResult.firstChild)
+      while (lastReply.firstChild) {
+        lastReply.removeChild(lastReply.firstChild)
       }
       const pointer = document.createElement("div")
       pointer.className = "pointer"
-      promptResult.appendChild(pointer)
+      lastReply.appendChild(pointer)
     }
   }
 
@@ -259,7 +262,7 @@ const ask = async (prompt, hidePrompt) => {
                 const resultText = reply.replace(/\</g, "&#60;")
 
                 patchDOM(
-                  promptResult,
+                  lastReply,
                   markdownToHTML(resultText) + '<div class="pointer"></div>'
                 )
 
@@ -286,11 +289,11 @@ const ask = async (prompt, hidePrompt) => {
 
   // the request failed or the model returned nothing
   if (reply === "") {
-    promptResult.innerHTML =
+    lastReply.innerHTML =
       markdownToHTML(t("error_empty")) + '<div class="pointer"></div>'
   }
 
-  handleReply(content, reply, promptResult, prompt)
+  handleReply(content, reply, lastReply, lastPrompt)
 }
 
 const handleReply = (content, reply, promptResult, prompt) => {
