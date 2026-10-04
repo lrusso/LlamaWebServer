@@ -259,11 +259,7 @@ const ask = async (prompt, hidePrompt) => {
                 const newText = decoder.decode(value)
                 reply = reply + newText
 
-                const resultText = reply
-                  .replace(/\</g, "&#60;")
-                  .trim()
-                  .replace(/^\),/, "")
-                  .trim()
+                const resultText = reply.replace(/\</g, "&#60;")
 
                 patchDOM(
                   promptResult,
@@ -360,11 +356,7 @@ const handleReply = (content, reply, promptResult, prompt) => {
 
     chatHistory.push({ type: "model", response: [newReply] })
 
-    const resultText = newReply
-      .replace(/\</g, "&#60;")
-      .trim()
-      .replace(/^\),/, "")
-      .trim()
+    const resultText = newReply.replace(/\</g, "&#60;")
     promptResult.innerHTML = markdownToHTML(resultText)
 
     const selection = window.getSelection()
