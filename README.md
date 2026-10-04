@@ -81,7 +81,7 @@ This is a web server that lets you run GGUF models locally, such as `Llama`, `Ge
 - Run `chmod 644 ~/Library/LaunchAgents/com.lrusso.server.plist`
 - Run `launchctl load ~/Library/LaunchAgents/com.lrusso.server.plist`
 
-## Special keys:
+## Special keys
 
 | Action            | macOS Shortcut | Windows Shortcut | Safari Shortcut |
 | :---------------- | :------------: | :--------------: | :-------------: |
