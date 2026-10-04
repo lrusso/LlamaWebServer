@@ -200,7 +200,10 @@ const ask = async (prompt, hidePrompt) => {
   let promptResult = null
 
   if (!hidePrompt) {
-    document.querySelector(".actions_container")?.remove()
+    const actionsContainer = document.querySelector(".actions_container")
+    if (actionsContainer) {
+      actionsContainer.remove()
+    }
 
     promptResult = appendMessage("reply", '<div class="pointer"></div>')
 
@@ -212,7 +215,8 @@ const ask = async (prompt, hidePrompt) => {
       ]
     const hasOnlyPointer =
       promptResult.children.length === 1 &&
-      promptResult.firstElementChild?.classList.contains("pointer")
+      promptResult.firstElementChild &&
+      promptResult.firstElementChild.classList.contains("pointer")
     if (!hasOnlyPointer) {
       while (promptResult.firstChild) {
         promptResult.removeChild(promptResult.firstChild)
@@ -307,7 +311,10 @@ const handleReply = (content, reply, promptResult, prompt) => {
   selectedReply = replies.length
   document.title = t("title")
 
-  document.querySelector(".actions_container")?.remove()
+  const actionsContainer = document.querySelector(".actions_container")
+  if (actionsContainer) {
+    actionsContainer.remove()
+  }
 
   const buttonsContainer = createComponent("div", "actions_container")
 
@@ -461,7 +468,10 @@ const handleReply = (content, reply, promptResult, prompt) => {
 
   content.appendChild(buttonsContainer)
 
-  document.querySelector(".pointer")?.remove()
+  const pointerElement = document.querySelector(".pointer")
+  if (pointerElement) {
+    pointerElement.remove()
+  }
 
   rendering = false
 }
