@@ -196,9 +196,13 @@ const ask = async (prompt, hidePrompt) => {
     content.appendChild(promptContainer)
     content.appendChild(editContainer)
 
+    // the previous reply only keeps its copy button, which is the last one
     const actionsContainer = document.querySelector(".actions_container")
     if (actionsContainer) {
-      actionsContainer.remove()
+      actionsContainer.className = "copy_container"
+      while (actionsContainer.children.length > 1) {
+        actionsContainer.removeChild(actionsContainer.firstChild)
+      }
     }
 
     lastReply = appendMessage("reply", '<div class="pointer"></div>')
@@ -407,15 +411,9 @@ const handleReply = (content, reply, promptResult, prompt) => {
   buttonCopy.type = "button"
   buttonCopy.appendChild(ICON_COPY())
   buttonCopy.addEventListener("click", () => {
-    if (rendering) {
-      return
-    }
-
-    const lastReply = document.querySelector(".reply:last-of-type")
-
     if (navigator.clipboard) {
       // the clipboard api only exists in secure contexts (https or localhost)
-      navigator.clipboard.writeText(lastReply.innerText).then(() => {
+      navigator.clipboard.writeText(promptResult.innerText).then(() => {
         showToast(t("copied"))
       })
     } else {
@@ -425,7 +423,7 @@ const handleReply = (content, reply, promptResult, prompt) => {
       const selection = window.getSelection()
       const range = document.createRange()
 
-      range.selectNodeContents(lastReply)
+      range.selectNodeContents(promptResult)
       selection.removeAllRanges()
       selection.addRange(range)
 

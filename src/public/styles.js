@@ -23,7 +23,7 @@ em{font-weight:bold}
 .input_send{display:block;margin-left:10px;margin-bottom:2px;cursor:default}
 .input_send.active{cursor:pointer}
 
-.actions_container{display:flex;margin-bottom:3px}
+.actions_container,.copy_container{display:flex;margin-bottom:3px}
 .action_button{display:flex;text-align:center;border-radius:10px;padding:12px;min-width:48px;min-height:48px;margin-right:10px;margin-bottom:10px;cursor:default;outline:0 solid;border:0;box-shadow:0 5px 5px rgba(0,0,0,0.1);white-space:nowrap;overflow:hidden;justify-content:center;align-items:center}
 .action_button:focus{outline-width:2px;outline-style:solid}
 .action_button.active{cursor:pointer}
