@@ -262,14 +262,11 @@ const ask = async (prompt, hidePrompt) => {
                   resolve()
                   return
                 }
-                const newText = decoder.decode(value)
-                reply = reply + newText
-
-                const resultText = reply.replace(/\</g, "&#60;")
-
+                reply = reply + decoder.decode(value)
                 patchDOM(
                   lastReply,
-                  markdownToHTML(resultText) + '<div class="pointer"></div>'
+                  markdownToHTML(reply.replace(/\</g, "&#60;")) +
+                    '<div class="pointer"></div>'
                 )
 
                 read()
