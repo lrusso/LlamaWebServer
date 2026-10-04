@@ -565,17 +565,17 @@ const markdownToHTML = (markdown) => {
 
       let html = "<table><thead><tr>"
       headers.forEach((header) => {
-        html += "<th>" + header + "</th>"
+        html = html + "<th>" + header + "</th>"
       })
-      html += "</tr></thead><tbody>"
+      html = html + "</tr></thead><tbody>"
       rows.forEach((row) => {
-        html += "<tr>"
+        html = html + "<tr>"
         row.forEach((cell) => {
-          html += "<td>" + cell + "</td>"
+          html = html + "<td>" + cell + "</td>"
         })
-        html += "</tr>"
+        html = html + "</tr>"
       })
-      html += "</tbody></table>"
+      html = html + "</tbody></table>"
       return html
     }
   )
