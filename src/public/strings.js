@@ -8,8 +8,6 @@ const APP_STRINGS = {
     system_welcome: "Hello, how can I help you today?",
     disclaimer: "Llama is AI and can make mistakes.",
     copied: "Copied to clipboard.",
-    error_empty:
-      "The AI model returned an empty message, check the context size or the Internet connection.",
   },
   es: {
     title: "Llama",
@@ -20,8 +18,6 @@ const APP_STRINGS = {
     system_welcome: "Hola, \xBFc\xF3mo puedo ayudarte hoy?",
     disclaimer: "Llama es una IA y puede cometer errores.",
     copied: "Copiado al portapapeles.",
-    error_empty:
-      "El modelo de IA devolvi\xF3 un mensaje vac\xEDo, verifique el tama\xF1o del contexto o la conexi\xF3n a Internet.",
   },
 }
 
