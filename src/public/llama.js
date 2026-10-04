@@ -184,6 +184,7 @@ const ask = async (prompt, hidePrompt) => {
 
     promptContent.addEventListener("keydown", handlePromptKeydown)
     promptContent.addEventListener("blur", handlePromptBlur)
+    promptContent.addEventListener("paste", handlePromptPaste)
 
     buttonEdit = createComponent("button", "action_button")
     buttonEdit.type = "button"
@@ -533,6 +534,27 @@ const handlePromptBlur = (event) => {
   // leaving the prompt ends the edition and discards the unsent changes
   event.currentTarget.contentEditable = "false"
   event.currentTarget.innerText = promptBeforeEdit
+}
+
+const handlePromptPaste = (event) => {
+  try {
+    // pasting only the plain text, so no html gets into the prompt
+    event.preventDefault()
+
+    const text = event.clipboardData.getData("text/plain")
+    const selection = window.getSelection()
+    const range = selection.getRangeAt(0)
+
+    // replacing the selected text (if any) and leaving the caret after it
+    range.deleteContents()
+    range.insertNode(document.createTextNode(text))
+    range.collapse(false)
+
+    selection.removeAllRanges()
+    selection.addRange(range)
+  } catch (err) {
+    //
+  }
 }
 
 const markdownToHTML = (markdown) => {
