@@ -9,6 +9,7 @@ let toastTimeout = null
 let promptBeforeEdit = ""
 let fetchController = null
 let isFocusEventHandled = false
+let reply = ""
 let lastReply = null
 let lastPrompt = ""
 
@@ -229,7 +230,7 @@ const ask = async (prompt, hidePrompt) => {
 
   document.title = t("title") + " - " + t("thinking")
 
-  let reply = ""
+  reply = ""
 
   try {
     fetchController = new AbortController()
