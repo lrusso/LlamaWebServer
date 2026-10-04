@@ -738,7 +738,7 @@ window.addEventListener("blur", () => {
   }
 })
 
-window.addEventListener("load", async () => {
+window.addEventListener("load", () => {
   if (window.top === window.self) {
     const pleaseWait = document.querySelector(".pleasewait")
     const container = document.getElementById("container")
