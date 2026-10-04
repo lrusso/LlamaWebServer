@@ -548,7 +548,7 @@ const markdownToHTML = (markdown) => {
   markdown = markdown.replace(
     /^(\|.+\|)\r?\n(\|[-:\s|]+\|)\r?\n((?:\|.+\|\r?\n?)+)/gm,
     (_match, headerRow, _separatorRow, bodyRows) => {
-      const parseRow = (row) => {
+      function parseRow(row) {
         return row
           .split("|")
           .slice(1, -1)
@@ -592,13 +592,13 @@ const markdownToHTML = (markdown) => {
     { regex: /`(.*?)`/g, replacement: '<div class="highlighted">$1</div>' },
     {
       regex: /^(#{1,6})\s*(.*)$/gm,
-      replacement: (_match, hashes, content) => {
+      replacement: function replacement(_match, hashes, content) {
         return "<h" + hashes.length + ">" + content + "</h" + hashes.length + ">"
       },
     },
     {
       regex: /^[\*\-\+] (.+)$/gm,
-      replacement: (_match, item) => {
+      replacement: function replacement(_match, item) {
         return "&#8226; " + item
       },
     },
