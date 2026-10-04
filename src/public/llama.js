@@ -912,9 +912,7 @@ window.addEventListener("load", () => {
     resizeInputText()
 
     if (!isMobileDevice()) {
-      setTimeout(() => {
-        inputTextbox.focus()
-      }, 200)
+      inputTextbox.focus()
     }
   }
 })
