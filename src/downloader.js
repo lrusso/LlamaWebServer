@@ -88,7 +88,7 @@ const downloadModel = async (url) => {
     deleteOldModels(modelName)
     console.log("The AI model file was saved in the 'model' folder.")
   } catch (error) {
-    console.error("Error during the downloading process: ", error)
+    console.log("Error during the downloading process: ", error)
   }
 }
 
