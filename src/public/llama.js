@@ -476,6 +476,9 @@ const editPrompt = () => {
 
   promptBeforeEdit = promptContent.innerText
   promptContent.contentEditable = "true"
+
+  // the prompt looks like the input textbox while it's being edited
+  promptContent.parentNode.classList.add("editing")
   promptContent.focus()
 
   // moving the caret to the end of the prompt
@@ -525,6 +528,7 @@ const handlePromptBlur = (event) => {
   // leaving the prompt ends the edition and discards the unsent changes
   event.currentTarget.contentEditable = "false"
   event.currentTarget.innerText = promptBeforeEdit
+  event.currentTarget.parentNode.classList.remove("editing")
 }
 
 const handlePromptPaste = (event) => {

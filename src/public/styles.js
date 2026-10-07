@@ -31,6 +31,7 @@ em{font-weight:bold}
 .prompt_container{margin-bottom:10px;margin-left:10px;text-align:right;word-break:break-word}
 .prompt_background{box-shadow:0 5px 5px rgba(0,0,0,0.1)}
 .prompt_content{display:block;outline:none}
+.prompt_background.editing{padding:9px}
 .edit_container{display:flex;justify-content:flex-end}
 .edit_container .action_button{margin-right:0}
 
@@ -82,6 +83,7 @@ em{color:#000}
 .action_button.active{color:#000}
 
 .prompt_background{background-color:#D9FDD3 !important}
+.prompt_background.editing{background-color:#FFF !important;border:1px solid rgba(206,206,206,0.4)}
 
 .reply{background-color:#FFF}
 
@@ -126,6 +128,7 @@ em{color:#FFF}
 .action_button.active{color:#FFF}
 
 .prompt_background{background-color:#005C4B !important;color:#FFF !important}
+.prompt_background.editing{background-color:#202C33 !important;border:1px solid rgba(206,206,206,0.1)}
 
 .reply{background-color:#202C33 !important;color:#FFF !important}
 
