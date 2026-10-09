@@ -33,7 +33,7 @@ em{font-weight:bold}
 .prompt_content{display:block;outline:none}
 .prompt_background.editing{padding:9px}
 .edit_container{display:flex;justify-content:flex-end}
-.edit_container .action_button{margin-right:0}
+.edit_container .action_button:last-child{margin-right:0}
 
 .reply{display:block;width:fit-content;margin-bottom:10px;word-break:break-word;box-shadow:0 5px 5px rgba(0,0,0,0.1)}
 

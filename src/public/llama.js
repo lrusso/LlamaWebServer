@@ -87,6 +87,39 @@ const showToast = (text) => {
   }, 2000)
 }
 
+const copyToClipboard = (element, button) => {
+  if (navigator.clipboard) {
+    // the clipboard api only exists in secure contexts (https or localhost)
+    navigator.clipboard.writeText(element.innerText).then(() => {
+      showToast(t("copied"))
+    })
+  } else {
+    // legacy copy for the insecure contexts (plain http), where the clipboard
+    // api doesn't exist. execCommand copies the current selection, so the
+    // element is selected first and unselected afterwards
+    const selection = window.getSelection()
+    const range = document.createRange()
+
+    range.selectNodeContents(element)
+    selection.removeAllRanges()
+    selection.addRange(range)
+
+    try {
+      if (document.execCommand("copy")) {
+        showToast(t("copied"))
+      }
+    } catch (err) {
+      //
+    }
+
+    selection.removeAllRanges()
+  }
+
+  if (!isMobileDevice()) {
+    button.blur()
+  }
+}
+
 const patchDOM = (target, newHTML) => {
   const temp = document.createElement("div")
   temp.innerHTML = newHTML
@@ -169,31 +202,42 @@ const ask = async (prompt, hidePrompt) => {
 
   lastPrompt = prompt
 
-  let buttonEdit = document.querySelector(".edit_container button")
+  let buttonEdit = document.querySelector(".edit_button")
 
   if (!hidePrompt) {
     const promptContainer = createComponent("div", "prompt_container")
     const promptBackground = createComponent("span", "prompt_background")
     const promptContent = createComponent("div", "prompt_content", "", prompt)
     const editContainer = createComponent("div", "edit_container")
+    const buttonCopy = createComponent("button", "action_button")
 
-    // only the last prompt can be edited
+    // only the last prompt can be edited, the previous ones only keep their
+    // copy button
     if (buttonEdit) {
-      buttonEdit.parentNode.remove()
+      buttonEdit.remove()
     }
 
     promptContent.addEventListener("keydown", handlePromptKeydown)
     promptContent.addEventListener("blur", handlePromptBlur)
     promptContent.addEventListener("paste", handlePromptPaste)
 
-    buttonEdit = createComponent("button", "action_button")
+    buttonEdit = createComponent("button", "action_button edit_button")
     buttonEdit.type = "button"
     buttonEdit.appendChild(ICON_EDIT())
     buttonEdit.addEventListener("click", editPrompt)
 
+    buttonCopy.type = "button"
+    buttonCopy.appendChild(ICON_COPY())
+    buttonCopy.addEventListener("click", () => {
+      copyToClipboard(promptContent, buttonCopy)
+    })
+    buttonCopy.children[0].classList.add("active")
+    buttonCopy.style.cursor = "pointer"
+
     promptBackground.appendChild(promptContent)
     promptContainer.appendChild(promptBackground)
     editContainer.appendChild(buttonEdit)
+    editContainer.appendChild(buttonCopy)
     content.appendChild(promptContainer)
     content.appendChild(editContainer)
 
@@ -320,7 +364,7 @@ const handleReply = (content, reply, promptResult, prompt) => {
   const buttonNext = createComponent("button", "action_button")
   const buttonRegenerate = createComponent("button", "action_button")
   const buttonCopy = createComponent("button", "action_button")
-  const buttonEdit = document.querySelector(".edit_container button")
+  const buttonEdit = document.querySelector(".edit_button")
 
   buttonNext.type = "button"
   while (buttonNext.firstChild) {
@@ -403,36 +447,7 @@ const handleReply = (content, reply, promptResult, prompt) => {
   buttonCopy.type = "button"
   buttonCopy.appendChild(ICON_COPY())
   buttonCopy.addEventListener("click", () => {
-    if (navigator.clipboard) {
-      // the clipboard api only exists in secure contexts (https or localhost)
-      navigator.clipboard.writeText(promptResult.innerText).then(() => {
-        showToast(t("copied"))
-      })
-    } else {
-      // legacy copy for the insecure contexts (plain http), where the clipboard
-      // api doesn't exist. execCommand copies the current selection, so the
-      // reply is selected first and unselected afterwards
-      const selection = window.getSelection()
-      const range = document.createRange()
-
-      range.selectNodeContents(promptResult)
-      selection.removeAllRanges()
-      selection.addRange(range)
-
-      try {
-        if (document.execCommand("copy")) {
-          showToast(t("copied"))
-        }
-      } catch (err) {
-        //
-      }
-
-      selection.removeAllRanges()
-    }
-
-    if (!isMobileDevice()) {
-      buttonCopy.blur()
-    }
+    copyToClipboard(promptResult, buttonCopy)
   })
 
   if (replies.length === 1) {
