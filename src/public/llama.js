@@ -250,6 +250,7 @@ const ask = async (prompt, hidePrompt) => {
     }
 
     promptContent.addEventListener("keydown", handlePromptKeydown)
+    promptContent.addEventListener("input", handlePromptInput)
     promptContent.addEventListener("paste", handlePromptPaste)
 
     buttonEdit = createComponent("button", "action_button edit_button")
@@ -521,7 +522,7 @@ const editPrompt = () => {
   const selection = window.getSelection()
   const buttonEdit = document.querySelector(".edit_button")
   const buttonCancel = createComponent("button", "action_button active")
-  const buttonUpdate = createComponent("button", "action_button active")
+  const buttonUpdate = createComponent("button", "action_button")
 
   buttonCancel.type = "button"
   buttonCancel.appendChild(ICON_CANCEL())
@@ -529,8 +530,8 @@ const editPrompt = () => {
   buttonCancel.addEventListener("click", endPromptEdit)
 
   buttonUpdate.type = "button"
+  buttonUpdate.disabled = true
   buttonUpdate.appendChild(ICON_UPDATE())
-  buttonUpdate.children[0].classList.add("active")
   buttonUpdate.addEventListener("click", () => {
     updatePrompt(promptContent)
   })
@@ -615,6 +616,16 @@ const endPromptEdit = () => {
   buttonEdit.nextSibling.style.display = ""
 }
 
+const handlePromptInput = (event) => {
+  const buttonUpdate = document.querySelector(".update").parentNode
+  const isChanged = event.currentTarget.innerText.trim() !== promptBeforeEdit
+
+  // the update button is only enabled while the prompt is changed
+  buttonUpdate.classList.toggle("active", isChanged)
+  buttonUpdate.children[0].classList.toggle("active", isChanged)
+  buttonUpdate.disabled = !isChanged
+}
+
 const handlePromptPaste = (event) => {
   try {
     // pasting only the plain text, so no html gets into the prompt
@@ -631,6 +642,9 @@ const handlePromptPaste = (event) => {
 
     selection.removeAllRanges()
     selection.addRange(range)
+
+    // the pasted text doesn't fire the input event, since it's inserted by hand
+    handlePromptInput(event)
   } catch (err) {
     //
   }
