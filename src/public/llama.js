@@ -58,6 +58,33 @@ const ICON_EDIT = () => {
   return svg
 }
 
+const ICON_CANCEL = () => {
+  const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg")
+  svg.setAttribute("class", "cancel")
+  svg.setAttribute("width", "24")
+  svg.setAttribute("height", "24")
+  svg.setAttribute("viewBox", "0 0 24 24")
+  const path = document.createElementNS("http://www.w3.org/2000/svg", "path")
+  path.setAttribute(
+    "d",
+    "M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"
+  )
+  svg.appendChild(path)
+  return svg
+}
+
+const ICON_UPDATE = () => {
+  const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg")
+  svg.setAttribute("class", "update")
+  svg.setAttribute("width", "24")
+  svg.setAttribute("height", "24")
+  svg.setAttribute("viewBox", "0 0 24 24")
+  const path = document.createElementNS("http://www.w3.org/2000/svg", "path")
+  path.setAttribute("d", "M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z")
+  svg.appendChild(path)
+  return svg
+}
+
 const createComponent = (tag, className, innerHTML, innerText) => {
   const element = document.createElement(tag)
   element.className = className || ""
@@ -211,6 +238,11 @@ const ask = async (prompt, hidePrompt) => {
     const editContainer = createComponent("div", "edit_container")
     const buttonCopy = createComponent("button", "action_button")
 
+    // a new prompt discards the unsent changes of the one being edited
+    if (document.querySelector(".prompt_background.editing")) {
+      endPromptEdit()
+    }
+
     // only the last prompt can be edited, the previous ones only keep their
     // copy button
     if (buttonEdit) {
@@ -218,7 +250,6 @@ const ask = async (prompt, hidePrompt) => {
     }
 
     promptContent.addEventListener("keydown", handlePromptKeydown)
-    promptContent.addEventListener("blur", handlePromptBlur)
     promptContent.addEventListener("paste", handlePromptPaste)
 
     buttonEdit = createComponent("button", "action_button edit_button")
@@ -488,6 +519,28 @@ const editPrompt = () => {
   const prompts = document.querySelectorAll(".prompt_content")
   const promptContent = prompts[prompts.length - 1]
   const selection = window.getSelection()
+  const buttonEdit = document.querySelector(".edit_button")
+  const buttonCancel = createComponent("button", "action_button active")
+  const buttonUpdate = createComponent("button", "action_button active")
+
+  buttonCancel.type = "button"
+  buttonCancel.appendChild(ICON_CANCEL())
+  buttonCancel.children[0].classList.add("active")
+  buttonCancel.addEventListener("click", endPromptEdit)
+
+  buttonUpdate.type = "button"
+  buttonUpdate.appendChild(ICON_UPDATE())
+  buttonUpdate.children[0].classList.add("active")
+  buttonUpdate.addEventListener("click", () => {
+    updatePrompt(promptContent)
+  })
+
+  // the pencil and copy buttons are replaced by the cancel and update buttons
+  // at once, so the row of buttons never collapses in between
+  buttonEdit.style.display = "none"
+  buttonEdit.nextSibling.style.display = "none"
+  buttonEdit.parentNode.appendChild(buttonCancel)
+  buttonEdit.parentNode.appendChild(buttonUpdate)
 
   promptBeforeEdit = promptContent.innerText
   promptContent.contentEditable = "true"
@@ -505,45 +558,61 @@ const handlePromptKeydown = (event) => {
   const promptContent = event.currentTarget
 
   if (event.key === "Escape") {
-    promptContent.blur()
+    endPromptEdit()
   }
 
   if (event.key === "Enter") {
     event.preventDefault()
-
-    const newPrompt = promptContent.innerText.trim()
-
-    if (rendering || newPrompt === "" || newPrompt === promptBeforeEdit) {
-      promptContent.blur()
-      return
-    }
-
-    const actionsContainer = document.querySelector(".actions_container")
-
-    promptBeforeEdit = newPrompt
-    promptContent.blur()
-
-    if (actionsContainer) {
-      actionsContainer.remove()
-    }
-
-    // replacing the last prompt and removing the last reply
-    chatHistory.pop()
-    chatHistory.pop()
-    replies.splice(0, replies.length)
-    ask(newPrompt, true)
-
-    if (!isMobileDevice()) {
-      document.querySelector(".input_textbox").focus()
-    }
+    updatePrompt(promptContent)
   }
 }
 
-const handlePromptBlur = (event) => {
-  // leaving the prompt ends the edition and discards the unsent changes
-  event.currentTarget.contentEditable = "false"
-  event.currentTarget.innerText = promptBeforeEdit
-  event.currentTarget.parentNode.classList.remove("editing")
+const updatePrompt = (promptContent) => {
+  const newPrompt = promptContent.innerText.trim()
+
+  if (rendering || newPrompt === "" || newPrompt === promptBeforeEdit) {
+    endPromptEdit()
+    return
+  }
+
+  const actionsContainer = document.querySelector(".actions_container")
+
+  promptBeforeEdit = newPrompt
+  endPromptEdit()
+
+  if (actionsContainer) {
+    actionsContainer.remove()
+  }
+
+  // replacing the last prompt and removing the last reply
+  chatHistory.pop()
+  chatHistory.pop()
+  replies.splice(0, replies.length)
+  ask(newPrompt, true)
+
+  if (!isMobileDevice()) {
+    document.querySelector(".input_textbox").focus()
+  }
+}
+
+const endPromptEdit = () => {
+  const prompts = document.querySelectorAll(".prompt_content")
+  const promptContent = prompts[prompts.length - 1]
+  const buttonEdit = document.querySelector(".edit_button")
+  const editContainer = buttonEdit.parentNode
+
+  // ending the edition discards the unsent changes
+  promptContent.contentEditable = "false"
+  promptContent.innerText = promptBeforeEdit
+  promptContent.parentNode.classList.remove("editing")
+  promptContent.blur()
+
+  // the cancel and update buttons are replaced by the pencil and copy buttons
+  while (editContainer.children.length > 2) {
+    editContainer.removeChild(editContainer.lastChild)
+  }
+  buttonEdit.style.display = ""
+  buttonEdit.nextSibling.style.display = ""
 }
 
 const handlePromptPaste = (event) => {

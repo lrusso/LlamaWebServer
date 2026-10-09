@@ -46,7 +46,7 @@ hr{border:none;margin:10px 0}
 
 .pointer{line-height:16px;display:inline-block;border-radius:6px;width:12px;height:12px}
 
-.regenerate,.copy,.edit{display:block}
+.regenerate,.copy,.edit,.cancel,.update{display:block}
 
 .disclaimer{flex:1;text-align:center;margin-bottom:10px;margin-left:10px;margin-right:10px}
 
@@ -92,8 +92,8 @@ em{color:#000}
 .pointer{background-color:#000;animation:processing_light 1s ease-in-out infinite}
 @keyframes processing_light{0%{box-shadow:0 0 0 0 #000}50%{box-shadow:0 0 0 2.4px #000}100%{box-shadow:0 0 0 0 #000}}
 
-.regenerate,.copy,.edit{fill:#C8C8C8}
-.regenerate.active,.copy.active,.edit.active{fill:#000}
+.regenerate,.copy,.edit,.cancel,.update{fill:#C8C8C8}
+.regenerate.active,.copy.active,.edit.active,.cancel.active,.update.active{fill:#000}
 
 .disclaimer{color:gray}
 
@@ -137,8 +137,8 @@ em{color:#FFF}
 .pointer{background-color:#FFF;animation:processing_dark 1s ease-in-out infinite}
 @keyframes processing_dark{0%{box-shadow:0 0 0 0 #FFF}50%{box-shadow:0 0 0 2.4px #FFF}100%{box-shadow:0 0 0 0 #FFF}}
 
-.regenerate,.copy,.edit{fill:rgba(206,206,206,0.2)}
-.regenerate.active,.copy.active,.edit.active{fill:#FFF}
+.regenerate,.copy,.edit,.cancel,.update{fill:rgba(206,206,206,0.2)}
+.regenerate.active,.copy.active,.edit.active,.cancel.active,.update.active{fill:#FFF}
 
 .disclaimer{color:#9a9a9a}
 
