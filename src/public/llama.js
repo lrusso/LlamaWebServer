@@ -879,7 +879,7 @@ document.addEventListener("gesturestart", (event) => {
 // workaround for ios. safari ignores touch-action in fixed elements, so
 // the double tap zoom is blocked here.
 document.addEventListener("touchend", (event) => {
-  if (isUsingiOS() && event.timeStamp - lastTouchEnd <= 300) {
+  if (isUsingiOS() && event.timeStamp - lastTouchEnd <= 200) {
     event.preventDefault()
   }
   lastTouchEnd = event.timeStamp
