@@ -438,8 +438,7 @@ const handleReply = (content, reply, promptResult, prompt) => {
     const resultText = newReply.replace(/\</g, "&#60;")
     promptResult.innerHTML = markdownToHTML(resultText)
 
-    const selection = window.getSelection()
-    selection.removeAllRanges()
+    inputTextbox.focus()
   })
 
   buttonRegenerate.type = "button"
@@ -471,9 +470,7 @@ const handleReply = (content, reply, promptResult, prompt) => {
     chatHistory.pop()
     ask(prompt, true)
 
-    if (!isMobileDevice()) {
-      inputTextbox.focus()
-    }
+    inputTextbox.focus()
   })
 
   buttonCopy.type = "button"
@@ -954,10 +951,6 @@ window.addEventListener("load", () => {
         event.preventDefault()
         try {
           document.querySelectorAll(".actions_container button")[0].click()
-          setTimeout(() => {
-            inputTextbox.blur()
-            inputTextbox.focus()
-          }, 25)
         } catch (err) {
           //
         }
@@ -967,10 +960,6 @@ window.addEventListener("load", () => {
         event.preventDefault()
         try {
           document.querySelectorAll(".actions_container button")[1].click()
-          setTimeout(() => {
-            inputTextbox.blur()
-            inputTextbox.focus()
-          }, 25)
         } catch (err) {
           //
         }
@@ -980,10 +969,6 @@ window.addEventListener("load", () => {
         event.preventDefault()
         try {
           document.querySelectorAll(".actions_container button")[2].click()
-          setTimeout(() => {
-            inputTextbox.blur()
-            inputTextbox.focus()
-          }, 25)
         } catch (err) {
           //
         }
