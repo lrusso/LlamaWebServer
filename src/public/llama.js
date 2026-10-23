@@ -262,6 +262,7 @@ const ask = async (prompt, hidePrompt) => {
     buttonCopy.appendChild(ICON_COPY())
     buttonCopy.addEventListener("click", () => {
       copyToClipboard(promptContent, buttonCopy)
+      inputTextbox.focus()
     })
     buttonCopy.children[0].classList.add("active")
     buttonCopy.style.cursor = "pointer"
@@ -477,6 +478,7 @@ const handleReply = (content, reply, promptResult, prompt) => {
   buttonCopy.appendChild(ICON_COPY())
   buttonCopy.addEventListener("click", () => {
     copyToClipboard(promptResult, buttonCopy)
+    inputTextbox.focus()
   })
 
   if (replies.length === 1) {
