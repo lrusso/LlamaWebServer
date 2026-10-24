@@ -589,10 +589,6 @@ const updatePrompt = (promptContent) => {
   chatHistory.pop()
   replies.splice(0, replies.length)
   ask(newPrompt, true)
-
-  if (!isMobileDevice()) {
-    document.querySelector(".input_textbox").focus()
-  }
 }
 
 const endPromptEdit = () => {
@@ -605,7 +601,7 @@ const endPromptEdit = () => {
   promptContent.contentEditable = "false"
   promptContent.innerText = promptBeforeEdit
   promptContent.parentNode.classList.remove("editing")
-  promptContent.blur()
+  document.querySelector(".input_textbox").focus()
 
   // the cancel and update buttons are replaced by the pencil and copy buttons
   while (editContainer.children.length > 2) {
