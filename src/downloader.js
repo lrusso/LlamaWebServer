@@ -9,25 +9,6 @@ const fileExists = (filePath) => {
   return fs.existsSync(filePath)
 }
 
-const deleteOldModels = (newModelName) => {
-  try {
-    const path = __dirname + "/model"
-    const files = fs.readdirSync(path)
-
-    for (const file of files) {
-      if (file.toLowerCase().endsWith(".gguf") && file !== newModelName) {
-        try {
-          fs.unlinkSync(path + "/" + file)
-        } catch (err) {
-          //
-        }
-      }
-    }
-  } catch (err) {
-    //
-  }
-}
-
 const getFilenameFromUrl = (url) => {
   const segments = url.split("/")
   const lastSegment = segments.pop()
@@ -100,7 +81,6 @@ const downloadModel = async (url) => {
     )
 
     process.stdout.write("\n")
-    deleteOldModels(modelName)
     console.log("The AI model file was saved in the 'model' folder.")
   } catch (error) {
     console.log("Error during the downloading process: ", error)
