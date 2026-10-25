@@ -8,6 +8,12 @@ const APP_STRINGS = {
     system_welcome: "Hello, how can I help you today?",
     disclaimer: "Llama is AI and can make mistakes.",
     copied: "Copied to clipboard.",
+    next_reply: "Next reply",
+    regenerate: "Regenerate",
+    copy: "Copy",
+    edit: "Edit",
+    cancel: "Cancel",
+    update: "Update",
   },
   es: {
     title: "Llama",
@@ -18,6 +24,12 @@ const APP_STRINGS = {
     system_welcome: "Hola, \xBFc\xF3mo puedo ayudarte hoy?",
     disclaimer: "Llama es una IA y puede cometer errores.",
     copied: "Copiado al portapapeles.",
+    next_reply: "Siguiente respuesta",
+    regenerate: "Regenerar",
+    copy: "Copiar",
+    edit: "Editar",
+    cancel: "Cancelar",
+    update: "Actualizar",
   },
 }
 

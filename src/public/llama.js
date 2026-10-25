@@ -255,10 +255,12 @@ const ask = async (prompt, hidePrompt) => {
 
     buttonEdit = createComponent("button", "action_button edit_button")
     buttonEdit.type = "button"
+    buttonEdit.title = t("edit")
     buttonEdit.appendChild(ICON_EDIT())
     buttonEdit.addEventListener("click", editPrompt)
 
     buttonCopy.type = "button"
+    buttonCopy.title = t("copy")
     buttonCopy.appendChild(ICON_COPY())
     buttonCopy.addEventListener("click", () => {
       copyToClipboard(promptContent, buttonCopy)
@@ -402,6 +404,7 @@ const handleReply = (content, reply, promptResult, prompt) => {
   const buttonEdit = document.querySelector(".edit_button")
 
   buttonNext.type = "button"
+  buttonNext.title = t("next_reply")
   while (buttonNext.firstChild) {
     buttonNext.removeChild(buttonNext.firstChild)
   }
@@ -445,6 +448,7 @@ const handleReply = (content, reply, promptResult, prompt) => {
   })
 
   buttonRegenerate.type = "button"
+  buttonRegenerate.title = t("regenerate")
   buttonRegenerate.appendChild(ICON_REGENERATE())
   buttonRegenerate.addEventListener("click", () => {
     if (rendering) {
@@ -477,6 +481,7 @@ const handleReply = (content, reply, promptResult, prompt) => {
   })
 
   buttonCopy.type = "button"
+  buttonCopy.title = t("copy")
   buttonCopy.appendChild(ICON_COPY())
   buttonCopy.addEventListener("click", () => {
     copyToClipboard(promptResult, buttonCopy)
@@ -526,11 +531,13 @@ const editPrompt = () => {
   const buttonUpdate = createComponent("button", "action_button")
 
   buttonCancel.type = "button"
+  buttonCancel.title = t("cancel")
   buttonCancel.appendChild(ICON_CANCEL())
   buttonCancel.children[0].classList.add("active")
   buttonCancel.addEventListener("click", endPromptEdit)
 
   buttonUpdate.type = "button"
+  buttonUpdate.title = t("update")
   buttonUpdate.disabled = true
   buttonUpdate.appendChild(ICON_UPDATE())
   buttonUpdate.addEventListener("click", () => {
@@ -651,11 +658,15 @@ const handlePromptPaste = (event) => {
 const markdownToHTML = (markdown) => {
   const codeBlocks = []
 
-  // storing and removing all the code blocks
-  markdown = markdown.replace(/\`\`\`.*?\n([\s\S]*?)\`\`\`/g, (_match, group) => {
-    codeBlocks.push(group)
-    return "%%CODELLAMABLOCK" + (codeBlocks.length - 1) + "%%"
-  })
+  // storing and removing all the code blocks (a block that is still being
+  // written, without its closing fence yet, goes until the end of the reply)
+  markdown = markdown.replace(
+    /\`\`\`[^\n]*(?:\n|$)([\s\S]*?)(?:\`\`\`|$)/g,
+    (_match, group) => {
+      codeBlocks.push(group)
+      return "%%CODELLAMABLOCK" + (codeBlocks.length - 1) + "%%"
+    }
+  )
 
   // storing and removing all the inline code (so it's not touched by the
   // emphasis rules below, e.g. __init__ becoming <strong>init</strong>)
@@ -720,15 +731,20 @@ const markdownToHTML = (markdown) => {
   // setting the markdown rules
   let rules = [
     { regex: /^---$\n?/gm, replacement: "<hr>" },
-    // before the emphasis rules, so the asterisk of a bullet isn't an <em>
+    // before the emphasis rules, so the asterisk of a bullet isn't an <em>.
+    // the indented bullets (sublists) keep their indentation
     {
-      regex: /^[\*\-\+] (.+)$/gm,
-      replacement: function replacement(_match, item) {
-        return "&#8226; " + item
+      regex: /^([ \t]*)[\*\-\+] (.+)$/gm,
+      replacement: function replacement(_match, indent, item) {
+        return indent + "&#8226; " + item
       },
     },
-    { regex: /\*\*(.*?)\*\*/g, replacement: "<strong>$1</strong>" },
-    { regex: /\*(.*?)\*/g, replacement: "<em>$1</em>" },
+    // the asterisks must be next to the text, so 5 * 3 * 2 isn't an emphasis
+    {
+      regex: /\*\*([^\s*](?:.*?[^\s*])?)\*\*/g,
+      replacement: "<strong>$1</strong>",
+    },
+    { regex: /\*([^\s*](?:.*?[^\s*])?)\*/g, replacement: "<em>$1</em>" },
     // the underscores inside a word (e.g. my_var_name) are not an emphasis
     { regex: /\b__(.*?)__\b/g, replacement: "<strong>$1</strong>" },
     { regex: /\b_(.*?)_\b/g, replacement: "<em>$1</em>" },
