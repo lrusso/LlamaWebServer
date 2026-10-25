@@ -9,7 +9,7 @@ em{font-weight:bold}
 .wallpaper,.footer_container::before{background-image:url(background.png);background-size:412px 749px;background-repeat:repeat;background-position:left bottom}
 
 .header_container{position:fixed;left:0;right:0;top:0;height:64px;z-index:990;display:flex;align-items:center}
-.header_image{float:left;margin-left:15px;margin-right:15px;border-radius:20px;width:40px;height:40px;background-image:url(favIcon512x512.png);background-size:40px;background-position:center center;background-repeat:no-repeat}
+.header_image{float:left;margin-left:15px;margin-right:15px;border-radius:20px;width:40px;height:40px;background-image:url(favIcon192x192.png);background-size:40px;background-position:center center;background-repeat:no-repeat}
 .header_name{float:left}
 
 .content{display:block;position:fixed;top:65px;left:0;right:0;bottom:0;padding-left:25px;padding-right:25px;padding-top:10px;overflow-y:auto;overflow-x:hidden;overscroll-behavior:none;overflow-anchor:none}
