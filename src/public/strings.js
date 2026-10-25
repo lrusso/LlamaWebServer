@@ -20,7 +20,7 @@ const APP_STRINGS = {
     thinking: "Pensando...",
     writing: "Escribiendo...",
     placeholder: "Preg\xFAntale a Llama",
-    system_prompt: "T\xFA eres un \xFAtil asistente AI.",
+    system_prompt: "Eres un asistente de IA \xFAtil.",
     system_welcome: "Hola, \xBFc\xF3mo puedo ayudarte hoy?",
     disclaimer: "Llama es una IA y puede cometer errores.",
     copied: "Copiado al portapapeles.",
