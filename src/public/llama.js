@@ -117,9 +117,15 @@ const showToast = (text) => {
 const copyToClipboard = (element, button) => {
   if (navigator.clipboard) {
     // the clipboard api only exists in secure contexts (https or localhost)
-    navigator.clipboard.writeText(element.innerText).then(() => {
-      showToast(t("copied"))
-    })
+    navigator.clipboard.writeText(element.innerText).then(
+      () => {
+        showToast(t("copied"))
+      },
+      (_err) => {
+        // e.g. the browser didn't allow the copy
+        showToast(t("copy_error"))
+      }
+    )
   } else {
     // legacy copy for the insecure contexts (plain http), where the clipboard
     // api doesn't exist. execCommand copies the current selection, so the
@@ -134,9 +140,11 @@ const copyToClipboard = (element, button) => {
     try {
       if (document.execCommand("copy")) {
         showToast(t("copied"))
+      } else {
+        showToast(t("copy_error"))
       }
     } catch (err) {
-      //
+      showToast(t("copy_error"))
     }
 
     selection.removeAllRanges()
