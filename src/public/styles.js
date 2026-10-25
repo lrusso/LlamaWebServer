@@ -129,7 +129,7 @@ em{color:#FFF}
 .input_textbox::placeholder{color:rgba(206,206,206,0.25);opacity:1}
 .input_send{fill:rgba(206,206,206,0.2)}
 .input_send.active{fill:#FFF}
-.input_send:focus{outline-color:#FFF}
+.input_send:focus{outline-color:#858DA2}
 
 .action_button{background-color:#202C33;color:rgba(206,206,206,0.2)}
 .action_button:focus{outline-color:#858DA2}
