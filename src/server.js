@@ -297,7 +297,7 @@ const handleRequest = (req, res) => {
     return
   }
 
-  if (req.url === "/ask") {
+  if (req.url === "/ask" && req.method === "POST") {
     askLlama(req, res)
     return
   }
