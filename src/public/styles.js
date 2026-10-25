@@ -156,6 +156,8 @@ em{color:#FFF}
 a{color:#699cce}
 
 hr{border-top:1px solid white}
+
+blockquote{border-left-color:white}
 `
 
 const STYLES_LIGHT_MODE = BASE_STYLES + COLORS_LIGHT_MODE
