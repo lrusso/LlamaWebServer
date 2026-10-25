@@ -507,6 +507,14 @@ server.on("error", async (err) => {
     console.log(
       "Please close the application using that port or choose a different port.\n"
     )
+  } else if (err.code === "EACCES") {
+    // on linux, the ports below 1024 (such as 80) require administrator privileges
+    console.log(
+      "\nError: Port " + serverPort + " requires administrator privileges.\n"
+    )
+    console.log(
+      "Please run the server as administrator or choose a port above 1023.\n"
+    )
   } else {
     console.log(err)
   }
