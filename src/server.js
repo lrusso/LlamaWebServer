@@ -92,12 +92,28 @@ const askLlama = async (req, res) => {
       return
     }
 
+    // the reply stops being generated when the user closes or reloads the page
+    const promptController = new AbortController()
+    res.on("close", () => promptController.abort())
+
     let body = ""
+
+    // decoding as utf-8, so a character split between two chunks stays whole
+    req.setEncoding("utf8")
     req.on("data", (chunk) => {
       body = body + chunk.toString()
     })
 
-    await new Promise((resolve) => req.on("end", resolve)) // waiting for all data to be received
+    // waiting for all data to be received, or for the user to close the window
+    await new Promise((resolve) => {
+      req.on("end", resolve)
+      req.on("close", resolve)
+    })
+
+    // the user closed the window before the whole chat was received
+    if (!req.complete) {
+      return
+    }
 
     let context
     let session
@@ -134,6 +150,8 @@ const askLlama = async (req, res) => {
         temperature: 0.8,
         topP: 0.9,
         topK: 40,
+        signal: promptController.signal,
+        stopOnAbortSignal: true,
         async onResponseChunk({ segmentType, text }) {
           if (segmentType || !text) {
             return
@@ -146,13 +164,13 @@ const askLlama = async (req, res) => {
             const toFind = reply.substring(reply.length - 30, reply.length)
             const repeatedText = reply.split(toFind).length - 1
             if (repeatedText > 10) {
-              await safeDispose(session, context)
+              promptController.abort()
             }
           }
         },
       })
     } catch (err) {
-      if (err.message !== "Object is disposed") {
+      if (err.message !== "Object is disposed" && !promptController.signal.aborted) {
         console.log("ERROR: " + err.message)
       }
     } finally {

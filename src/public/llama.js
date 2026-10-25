@@ -339,7 +339,8 @@ const ask = async (prompt, hidePrompt) => {
                   resolve()
                   return
                 }
-                reply = reply + decoder.decode(value)
+                // streaming, so a character split between two chunks isn't broken
+                reply = reply + decoder.decode(value, { stream: true })
                 patchDOM(
                   lastReply,
                   markdownToHTML(reply.replace(/\</g, "&#60;")) +
