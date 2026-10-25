@@ -23,7 +23,7 @@ em{font-weight:bold}
 .input_send{display:block;margin-left:10px;margin-bottom:2px;cursor:default;padding:0;border:0;background:none;outline:0 solid}
 .input_send svg{display:block}
 .input_send.active{cursor:pointer}
-.input_send:focus{outline-width:2px;outline-style:solid}
+.input_send:focus{outline-width:2px;outline-style:solid;border-radius:2px}
 .input_send:disabled{pointer-events:none}
 
 .actions_container,.copy_container{display:flex;margin-bottom:3px}
