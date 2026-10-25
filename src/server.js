@@ -75,11 +75,17 @@ const showServerError = (err) => {
 }
 
 const getNetworkAddresses = () => {
-  // the ipv4 addresses of this computer in its local networks (e.g. wi-fi)
-  return Object.values(os.networkInterfaces())
-    .flat()
-    .filter((address) => address.family === "IPv4" && !address.internal)
-    .map((address) => address.address)
+  try {
+    // the ipv4 addresses of this computer in its local networks (e.g. wi-fi)
+    return Object.values(os.networkInterfaces())
+      .flat()
+      .filter((address) => address.family === "IPv4" && !address.internal)
+      .map((address) => address.address)
+  } catch (err) {
+    // some systems don't allow reading the network interfaces (e.g. android), so
+    // only localhost is shown
+    return []
+  }
 }
 
 // the port is checked before loading the model, so a port that can't be used is
