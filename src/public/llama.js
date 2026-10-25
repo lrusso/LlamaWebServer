@@ -737,14 +737,16 @@ const markdownToHTML = (markdown) => {
     return "%%CODELLAMALINK" + (links.length - 1) + "%%" + trailing
   })
 
-  // parsing markdown tables
+  // parsing markdown tables (the rows that are still being written, without
+  // their last "|" yet, are already part of the table)
   markdown = markdown.replace(
-    /^(\|.+\|)\r?\n(\|[-:\s|]+\|)\r?\n((?:\|.+\|\r?\n?)+)/gm,
+    /^(\|.+\|)\r?\n(\|[-:\s|]+\|)\r?\n((?:\|.*(?:\r?\n|$))+)/gm,
     (_match, headerRow, _separatorRow, bodyRows) => {
       function parseRow(row) {
+        // a row still being written (without its last "|") keeps its last cell
         return row
           .split("|")
-          .slice(1, -1)
+          .slice(1, /\|\s*$/.test(row) ? -1 : undefined)
           .map((cell) => {
             return cell.trim()
           })
