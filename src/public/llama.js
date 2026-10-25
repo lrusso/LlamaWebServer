@@ -723,12 +723,17 @@ const markdownToHTML = (markdown) => {
   )
 
   // storing and removing all the inline code (so it's not touched by the
-  // emphasis rules below, e.g. __init__ becoming <strong>init</strong>)
+  // emphasis rules below, e.g. __init__ becoming <strong>init</strong>). it can
+  // be opened with several backticks to have a backtick inside (e.g. ``a`b``),
+  // and it ends with exactly the same number of them
   const inlineCodes = []
-  markdown = markdown.replace(/`(.*?)`/g, (_match, code) => {
-    inlineCodes.push(code)
-    return "%%CODELLAMAINLINE" + (inlineCodes.length - 1) + "%%"
-  })
+  markdown = markdown.replace(
+    /(^|[^`])(`+)(?!`)([^\n]*?[^`\n])\2(?!`)/g,
+    (_match, before, _ticks, code) => {
+      inlineCodes.push(code)
+      return before + "%%CODELLAMAINLINE" + (inlineCodes.length - 1) + "%%"
+    }
+  )
 
   // storing and removing all the links (so their urls are not touched by the
   // emphasis rules below, e.g. an underscore inside a url becoming <em>)
