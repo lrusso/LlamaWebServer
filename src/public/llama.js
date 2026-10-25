@@ -940,11 +940,30 @@ const resizeInputText = () => {
   }
 }
 
-const sendPrompt = (prompt) => {
-  prompt = prompt.trim()
+const sendPrompt = () => {
+  const inputTextbox = document.querySelector(".input_textbox")
+  const inputSend = document.querySelector(".input_send")
+  const prompt = inputTextbox.value.trim()
+
+  // the prompt is sent with enter or with the send button, but not while a
+  // reply is being generated
+  if (rendering) {
+    return
+  }
+
   if (prompt) {
     replies.splice(0, replies.length)
     ask(prompt)
+  }
+
+  inputTextbox.value = ""
+  if (isMobileDevice()) {
+    inputTextbox.blur()
+  }
+  resizeInputText()
+  if (inputSend.classList.contains("active")) {
+    inputSend.classList.remove("active")
+    inputSend.disabled = true
   }
 }
 
@@ -1015,18 +1034,7 @@ window.addEventListener("load", () => {
       // enter sends the prompt and shift + enter adds a new line
       if (event.key === "Enter" && !event.shiftKey) {
         event.preventDefault()
-        if (!rendering) {
-          sendPrompt(inputTextbox.value)
-          inputTextbox.value = ""
-          if (isMobileDevice()) {
-            inputTextbox.blur()
-          }
-          resizeInputText()
-          if (inputSend.classList.contains("active")) {
-            inputSend.classList.remove("active")
-            inputSend.disabled = true
-          }
-        }
+        sendPrompt()
       }
     })
     inputTextbox.addEventListener("input", () => {
@@ -1040,20 +1048,7 @@ window.addEventListener("load", () => {
       }
     })
 
-    inputSend.addEventListener("click", () => {
-      if (!rendering) {
-        sendPrompt(inputTextbox.value)
-        inputTextbox.value = ""
-        if (isMobileDevice()) {
-          inputTextbox.blur()
-        }
-        resizeInputText()
-        if (inputSend.classList.contains("active")) {
-          inputSend.classList.remove("active")
-          inputSend.disabled = true
-        }
-      }
-    })
+    inputSend.addEventListener("click", sendPrompt)
 
     inputContainer.addEventListener("click", () => {
       inputTextbox.focus()
