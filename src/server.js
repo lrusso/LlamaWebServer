@@ -281,6 +281,13 @@ const escapeHTML = (text) => {
     .replace(/"/g, "&quot;")
 }
 
+const isNotModified = (req, filePath) => {
+  // the browser asks if the file changed since the date it already has (the
+  // dates of the headers have no milliseconds, so the file is compared without them)
+  const modified = Math.floor(fs.statSync(filePath).mtimeMs / 1000) * 1000
+  return modified <= Date.parse(req.headers["if-modified-since"])
+}
+
 const handleRequest = (req, res) => {
   const baseURL =
     (req.protocol ? req.protocol : "http") + "://" + req.headers.host + "/"
@@ -320,6 +327,13 @@ const handleRequest = (req, res) => {
   if (reqUrl.pathname === "/" && isFile(rootIndexPath)) {
     const filePath = rootIndexPath
     const fileSize = fs.statSync(filePath).size
+
+    // the browser already has this version of the file
+    if (isNotModified(req, filePath)) {
+      res.writeHead(304)
+      res.end()
+      return
+    }
     const readStream = fs.createReadStream(filePath)
 
     // a file that can't be read closes the connection instead of the server
@@ -329,6 +343,7 @@ const handleRequest = (req, res) => {
       "Content-Length": fileSize,
       "Content-Type": "text/html",
       "Accept-Ranges": "bytes",
+      "Last-Modified": fs.statSync(filePath).mtime.toUTCString(),
     })
     readStream.pipe(res)
     return
@@ -341,12 +356,20 @@ const handleRequest = (req, res) => {
   ) {
     const filePath = indexPath
     const fileSize = fs.statSync(filePath).size
+
+    // the browser already has this version of the file
+    if (isNotModified(req, filePath)) {
+      res.writeHead(304)
+      res.end()
+      return
+    }
     const readStream = fs.createReadStream(filePath)
     readStream.on("error", () => res.destroy())
     res.writeHead(200, {
       "Content-Length": fileSize,
       "Content-Type": "text/html",
       "Accept-Ranges": "bytes",
+      "Last-Modified": fs.statSync(filePath).mtime.toUTCString(),
     })
     readStream.pipe(res)
     return
@@ -440,6 +463,13 @@ const handleRequest = (req, res) => {
     const filePath = __dirname + decodeURIComponent(requestedFilename)
     const fileExtension = requestedFilename.split(".").pop().toLowerCase()
     const fileSize = fs.statSync(filePath).size
+
+    // the browser already has this version of the file
+    if (isNotModified(req, filePath)) {
+      res.writeHead(304)
+      res.end()
+      return
+    }
     // only the byte ranges are supported, a range in any other unit is ignored
     const fileRange =
       req.headers.range && req.headers.range.startsWith("bytes=")
@@ -915,12 +945,14 @@ const handleRequest = (req, res) => {
         "Content-Length": fileRangeEnd - fileRangeStart + 1,
         "Content-Type": getMimeType(),
         "Accept-Ranges": "bytes",
+        "Last-Modified": fs.statSync(filePath).mtime.toUTCString(),
       })
     } else {
       res.writeHead(200, {
         "Content-Length": fileSize,
         "Content-Type": getMimeType(),
         "Accept-Ranges": "bytes",
+        "Last-Modified": fs.statSync(filePath).mtime.toUTCString(),
       })
     }
 
