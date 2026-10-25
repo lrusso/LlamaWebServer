@@ -88,3 +88,6 @@ This is a web server that lets you run GGUF models locally, such as `Llama`, `Ge
 | Next reply        |  Command + 1   |     Ctrl + 1     |    Ctrl + 1     |
 | Regenerate        |  Command + 2   |     Ctrl + 2     |    Ctrl + 2     |
 | Copy to clipboard |  Command + 3   |     Ctrl + 3     |    Ctrl + 3     |
+| Send              |     Enter      |      Enter       |      Enter      |
+| New line          | Shift + Enter  |  Shift + Enter   |  Shift + Enter  |
+| Cancel editing    |     Escape     |      Escape      |     Escape      |
