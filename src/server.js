@@ -28,6 +28,14 @@ const CHUNK_SIZE_IN_MB = 10
 const args = process.argv?.slice(2)
 const serverPort = args.length > 0 ? args[0] : 80
 
+// a port that isn't a number (e.g. "abc" would be taken as the name of a socket
+// file) or that is out of range can't be used
+if (!/^\d+$/.test(serverPort) || serverPort < 1 || serverPort > 65535) {
+  console.log("\nError: Port " + serverPort + " is not valid.\n")
+  console.log("Please choose a port between 1 and 65535.\n")
+  process.exit(0)
+}
+
 const modelFiles = fs
   .readdirSync(__dirname + "/model/")
   .filter((file) => file.toLowerCase().endsWith(".gguf"))
@@ -320,9 +328,13 @@ const handleRequest = (req, res) => {
   }
 
   // only the chat page of this server can ask, so a page from another site
-  // can't make the model generate
-  if (req.url === "/ask" && req.method === "POST" && isSameOrigin(req)) {
-    askLlama(req, res)
+  // can't make the model generate and gets an empty reply
+  if (req.url === "/ask" && req.method === "POST") {
+    if (isSameOrigin(req)) {
+      askLlama(req, res)
+    } else {
+      res.end()
+    }
     return
   }
 
@@ -420,12 +432,27 @@ const handleRequest = (req, res) => {
   }
 
   if (isFolder(requestedPath)) {
+    let folderFiles = null
+    try {
+      folderFiles = fs.readdirSync(requestedPath)
+    } catch (err) {
+      // a folder that can't be read (e.g. without permissions) returns an error
+      // instead of closing the server
+      res.writeHead(500, {
+        "Content-Length": ERROR_INTERNAL_SERVER_ERROR.length,
+        "Content-Type": "text/plain",
+      })
+      res.write(ERROR_INTERNAL_SERVER_ERROR)
+      res.end()
+      return
+    }
+
     const folderName = decodeURIComponent(requestedFilename).substring(
       ROOT_FOLDER.length,
       decodeURIComponent(requestedFilename).length
     )
     const folderUp = folderName.substring(0, folderName.lastIndexOf("/"))
-    const folderContent = fs.readdirSync(requestedPath).sort((a, b) => {
+    const folderContent = folderFiles.sort((a, b) => {
       const aIsDir = isFolder(requestedPath + "/" + a),
         bIsDir = isFolder(requestedPath + "/" + b)
       if (aIsDir && !bIsDir) {
