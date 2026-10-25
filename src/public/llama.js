@@ -4,6 +4,7 @@ let customPrefix = ""
 let rendering = false
 let chatHistory = []
 let replies = []
+let renderedReplies = []
 let selectedReply = 0
 let toastTimeout = null
 let promptBeforeEdit = ""
@@ -471,8 +472,9 @@ const handleReply = (content, reply, promptResult, prompt) => {
 
     chatHistory.push({ type: "model", response: [newReply] })
 
-    const resultText = newReply.replace(/&/g, "&#38;").replace(/\</g, "&#60;")
-    promptResult.innerHTML = markdownToHTML(resultText)
+    // the reply was already converted while it was written, so switching to it
+    // doesn't apply the markdown rules again (slow on phones with long replies)
+    promptResult.innerHTML = renderedReplies[selectedReply]
 
     inputTextbox.focus()
   })
@@ -544,6 +546,9 @@ const handleReply = (content, reply, promptResult, prompt) => {
   if (pointerElement) {
     pointerElement.remove()
   }
+
+  // the converted reply is kept for the next reply button
+  renderedReplies.push(promptResult.innerHTML)
 
   rendering = false
 }
@@ -633,6 +638,7 @@ const updatePrompt = (promptContent) => {
   chatHistory.pop()
   chatHistory.pop()
   replies.splice(0, replies.length)
+  renderedReplies.splice(0, renderedReplies.length)
   ask(newPrompt, true)
 }
 
@@ -1014,6 +1020,7 @@ const sendPrompt = () => {
 
   if (prompt) {
     replies.splice(0, replies.length)
+    renderedReplies.splice(0, renderedReplies.length)
     ask(prompt)
   }
 
