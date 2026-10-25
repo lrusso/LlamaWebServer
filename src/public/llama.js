@@ -422,7 +422,12 @@ const handleReply = (content, reply, promptResult, prompt) => {
 
     chatHistory.pop()
     chatHistory.pop()
-    chatHistory.push({ type: "user", text: prompt })
+    let formattedPrompt = prompt
+    customPromptRegexRules.forEach((rule) => {
+      formattedPrompt = formattedPrompt.replace(rule.regex, rule.replacement)
+    })
+
+    chatHistory.push({ type: "user", text: customPrefix + formattedPrompt })
 
     if (!replies[selectedReply + 1]) {
       selectedReply = 0
