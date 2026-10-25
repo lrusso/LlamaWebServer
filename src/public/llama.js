@@ -562,7 +562,8 @@ const handlePromptKeydown = (event) => {
     endPromptEdit()
   }
 
-  if (event.key === "Enter") {
+  // enter updates the prompt and shift + enter adds a new line
+  if (event.key === "Enter" && !event.shiftKey) {
     event.preventDefault()
     updatePrompt(promptContent)
   }
@@ -908,12 +909,8 @@ window.addEventListener("load", () => {
     window.addEventListener("resize", resizeInputText)
     inputTextbox.addEventListener("input", resizeInputText)
     inputTextbox.addEventListener("keydown", (event) => {
-      if (event.key === "Enter") {
-        event.preventDefault()
-      }
-    })
-    inputTextbox.addEventListener("keyup", (event) => {
-      if (event.key === "Enter") {
+      // enter sends the prompt and shift + enter adds a new line
+      if (event.key === "Enter" && !event.shiftKey) {
         event.preventDefault()
         if (!rendering) {
           sendPrompt(inputTextbox.value)
