@@ -45,14 +45,52 @@ if (countGGUFFiles > 1) {
   process.exit(1)
 }
 
+const showServerError = (err) => {
+  if (err.code === "EADDRINUSE") {
+    console.log("\nError: Port " + serverPort + " is already in use.\n")
+    console.log(
+      "Please close the application using that port or choose a different port.\n"
+    )
+  } else if (err.code === "EACCES") {
+    // on linux, the ports below 1024 (such as 80) require administrator privileges
+    console.log(
+      "\nError: Port " + serverPort + " requires administrator privileges.\n"
+    )
+    console.log(
+      "Please run the server as administrator or choose a port above 1023.\n"
+    )
+  } else {
+    console.log(err)
+  }
+  process.exit(1)
+}
+
+// the port is checked before loading the model, so a port that can't be used is
+// reported right away and not after the model is loaded
+await new Promise((resolve) => {
+  const portCheck = http.createServer()
+  portCheck.on("error", showServerError)
+  portCheck.listen(serverPort, () => portCheck.close(resolve))
+})
+
 console.log("Loading AI model, please wait...")
 
 const llama = await getLlama({
   logLevel: LlamaLogLevel.error,
 })
-const model = await llama.loadModel({
-  modelPath: __dirname + "/model/" + modelFilename,
-})
+
+let model = null
+try {
+  model = await llama.loadModel({
+    modelPath: __dirname + "/model/" + modelFilename,
+  })
+} catch (err) {
+  // e.g. a damaged file, a model that this version of llama.cpp doesn't support
+  // or not enough memory
+  console.log("\nError: The " + modelFilename + " file couldn't be loaded.\n")
+  console.log(err.message + "\n")
+  process.exit(1)
+}
 const modelArchitecture = model.fileInfo.metadata?.general?.architecture
 const isGptOssModel = modelArchitecture === GgufArchitectureType.gptOss
 
@@ -595,25 +633,9 @@ const handleRequest = (req, res) => {
 const server = http.createServer(handleRequest)
 
 server.on("error", async (err) => {
-  if (err.code === "EADDRINUSE") {
-    console.log("\nError: Port " + serverPort + " is already in use.\n")
-    console.log(
-      "Please close the application using that port or choose a different port.\n"
-    )
-  } else if (err.code === "EACCES") {
-    // on linux, the ports below 1024 (such as 80) require administrator privileges
-    console.log(
-      "\nError: Port " + serverPort + " requires administrator privileges.\n"
-    )
-    console.log(
-      "Please run the server as administrator or choose a port above 1023.\n"
-    )
-  } else {
-    console.log(err)
-  }
   await model.dispose()
   await llama.dispose()
-  process.exit(1)
+  showServerError(err)
 })
 
 server.on("listening", () => {
