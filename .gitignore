@@ -3,6 +3,7 @@ node_modules
 
 # models
 *.gguf
+*.gguf.part
 
 # misc
 .DS_Store

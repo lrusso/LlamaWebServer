@@ -56,7 +56,11 @@ const downloadModel = async (url) => {
       return
     }
 
-    const fileStream = fs.createWriteStream(__dirname + "/model/" + modelName)
+    // the file is downloaded with a temporary name, so an interrupted download
+    // isn't taken as an already downloaded file
+    const fileStream = fs.createWriteStream(
+      __dirname + "/model/" + modelName + ".part"
+    )
 
     let downloadedSize = 0
     const reader = response.body.getReader()
@@ -68,7 +72,12 @@ const downloadModel = async (url) => {
         break
       }
 
-      fileStream.write(value)
+      // waiting when the disk is slower than the network, so the downloaded
+      // data doesn't pile up in memory
+      if (!fileStream.write(value)) {
+        await new Promise((resolve) => fileStream.once("drain", resolve))
+      }
+
       downloadedSize += value.length
       const percentage = ((downloadedSize / totalSize) * 100).toFixed(2)
 
@@ -83,7 +92,13 @@ const downloadModel = async (url) => {
       )
     }
 
-    fileStream.end()
+    // waiting for all the data to be written before giving the file its name
+    await new Promise((resolve) => fileStream.end(resolve))
+    fs.renameSync(
+      __dirname + "/model/" + modelName + ".part",
+      __dirname + "/model/" + modelName
+    )
+
     process.stdout.write("\n")
     deleteOldModels(modelName)
     console.log("The AI model file was saved in the 'model' folder.")
@@ -93,7 +108,7 @@ const downloadModel = async (url) => {
 }
 
 const args = process.argv?.slice(2)
-const requestedModel = args[0].toLocaleLowerCase()
+const requestedModel = args.length > 0 ? args[0].toLocaleLowerCase() : ""
 
 const MODEL_Q4_URL =
   "https://huggingface.co/unsloth/gemma-3-4b-it-GGUF/resolve/main/gemma-3-4b-it-Q4_K_M.gguf?download=true"
