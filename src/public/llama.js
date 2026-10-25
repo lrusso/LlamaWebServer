@@ -655,11 +655,25 @@ const markdownToHTML = (markdown) => {
     return "%%CODELLAMABLOCK" + (codeBlocks.length - 1) + "%%"
   })
 
+  // storing and removing all the inline code (so it's not touched by the
+  // emphasis rules below, e.g. __init__ becoming <strong>init</strong>)
+  const inlineCodes = []
+  markdown = markdown.replace(/`(.*?)`/g, (_match, code) => {
+    inlineCodes.push(code)
+    return "%%CODELLAMAINLINE" + (inlineCodes.length - 1) + "%%"
+  })
+
   // storing and removing all the links (so their urls are not touched by the
   // emphasis rules below, e.g. an underscore inside a url becoming <em>)
   const links = []
   markdown = markdown.replace(/\[(.*?)\]\((.*?)\)/g, (_match, text, url) => {
-    links.push('<a href="' + url + '" target="top">' + text + "</a>")
+    // only the http and https urls become links (a javascript url
+    // would run code when clicked), and a quote can't close the href
+    if (!/^https?:\/\//i.test(url)) {
+      return text
+    }
+    url = url.replace(/"/g, "%22")
+    links.push('<a href="' + url + '" target="_blank">' + text + "</a>")
     return "%%CODELLAMALINK" + (links.length - 1) + "%%"
   })
 
@@ -704,21 +718,21 @@ const markdownToHTML = (markdown) => {
   // setting the markdown rules
   let rules = [
     { regex: /^---$\n?/gm, replacement: "<hr>" },
-    { regex: /\*\*(.*?)\*\*/g, replacement: "<strong>$1</strong>" },
-    { regex: /\*(.*?)\*/g, replacement: "<em>$1</em>" },
-    { regex: /__(.*?)__/g, replacement: "<strong>$1</strong>" },
-    { regex: /_(.*?)_/g, replacement: "<em>$1</em>" },
-    { regex: /`(.*?)`/g, replacement: '<div class="highlighted">$1</div>' },
-    {
-      regex: /^(#{1,6})\s*(.*)$/gm,
-      replacement: function replacement(_match, hashes, content) {
-        return "<h" + hashes.length + ">" + content + "</h" + hashes.length + ">"
-      },
-    },
+    // before the emphasis rules, so the asterisk of a bullet isn't an <em>
     {
       regex: /^[\*\-\+] (.+)$/gm,
       replacement: function replacement(_match, item) {
         return "&#8226; " + item
+      },
+    },
+    { regex: /\*\*(.*?)\*\*/g, replacement: "<strong>$1</strong>" },
+    { regex: /\*(.*?)\*/g, replacement: "<em>$1</em>" },
+    { regex: /__(.*?)__/g, replacement: "<strong>$1</strong>" },
+    { regex: /_(.*?)_/g, replacement: "<em>$1</em>" },
+    {
+      regex: /^(#{1,6})\s*(.*)$/gm,
+      replacement: function replacement(_match, hashes, content) {
+        return "<h" + hashes.length + ">" + content + "</h" + hashes.length + ">"
       },
     },
   ]
@@ -733,6 +747,11 @@ const markdownToHTML = (markdown) => {
   // restoring all the links
   markdown = markdown.replace(/%%CODELLAMALINK(\d+)%%/g, (_match, index) => {
     return links[index]
+  })
+
+  // restoring all the inline code
+  markdown = markdown.replace(/%%CODELLAMAINLINE(\d+)%%/g, (_match, index) => {
+    return '<div class="highlighted">' + inlineCodes[index] + "</div>"
   })
 
   // restoring all the code blocks
