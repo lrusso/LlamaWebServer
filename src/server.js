@@ -288,6 +288,21 @@ const isNotModified = (req, filePath) => {
   return modified <= Date.parse(req.headers["if-modified-since"])
 }
 
+const isSameOrigin = (req) => {
+  // the requests without an origin (e.g. curl) are not sent by a page, so they
+  // can't come from another site
+  if (!req.headers.origin) {
+    return true
+  }
+
+  try {
+    return new URL(req.headers.origin).host === req.headers.host
+  } catch (err) {
+    // an origin that isn't a url (e.g. "null") is not this server
+    return false
+  }
+}
+
 const handleRequest = (req, res) => {
   const baseURL =
     (req.protocol ? req.protocol : "http") + "://" + req.headers.host + "/"
@@ -304,7 +319,9 @@ const handleRequest = (req, res) => {
     return
   }
 
-  if (req.url === "/ask" && req.method === "POST") {
+  // only the chat page of this server can ask, so a page from another site
+  // can't make the model generate
+  if (req.url === "/ask" && req.method === "POST" && isSameOrigin(req)) {
     askLlama(req, res)
     return
   }
