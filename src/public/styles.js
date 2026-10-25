@@ -42,6 +42,8 @@ em{font-weight:bold}
 table{border-collapse:collapse;margin:10px 0}
 table th,table td{border:1px solid silver;padding:8px}
 
+blockquote{margin:0;padding-left:10px;border-left:3px solid silver}
+
 hr{border:none;margin:10px 0}
 
 .pointer{line-height:16px;display:inline-block;border-radius:6px;width:12px;height:12px}

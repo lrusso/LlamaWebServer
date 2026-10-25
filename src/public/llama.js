@@ -684,15 +684,37 @@ const markdownToHTML = (markdown) => {
   // storing and removing all the links (so their urls are not touched by the
   // emphasis rules below, e.g. an underscore inside a url becoming <em>)
   const links = []
-  markdown = markdown.replace(/\[(.*?)\]\((.*?)\)/g, (_match, text, url) => {
-    // only the http and https urls become links (a javascript url
-    // would run code when clicked), and a quote can't close the href
-    if (!/^https?:\/\//i.test(url)) {
-      return text
+  // (a url can have parentheses inside, e.g. wikipedia's /wiki/Python_(language))
+  markdown = markdown.replace(
+    /\[(.*?)\]\(((?:[^()\n]|\([^()\n]*\))*)\)/g,
+    (_match, text, url) => {
+      // only the http and https urls become links (a javascript url
+      // would run code when clicked), and a quote can't close the href
+      if (!/^https?:\/\//i.test(url)) {
+        return text
+      }
+      url = url.replace(/"/g, "%22")
+      links.push('<a href="' + url + '" target="_blank">' + text + "</a>")
+      return "%%CODELLAMALINK" + (links.length - 1) + "%%"
     }
-    url = url.replace(/"/g, "%22")
-    links.push('<a href="' + url + '" target="_blank">' + text + "</a>")
-    return "%%CODELLAMALINK" + (links.length - 1) + "%%"
+  )
+
+  // storing and removing the urls written without the markdown format (e.g.
+  // https://www.example.com), which become links too
+  markdown = markdown.replace(/https?:\/\/(?:(?!%%CODELLAMA)[^\s<])+/g, (url) => {
+    // the punctuation after a url (e.g. the period that ends a sentence) is not
+    // part of it, and neither is a closing parenthesis without its opening one
+    let trailing = ""
+    while (
+      /[.,;:!?'"*]$/.test(url) ||
+      (/\)$/.test(url) && url.split("(").length < url.split(")").length)
+    ) {
+      trailing = url.slice(-1) + trailing
+      url = url.slice(0, -1)
+    }
+    const href = url.replace(/"/g, "%22")
+    links.push('<a href="' + href + '" target="_blank">' + url + "</a>")
+    return "%%CODELLAMALINK" + (links.length - 1) + "%%" + trailing
   })
 
   // parsing markdown tables
@@ -757,6 +779,17 @@ const markdownToHTML = (markdown) => {
       regex: /^(#{1,6})\s+(.*)$/gm,
       replacement: function replacement(_match, hashes, content) {
         return "<h" + hashes.length + ">" + content + "</h" + hashes.length + ">"
+      },
+    },
+    // the lines that start with ">" are a quote
+    {
+      regex: /^(?:> ?.*(?:\n|$))+/gm,
+      replacement: function replacement(match) {
+        return (
+          "<blockquote>" +
+          match.replace(/\n$/, "").replace(/^> ?/gm, "") +
+          "</blockquote>"
+        )
       },
     },
   ]
