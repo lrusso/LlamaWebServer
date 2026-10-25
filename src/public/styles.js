@@ -20,8 +20,11 @@ em{font-weight:bold}
 .input_container{display:none;flex-grow:1;align-items:end;height:auto;margin:0 10px 10px 10px;padding:14px;border-radius:10px;box-shadow:0 5px 5px rgba(0,0,0,0.1)}
 .input_textbox{flex-grow:1;resize:none;outline:none;border:0;line-height:normal !important}
 .input_textbox:disabled{cursor:default}
-.input_send{display:block;margin-left:10px;margin-bottom:2px;cursor:default}
+.input_send{display:block;margin-left:10px;margin-bottom:2px;cursor:default;padding:0;border:0;background:none;outline:0 solid}
+.input_send svg{display:block}
 .input_send.active{cursor:pointer}
+.input_send:focus{outline-width:2px;outline-style:solid}
+.input_send:disabled{pointer-events:none}
 
 .actions_container,.copy_container{display:flex;margin-bottom:3px}
 .action_button{display:flex;text-align:center;border-radius:10px;padding:12px;min-width:48px;min-height:48px;margin-right:10px;margin-bottom:10px;cursor:default;outline:0 solid;border:0;box-shadow:0 5px 5px rgba(0,0,0,0.1);white-space:nowrap;overflow:hidden;justify-content:center;align-items:center}
@@ -80,6 +83,7 @@ em{color:#000}
 .input_textbox::placeholder{color:rgba(0,0,0,0.4);opacity:1}
 .input_send{fill:#C8C8C8}
 .input_send.active{fill:#000}
+.input_send:focus{outline-color:#000}
 
 .action_button{background-color:#FFF;color:#C8C8C8}
 .action_button:focus{outline-color:#C8C8C8}
@@ -125,6 +129,7 @@ em{color:#FFF}
 .input_textbox::placeholder{color:rgba(206,206,206,0.25);opacity:1}
 .input_send{fill:rgba(206,206,206,0.2)}
 .input_send.active{fill:#FFF}
+.input_send:focus{outline-color:#FFF}
 
 .action_button{background-color:#202C33;color:rgba(206,206,206,0.2)}
 .action_button:focus{outline-color:#858DA2}

@@ -559,6 +559,11 @@ const editPrompt = () => {
   promptBeforeEdit = promptContent.innerText
   promptContent.contentEditable = "true"
 
+  // a screen reader announces the prompt being edited as a text field
+  promptContent.setAttribute("role", "textbox")
+  promptContent.setAttribute("aria-multiline", "true")
+  promptContent.setAttribute("aria-label", t("edit"))
+
   // the prompt looks like the input textbox while it's being edited
   promptContent.parentNode.classList.add("editing")
   promptContent.focus()
@@ -614,6 +619,9 @@ const endPromptEdit = () => {
 
   // ending the edition discards the unsent changes
   promptContent.contentEditable = "false"
+  promptContent.removeAttribute("role")
+  promptContent.removeAttribute("aria-multiline")
+  promptContent.removeAttribute("aria-label")
   promptContent.innerText = promptBeforeEdit
   promptContent.parentNode.classList.remove("editing")
   document.querySelector(".input_textbox").focus()
@@ -987,6 +995,10 @@ window.addEventListener("load", () => {
     }
 
     inputTextbox.placeholder = t("placeholder")
+    // the names a screen reader announces for the textbox and the send button
+    inputTextbox.setAttribute("aria-label", t("placeholder"))
+    inputSend.title = t("send")
+    inputSend.disabled = true
     inputTextbox.disabled = false
     inputTextbox.value = ""
     window.addEventListener("resize", resizeInputText)
@@ -1004,15 +1016,19 @@ window.addEventListener("load", () => {
           resizeInputText()
           if (inputSend.classList.contains("active")) {
             inputSend.classList.remove("active")
+            inputSend.disabled = true
           }
         }
       }
     })
     inputTextbox.addEventListener("input", () => {
+      // the send button is only enabled while the textbox has text
       if (inputTextbox.value.length > 0) {
         inputSend.classList.add("active")
+        inputSend.disabled = false
       } else {
         inputSend.classList.remove("active")
+        inputSend.disabled = true
       }
     })
 
@@ -1026,6 +1042,7 @@ window.addEventListener("load", () => {
         resizeInputText()
         if (inputSend.classList.contains("active")) {
           inputSend.classList.remove("active")
+          inputSend.disabled = true
         }
       }
     })

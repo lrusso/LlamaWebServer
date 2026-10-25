@@ -14,6 +14,7 @@ const APP_STRINGS = {
     edit: "Edit",
     cancel: "Cancel",
     update: "Update",
+    send: "Send",
   },
   es: {
     title: "Llama",
@@ -30,6 +31,7 @@ const APP_STRINGS = {
     edit: "Editar",
     cancel: "Cancelar",
     update: "Actualizar",
+    send: "Enviar",
   },
 }
 
