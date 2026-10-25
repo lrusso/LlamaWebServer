@@ -1166,7 +1166,13 @@ window.addEventListener("load", () => {
     }
     document.head.appendChild(styleNode)
 
-    chatHistory.push({ type: "system", text: t("system_prompt") })
+    // the system prompt goes with the date of today, since the model can't know it
+    // (e.g. "You are a useful AI assistant. Today is Sun Oct 25 2026.")
+    const today = t("today") + " " + new Date().toDateString() + "."
+    chatHistory.push({
+      type: "system",
+      text: t("system_prompt") + " " + today,
+    })
 
     appendMessage("reply", markdownToHTML(t("system_welcome")))
 
