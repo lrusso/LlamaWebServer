@@ -101,17 +101,35 @@ const askLlama = async (req, res) => {
     // decoding as utf-8, so a character split between two chunks stays whole
     req.setEncoding("utf8")
     req.on("data", (chunk) => {
-      body = body + chunk.toString()
+      // after a chat too big got its empty reply, the rest of it is ignored
+      if (res.writableEnded) {
+        return
+      }
+
+      try {
+        body = body + chunk.toString()
+      } catch (err) {
+        // a chat too big to fit in a string (a RangeError) gets an empty reply
+        body = ""
+        res.end()
+      }
     })
 
-    // waiting for all data to be received, or for the user to close the window
+    // waiting for all data to be received, for the user to close the window or
+    // for the empty reply of a chat too big
     await new Promise((resolve) => {
       req.on("end", resolve)
       req.on("close", resolve)
+      res.on("close", resolve)
     })
 
     // the user closed the window before the whole chat was received
     if (!req.complete) {
+      return
+    }
+
+    // a chat too big to fit in a string already got its empty reply
+    if (res.writableEnded) {
       return
     }
 
