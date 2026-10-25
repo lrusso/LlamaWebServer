@@ -30,7 +30,7 @@ This is a web server that lets you run GGUF models locally, such as `Llama`, `Ge
 
 ## How to set a custom context size
 
-- Edit the [server.js](https://github.com/lrusso/LlamaWebServer/blob/main/src/server.js#L14) file.
+- Edit the [server.js](https://github.com/lrusso/LlamaWebServer/blob/main/src/server.js#L15) file.
 
 ## How to set a custom system prompt
 
