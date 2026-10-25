@@ -1,6 +1,6 @@
 # Llama Web Server
 
-This is a web server that lets you run GGUF models locally, such as `Llama`, `Gemma` and `gpt-oss`. It includes a user interface that's similar to WhatsApp. You can use the default GGUF model file that is downloaded during the installation process or you can download a GGUF model file from [HuggingFace.co](https://huggingface.co) and place it in the `model` folder.
+This is a web server that lets you run GGUF models locally, such as `Llama`, `Gemma` and `gpt-oss`. It includes a user interface that's similar to WhatsApp. You can use the default GGUF model file, which is downloaded with `npm run download:q8` or `npm run download:q4`, or you can download a GGUF model file from [HuggingFace.co](https://huggingface.co) and place it in the `model` folder.
 
 ![demo](https://github.com/lrusso/LlamaWebServer/blob/main/README.gif?raw=true)
 
@@ -30,7 +30,7 @@ This is a web server that lets you run GGUF models locally, such as `Llama`, `Ge
 
 ## How to set a custom context size
 
-- Edit the [server.js](https://github.com/lrusso/LlamaWebServer/blob/main/src/server.js#L13) file.
+- Edit the [server.js](https://github.com/lrusso/LlamaWebServer/blob/main/src/server.js#L14) file.
 
 ## How to set a custom system prompt
 
