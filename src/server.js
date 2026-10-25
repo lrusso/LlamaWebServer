@@ -7,7 +7,7 @@ import {
 } from "node-llama-cpp"
 import { TaskQueue } from "./taskQueue.js"
 import { fileURLToPath } from "url"
-import { dirname, join, sep } from "path"
+import { basename, dirname, join, sep } from "path"
 import http from "http"
 import fs from "fs"
 import os from "os"
@@ -34,6 +34,20 @@ const serverPort = args.length > 0 ? args[0] : 80
 if (!/^\d+$/.test(serverPort) || serverPort < 1 || serverPort > 65535) {
   console.log("\nError: Port " + serverPort + " is not valid.\n")
   console.log("Please choose a port between 1 and 65535.\n")
+  process.exit(0)
+}
+
+// the model and public folders are created if they don't exist (e.g. deleted by
+// the user)
+try {
+  fs.mkdirSync(__dirname + "/model/", { recursive: true })
+  fs.mkdirSync(PUBLIC_FOLDER, { recursive: true })
+} catch (err) {
+  // e.g. without permission to write there, or with a file that has its name
+  console.log(
+    "\nError: The " + basename(err.path) + " folder couldn't be created.\n"
+  )
+  console.log(err.message + "\n")
   process.exit(0)
 }
 

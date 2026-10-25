@@ -37,6 +37,9 @@ const downloadModel = async (url) => {
       return
     }
 
+    // the model folder is created if it doesn't exist (e.g. deleted by the user)
+    fs.mkdirSync(__dirname + "/model/", { recursive: true })
+
     // the file is downloaded with a temporary name, so an interrupted download
     // isn't taken as an already downloaded file
     const fileStream = fs.createWriteStream(
