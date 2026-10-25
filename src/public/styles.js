@@ -41,10 +41,11 @@ em{font-weight:bold}
 
 .reply{display:block;width:fit-content;max-width:100%;box-sizing:border-box;margin-bottom:10px;word-break:break-word;box-shadow:0 5px 5px rgba(0,0,0,0.1)}
 
-.highlighted{display:inline-block;padding-left:4px;padding-right:4px;border-radius:4px}
+.highlighted{display:inline;padding:5px 4px;border-radius:4px}
 
 table{display:block;overflow-x:auto;border-collapse:collapse;margin:10px 0}
 table th,table td{border:1px solid silver;padding:8px;word-break:normal}
+table a{word-break:break-word}
 
 blockquote{margin:0;padding-left:10px;border-left:3px solid silver}
 
