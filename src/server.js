@@ -28,13 +28,12 @@ const CHUNK_SIZE_IN_MB = 10
 const args = process.argv?.slice(2)
 const serverPort = args.length > 0 ? args[0] : 80
 
-const modelFilename = fs
+const modelFiles = fs
   .readdirSync(__dirname + "/model/")
-  .find((file) => file.endsWith(".gguf"))
+  .filter((file) => file.toLowerCase().endsWith(".gguf"))
 
-const countGGUFFiles = fs
-  .readdirSync(__dirname + "/model/")
-  .filter((file) => file.endsWith(".gguf")).length
+const modelFilename = modelFiles[0]
+const countGGUFFiles = modelFiles.length
 
 if (!modelFilename) {
   console.log("Error: Please put a GGUF file in the model folder.")
