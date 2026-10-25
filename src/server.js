@@ -37,12 +37,12 @@ const countGGUFFiles = modelFiles.length
 
 if (!modelFilename) {
   console.log("Error: Please put a GGUF file in the model folder.")
-  process.exit(1)
+  process.exit(0)
 }
 
 if (countGGUFFiles > 1) {
   console.log("Error: You can have only 1 GGUF file in the model folder.")
-  process.exit(1)
+  process.exit(0)
 }
 
 const showServerError = (err) => {
@@ -62,7 +62,7 @@ const showServerError = (err) => {
   } else {
     console.log(err)
   }
-  process.exit(1)
+  process.exit(0)
 }
 
 // the port is checked before loading the model, so a port that can't be used is
@@ -89,7 +89,7 @@ try {
   // or not enough memory
   console.log("\nError: The " + modelFilename + " file couldn't be loaded.\n")
   console.log(err.message + "\n")
-  process.exit(1)
+  process.exit(0)
 }
 const modelArchitecture = model.fileInfo.metadata?.general?.architecture
 const isGptOssModel = modelArchitecture === GgufArchitectureType.gptOss
