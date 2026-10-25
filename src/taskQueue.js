@@ -27,16 +27,4 @@ export class TaskQueue extends EventEmitter {
     this.queue.push(task)
     this.processTask()
   }
-
-  size() {
-    return this.queue.length + this.running
-  }
-
-  getQueue() {
-    return [...this.queue]
-  }
-
-  isRunning() {
-    return this.running > 0 || this.queue.length > 0
-  }
 }
