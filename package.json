@@ -4,7 +4,9 @@
   "description": "Web server for running GGUF models locally, such as Llama, Gemma and gpt-oss",
   "author": "Leonardo Javier Russo",
   "type": "module",
-  "main": "index.js",
+  "engines": {
+    "node": ">=20.17.0"
+  },
   "scripts": {
     "prettier": "prettier --check .",
     "prettier:fix": "prettier --write .",
@@ -15,8 +17,10 @@
     "download:q8": "node ./src/downloader.js q8"
   },
   "dependencies": {
+    "node-llama-cpp": "3.22.2"
+  },
+  "devDependencies": {
     "@awmottaz/prettier-plugin-void-html": "1.5.0",
-    "node-llama-cpp": "3.22.1",
     "pre-commit": "2.0.0",
     "prettier": "3.2.5"
   },
