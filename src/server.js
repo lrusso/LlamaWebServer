@@ -228,7 +228,18 @@ const escapeHTML = (text) => {
 const handleRequest = (req, res) => {
   const baseURL =
     (req.protocol ? req.protocol : "http") + "://" + req.headers.host + "/"
-  const reqUrl = new URL(req.url, baseURL)
+  let reqUrl = null
+  try {
+    reqUrl = new URL(req.url, baseURL)
+  } catch (err) {
+    // the urls that can't be parsed (e.g. "//" or a wrong host) are handled as
+    // a missing file
+    res.writeHead(302, {
+      Location: baseURL,
+    })
+    res.end()
+    return
+  }
 
   if (req.url === "/ask") {
     askLlama(req, res)
@@ -282,6 +293,33 @@ const handleRequest = (req, res) => {
       "Accept-Ranges": "bytes",
     })
     readStream.pipe(res)
+    return
+  }
+
+  if (
+    isFolder(requestedPath) &&
+    isFile(indexPath) &&
+    !reqUrl.pathname.endsWith("/")
+  ) {
+    res.writeHead(302, {
+      Location: reqUrl.pathname + "/",
+    })
+    res.end()
+    return
+  }
+
+  // a folder without an index.html is listed without the trailing slash (the
+  // root is the exception, since its url always ends with a slash)
+  if (
+    isFolder(requestedPath) &&
+    !isFile(indexPath) &&
+    reqUrl.pathname.endsWith("/") &&
+    reqUrl.pathname !== "/"
+  ) {
+    res.writeHead(302, {
+      Location: reqUrl.pathname.replace(/\/+$/, ""),
+    })
+    res.end()
     return
   }
 
