@@ -10,6 +10,7 @@ import { fileURLToPath } from "url"
 import { dirname, join, sep } from "path"
 import http from "http"
 import fs from "fs"
+import os from "os"
 
 const MODEL_CONTEXT_SIZE = "auto" // "auto", 4096, 8192, 16384, 32768, 65536, 131072
 
@@ -71,6 +72,14 @@ const showServerError = (err) => {
     console.log(err)
   }
   process.exit(0)
+}
+
+const getNetworkAddresses = () => {
+  // the ipv4 addresses of this computer in its local networks (e.g. wi-fi)
+  return Object.values(os.networkInterfaces())
+    .flat()
+    .filter((address) => address.family === "IPv4" && !address.internal)
+    .map((address) => address.address)
 }
 
 // the port is checked before loading the model, so a port that can't be used is
@@ -1022,12 +1031,16 @@ server.on("error", async (err) => {
 })
 
 server.on("listening", () => {
+  const port = Number(serverPort) !== 80 ? ":" + serverPort : ""
+
+  // the urls for browsing from this computer and from other devices on the
+  // network (e.g. a phone), listed with the same bullet as the chat
+  const urls = ["localhost"].concat(getNetworkAddresses()).map((host) => {
+    return "\u2022 http://" + host + port
+  })
+
   console.log("\nServer running.\n")
-  console.log(
-    "Browse to http://localhost" +
-      (Number(serverPort) !== 80 ? ":" + serverPort : "") +
-      "\n"
-  )
+  console.log("Open in your browser:\n\n" + urls.join("\n") + "\n")
 })
 
 server.listen(serverPort)

@@ -91,9 +91,9 @@ const args = process.argv?.slice(2)
 const requestedModel = args.length > 0 ? args[0].toLocaleLowerCase() : ""
 
 const MODEL_Q4_URL =
-  "https://huggingface.co/unsloth/gemma-3-4b-it-GGUF/resolve/main/gemma-3-4b-it-Q4_K_M.gguf?download=true"
+  "https://huggingface.co/unsloth/gemma-4-E4B-it-GGUF/resolve/main/gemma-4-E4B-it-Q4_K_M.gguf?download=true"
 
 const MODEL_Q8_URL =
-  "https://huggingface.co/unsloth/gemma-3-4b-it-GGUF/resolve/main/gemma-3-4b-it-Q8_0.gguf?download=true"
+  "https://huggingface.co/unsloth/gemma-4-E4B-it-GGUF/resolve/main/gemma-4-E4B-it-Q8_0.gguf?download=true"
 
 downloadModel(requestedModel === "q4" ? MODEL_Q4_URL : MODEL_Q8_URL)
