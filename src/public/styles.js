@@ -109,7 +109,7 @@ em{color:#000}
 
 a{color:#3a76b1}
 
-hr{border-top:1px solid black}
+hr{border-top:1px solid silver}
 `
 
 const COLORS_DARK_MODE = `
