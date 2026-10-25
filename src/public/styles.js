@@ -2,7 +2,7 @@ const BASE_STYLES = `
 *{font-size:16px;font-family:ui-sans-serif, -apple-system, system-ui, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"}
 html,body{margin:0;padding:0;overscroll-behavior:none;overflow-anchor:none}
 span{line-height:28px;display:inline-block;padding:10px;border-radius:10px;white-space:pre-wrap}
-code{line-height:28px;display:block;padding:10px;border-radius:10px;white-space:pre-wrap}
+code{line-height:28px;display:block;padding:10px;border-radius:10px;white-space:pre-wrap;overflow:hidden}
 em{font-weight:bold}
 
 .wallpaper{position:fixed;left:0;right:0;bottom:0;top:0;z-index:-1}
@@ -27,6 +27,7 @@ em{font-weight:bold}
 .action_button{display:flex;text-align:center;border-radius:10px;padding:12px;min-width:48px;min-height:48px;margin-right:10px;margin-bottom:10px;cursor:default;outline:0 solid;border:0;box-shadow:0 5px 5px rgba(0,0,0,0.1);white-space:nowrap;overflow:hidden;justify-content:center;align-items:center}
 .action_button:focus{outline-width:2px;outline-style:solid}
 .action_button.active{cursor:pointer}
+.code_copy{float:right;margin:0 0 0 10px}
 
 .prompt_container{margin-bottom:10px;margin-left:10px;text-align:right;word-break:break-word}
 .prompt_background{box-shadow:0 5px 5px rgba(0,0,0,0.1)}

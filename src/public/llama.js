@@ -660,6 +660,26 @@ const handlePromptPaste = (event) => {
   }
 }
 
+const getCodeCopyButton = () => {
+  // the copy button of a code block, written as html inside the <code>
+  const button = createComponent("button", "action_button code_copy active")
+  button.type = "button"
+  button.title = t("copy")
+  button.appendChild(ICON_COPY())
+  button.children[0].classList.add("active")
+  return button.outerHTML
+}
+
+const handleCodeCopy = (event) => {
+  // a single listener for every code block, since the replies are rendered
+  // again with each new chunk
+  const button = event.target.closest(".code_copy")
+  if (button) {
+    copyToClipboard(button.parentNode, button)
+    document.querySelector(".input_textbox").focus()
+  }
+}
+
 const markdownToHTML = (markdown) => {
   const codeBlocks = []
 
@@ -811,9 +831,10 @@ const markdownToHTML = (markdown) => {
     return '<div class="highlighted">' + inlineCodes[index] + "</div>"
   })
 
-  // restoring all the code blocks
+  // restoring all the code blocks, each one with its copy button
   markdown = markdown.replace(/%%CODELLAMABLOCK(\d+)%%/g, (_match, index) => {
-    return "<code>" + codeBlocks[index].replace(/```/g, "") + "</code>"
+    const code = codeBlocks[index].replace(/```/g, "")
+    return "<code>" + getCodeCopyButton() + code + "</code>"
   })
 
   return markdown
@@ -940,6 +961,8 @@ window.addEventListener("blur", () => {
     }, 200)
   }
 })
+
+document.addEventListener("click", handleCodeCopy)
 
 window.addEventListener("load", () => {
   if (window.top === window.self) {
