@@ -929,9 +929,7 @@ window.addEventListener("load", () => {
     })
     inputTextbox.addEventListener("input", () => {
       if (inputTextbox.value.length > 0) {
-        if (!inputSend.classList.contains("contains")) {
-          inputSend.classList.add("active")
-        }
+        inputSend.classList.add("active")
       } else {
         inputSend.classList.remove("active")
       }
