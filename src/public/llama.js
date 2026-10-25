@@ -343,8 +343,9 @@ const ask = async (prompt, hidePrompt) => {
                 reply = reply + decoder.decode(value, { stream: true })
                 patchDOM(
                   lastReply,
-                  markdownToHTML(reply.replace(/\</g, "&#60;")) +
-                    '<div class="pointer"></div>'
+                  markdownToHTML(
+                    reply.replace(/&/g, "&#38;").replace(/\</g, "&#60;")
+                  ) + '<div class="pointer"></div>'
                 )
 
                 read()
@@ -437,7 +438,7 @@ const handleReply = (content, reply, promptResult, prompt) => {
 
     chatHistory.push({ type: "model", response: [newReply] })
 
-    const resultText = newReply.replace(/\</g, "&#60;")
+    const resultText = newReply.replace(/&/g, "&#38;").replace(/\</g, "&#60;")
     promptResult.innerHTML = markdownToHTML(resultText)
 
     inputTextbox.focus()
@@ -728,10 +729,11 @@ const markdownToHTML = (markdown) => {
     },
     { regex: /\*\*(.*?)\*\*/g, replacement: "<strong>$1</strong>" },
     { regex: /\*(.*?)\*/g, replacement: "<em>$1</em>" },
-    { regex: /__(.*?)__/g, replacement: "<strong>$1</strong>" },
-    { regex: /_(.*?)_/g, replacement: "<em>$1</em>" },
+    // the underscores inside a word (e.g. my_var_name) are not an emphasis
+    { regex: /\b__(.*?)__\b/g, replacement: "<strong>$1</strong>" },
+    { regex: /\b_(.*?)_\b/g, replacement: "<em>$1</em>" },
     {
-      regex: /^(#{1,6})\s*(.*)$/gm,
+      regex: /^(#{1,6})\s+(.*)$/gm,
       replacement: function replacement(_match, hashes, content) {
         return "<h" + hashes.length + ">" + content + "</h" + hashes.length + ">"
       },
