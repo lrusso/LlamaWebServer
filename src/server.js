@@ -14,6 +14,7 @@ import fs from "fs"
 const MODEL_CONTEXT_SIZE = "auto" // "auto", 4096, 8192, 16384, 32768, 65536, 131072
 
 const taskQueue = new TaskQueue()
+taskQueue.on("error", (err) => console.log("ERROR: " + err.message))
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
