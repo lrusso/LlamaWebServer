@@ -1024,7 +1024,9 @@ server.on("error", async (err) => {
 server.on("listening", () => {
   console.log("\nServer running.\n")
   console.log(
-    "Browse to http://localhost" + (serverPort !== 80 ? ":" + serverPort : "") + "\n"
+    "Browse to http://localhost" +
+      (Number(serverPort) !== 80 ? ":" + serverPort : "") +
+      "\n"
   )
 })
 

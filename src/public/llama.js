@@ -700,14 +700,21 @@ const markdownToHTML = (markdown) => {
   const codeBlocks = []
 
   // storing and removing all the code blocks (a block that is still being
-  // written, without its closing fence yet, goes until the end of the reply)
+  // written, without its closing fence yet, goes until the end of the reply).
+  // the code block is already a block, so the line break after its closing
+  // fence and the last line break of the code (with the indentation of the
+  // closing fence, e.g. inside a list) are removed, as they would add empty lines
   markdown = markdown.replace(
-    /\`\`\`[^\n]*(?:\n|$)([\s\S]*?)(?:\`\`\`|$)/g,
+    /\`\`\`[^\n]*(?:\n|$)([\s\S]*?)(?:\`\`\`\n?|$)/g,
     (_match, group) => {
-      codeBlocks.push(group)
+      codeBlocks.push(group.replace(/\n[ \t]*$/, ""))
       return "%%CODELLAMABLOCK" + (codeBlocks.length - 1) + "%%"
     }
   )
+
+  // the indentation before a code block (e.g. inside a list) would add an empty
+  // line too
+  markdown = markdown.replace(/\n[ \t]+(%%CODELLAMABLOCK\d+%%)/g, "\n$1")
 
   // storing and removing all the inline code (so it's not touched by the
   // emphasis rules below, e.g. __init__ becoming <strong>init</strong>)
@@ -815,8 +822,10 @@ const markdownToHTML = (markdown) => {
     { regex: /\b_(.*?)_\b/g, replacement: "<em>$1</em>" },
     // ~~text~~ is a strikethrough (the tildes must be next to the text too)
     { regex: /~~([^\s~](?:.*?[^\s~])?)~~/g, replacement: "<del>$1</del>" },
+    // the title is already a block, so the line break after it is removed (like
+    // the one after the <hr>), as it would add an empty line
     {
-      regex: /^(#{1,6})\s+(.*)$/gm,
+      regex: /^(#{1,6})\s+(.*)$\n?/gm,
       replacement: function replacement(_match, hashes, content) {
         return "<h" + hashes.length + ">" + content + "</h" + hashes.length + ">"
       },
