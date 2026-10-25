@@ -214,6 +214,25 @@ const reconcileNode = (parent, existingNode, newNode) => {
   }
 }
 
+const addPointer = (html) => {
+  const pointer = '<div class="pointer"></div>'
+
+  // while a table is being written (it's the end of the reply), the pointer goes
+  // at the end of its last cell (or in a new cell when a row has just started)
+  // instead of under the table
+  const pointerInTable = html
+    .replace(
+      /<\/td><\/tr><\/tbody><\/table>$/,
+      pointer + "</td></tr></tbody></table>"
+    )
+    .replace(
+      /<tr><\/tr><\/tbody><\/table>$/,
+      "<tr><td>" + pointer + "</td></tr></tbody></table>"
+    )
+
+  return pointerInTable !== html ? pointerInTable : html + pointer
+}
+
 const ask = async (prompt, hidePrompt) => {
   const content = document.querySelector(".content")
   const inputTextbox = document.querySelector(".input_textbox")
@@ -353,9 +372,11 @@ const ask = async (prompt, hidePrompt) => {
                 reply = reply + decoder.decode(value, { stream: true })
                 patchDOM(
                   lastReply,
-                  markdownToHTML(
-                    reply.replace(/&/g, "&#38;").replace(/\</g, "&#60;")
-                  ) + '<div class="pointer"></div>'
+                  addPointer(
+                    markdownToHTML(
+                      reply.replace(/&/g, "&#38;").replace(/\</g, "&#60;")
+                    )
+                  )
                 )
 
                 read()
