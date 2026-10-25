@@ -789,10 +789,12 @@ const markdownToHTML = (markdown) => {
   })
 
   // parsing markdown tables (the rows that are still being written, without
-  // their last "|" yet, are already part of the table)
+  // their last "|" yet, are already part of the table). like github, a table can
+  // have only its header and its separator, without rows yet (once the
+  // separator line is complete, so it doesn't flicker while it's being written)
   markdown = markdown.replace(
-    /^(\|.+\|)\r?\n(\|[-:\s|]+\|)\r?\n((?:\|.*(?:\r?\n|$))+)/gm,
-    (_match, headerRow, _separatorRow, bodyRows) => {
+    /^(\|.+\|)\r?\n(\|[-: \t|]+\|)[ \t]*(?:\r?\n((?:\|.*(?:\r?\n|$))+)|\r?\n)/gm,
+    (match, headerRow, separatorRow, bodyRows) => {
       function parseRow(row) {
         // a row still being written (without its last "|") keeps its last cell
         return row
@@ -804,9 +806,20 @@ const markdownToHTML = (markdown) => {
       }
 
       const headers = parseRow(headerRow)
-      const rows = bodyRows
+
+      // without rows yet, it's a table only once its separator has as many columns
+      // as its header (like github), so a separator still being written isn't one
+      if (!bodyRows && parseRow(separatorRow).length !== headers.length) {
+        return match
+      }
+
+      // (a table without rows yet has none, instead of an empty one)
+      const rows = (bodyRows || "")
         .trim()
         .split(/\r?\n/)
+        .filter((row) => {
+          return row !== ""
+        })
         .map((row) => {
           return parseRow(row)
         })
