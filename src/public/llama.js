@@ -11,8 +11,16 @@ let promptBeforeEdit = ""
 let fetchController = null
 let isFocusEventHandled = false
 let reply = ""
+let stableReplyLength = 0
+let stableReplyHTML = ""
 let lastReply = null
 let lastPrompt = ""
+
+// a code block (or three backticks closed on the same line, e.g. ```npm install```)
+// with the indentation before its fence. the last group is the closing fence, which
+// is empty while the block is still being written
+const CODE_BLOCK_REGEX =
+  /([ \t]*)\`\`\`(?:([^`\n]+?)\`\`\`|[^\n]*(?:\n|$)([\s\S]*?)(\`\`\`\n?|$))/g
 
 const ICON_REGENERATE = () => {
   const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg")
@@ -230,6 +238,63 @@ const addPointer = (html) => {
   return pointerInTable !== html ? pointerInTable : html + pointer
 }
 
+const getStableLength = (text) => {
+  // the complete lines don't change anymore while the reply is written, except the
+  // ones that go together with the next line: the lines of a code block, a table row
+  // ("|"), a quote (">"), an empty line (a title without text yet takes the next
+  // line), and the title, the divider and the end of a code block (they take the
+  // line break after them, so the next line is converted right after them)
+  const codeBlocks = []
+  let codeBlock = null
+  CODE_BLOCK_REGEX.lastIndex = 0
+  while ((codeBlock = CODE_BLOCK_REGEX.exec(text))) {
+    // a code block still being written goes until the end of the text
+    const blockEnd =
+      codeBlock[4] === "" ? text.length + 1 : CODE_BLOCK_REGEX.lastIndex
+    codeBlocks.push([codeBlock.index, blockEnd])
+  }
+
+  const goesWithNextLine =
+    /^(?:[|>]|\s*$|#{1,6}(?:\s|$)| {0,3}([-*_])(?:[ \t]*\1){2,}[ \t]*$)/
+  const lines = text.split("\n")
+  let lineEnd = text.length - lines[lines.length - 1].length
+  for (let i = lines.length - 2; i >= 0; i--) {
+    const isInCodeBlock = codeBlocks.some((block) => {
+      return block[0] < lineEnd && lineEnd <= block[1]
+    })
+    if (!isInCodeBlock && !goesWithNextLine.test(lines[i])) {
+      return lineEnd
+    }
+    lineEnd = lineEnd - lines[i].length - 1
+  }
+  return 0
+}
+
+const renderReply = () => {
+  // the lines that can't change anymore are converted only once, so each chunk only
+  // converts (and looks for the place of the pointer in) the lines still being
+  // written, however long the reply is
+  const pending = reply.slice(stableReplyLength)
+  const stableLength = getStableLength(pending)
+
+  if (stableLength > 0) {
+    const stableText = pending.slice(0, stableLength)
+    stableReplyHTML =
+      stableReplyHTML +
+      markdownToHTML(stableText.replace(/&/g, "&#38;").replace(/\</g, "&#60;"))
+    stableReplyLength = stableReplyLength + stableLength
+  }
+
+  const writingText = pending.slice(stableLength)
+  patchDOM(
+    lastReply,
+    stableReplyHTML +
+      addPointer(
+        markdownToHTML(writingText.replace(/&/g, "&#38;").replace(/\</g, "&#60;"))
+      )
+  )
+}
+
 const ask = async (prompt, hidePrompt) => {
   const content = document.querySelector(".content")
   const inputTextbox = document.querySelector(".input_textbox")
@@ -339,6 +404,8 @@ const ask = async (prompt, hidePrompt) => {
   document.title = t("title") + " - " + t("thinking")
 
   reply = ""
+  stableReplyLength = 0
+  stableReplyHTML = ""
 
   try {
     fetchController = new AbortController()
@@ -367,14 +434,7 @@ const ask = async (prompt, hidePrompt) => {
                 }
                 // streaming, so a character split between two chunks isn't broken
                 reply = reply + decoder.decode(value, { stream: true })
-                patchDOM(
-                  lastReply,
-                  addPointer(
-                    markdownToHTML(
-                      reply.replace(/&/g, "&#38;").replace(/\</g, "&#60;")
-                    )
-                  )
-                )
+                renderReply()
 
                 read()
               })
@@ -727,23 +787,20 @@ const markdownToHTML = (markdown) => {
   // the code block is already a block, so the line break after its closing
   // fence and the last line break of the code (with the indentation of the
   // closing fence, e.g. inside a list) are removed, as they would add empty lines
-  markdown = markdown.replace(
-    /([ \t]*)\`\`\`(?:([^`\n]+?)\`\`\`|[^\n]*(?:\n|$)([\s\S]*?)(?:\`\`\`\n?|$))/g,
-    (_match, indent, inline, group) => {
-      // three backticks closed on the same line (e.g. ```npm install```) are
-      // inline code, not a code block
-      if (inline) {
-        return indent + "`" + inline + "`"
-      }
-
-      // the indentation of the fence (e.g. inside a list) isn't part of the code,
-      // so it's removed from every line of the code and from before the block
-      // (where it would add an empty line too)
-      const code = group.replace(new RegExp("^" + indent, "gm"), "")
-      codeBlocks.push(code.replace(/\n[ \t]*$/, ""))
-      return "%%CODELLAMABLOCK" + (codeBlocks.length - 1) + "%%"
+  markdown = markdown.replace(CODE_BLOCK_REGEX, (_match, indent, inline, group) => {
+    // three backticks closed on the same line (e.g. ```npm install```) are
+    // inline code, not a code block
+    if (inline) {
+      return indent + "`" + inline + "`"
     }
-  )
+
+    // the indentation of the fence (e.g. inside a list) isn't part of the code,
+    // so it's removed from every line of the code and from before the block
+    // (where it would add an empty line too)
+    const code = group.replace(new RegExp("^" + indent, "gm"), "")
+    codeBlocks.push(code.replace(/\n[ \t]*$/, ""))
+    return "%%CODELLAMABLOCK" + (codeBlocks.length - 1) + "%%"
+  })
 
   // storing and removing all the inline code (so it's not touched by the
   // emphasis rules below, e.g. __init__ becoming <strong>init</strong>). it can
