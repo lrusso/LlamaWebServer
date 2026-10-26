@@ -16,11 +16,12 @@ let stableReplyHTML = ""
 let lastReply = null
 let lastPrompt = ""
 
-// a code block (or three backticks closed on the same line, e.g. ```npm install```)
-// with the indentation before its fence. the last group is the closing fence, which
-// is empty while the block is still being written
+// a code block (or three backticks closed on the same line, e.g. ```npm install```).
+// it starts with the backticks, so it's only tried where there are backticks. the
+// last group is the closing fence, which is empty while the block is still being
+// written
 const CODE_BLOCK_REGEX =
-  /([ \t]*)\`\`\`(?:([^`\n]+?)\`\`\`|[^\n]*(?:\n|$)([\s\S]*?)(\`\`\`\n?|$))/g
+  /\`\`\`(?:([^`\n]+?)\`\`\`|[^\n]*(?:\n|$)([\s\S]*?)(\`\`\`\n?|$))/g
 
 const ICON_REGENERATE = () => {
   const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg")
@@ -229,7 +230,11 @@ const addPointer = (html) => {
   // while a table is being written (it's the end of the reply), the pointer goes
   // at the end of the cell being written (the last one with content before the
   // empty ones, or the first one when a row has just started) instead of under
-  // the table
+  // the table. only a reply that ends with a table row can have it there, so the
+  // other ones don't need the regex
+  if (!html.endsWith("</tr></tbody></table>")) {
+    return html + pointer
+  }
   const pointerInTable = html.replace(
     /<\/td>((?:<td><\/td>)*)<\/tr><\/tbody><\/table>$/,
     pointer + "</td>$1</tr></tbody></table>"
@@ -250,7 +255,7 @@ const getStableLength = (text) => {
   while ((codeBlock = CODE_BLOCK_REGEX.exec(text))) {
     // a code block still being written goes until the end of the text
     const blockEnd =
-      codeBlock[4] === "" ? text.length + 1 : CODE_BLOCK_REGEX.lastIndex
+      codeBlock[3] === "" ? text.length + 1 : CODE_BLOCK_REGEX.lastIndex
     codeBlocks.push([codeBlock.index, blockEnd])
   }
 
@@ -787,20 +792,49 @@ const markdownToHTML = (markdown) => {
   // the code block is already a block, so the line break after its closing
   // fence and the last line break of the code (with the indentation of the
   // closing fence, e.g. inside a list) are removed, as they would add empty lines
-  markdown = markdown.replace(CODE_BLOCK_REGEX, (_match, indent, inline, group) => {
-    // three backticks closed on the same line (e.g. ```npm install```) are
-    // inline code, not a code block
-    if (inline) {
-      return indent + "`" + inline + "`"
+  let withoutCode = ""
+  let codeEnd = 0
+  let fence = null
+  CODE_BLOCK_REGEX.lastIndex = 0
+  while ((fence = CODE_BLOCK_REGEX.exec(markdown))) {
+    if (fence[1]) {
+      // three backticks closed on the same line (e.g. ```npm install```) are
+      // inline code, not a code block
+      withoutCode =
+        withoutCode + markdown.slice(codeEnd, fence.index) + "`" + fence[1] + "`"
+    } else {
+      // the indentation of the fence (e.g. inside a list) isn't part of the code,
+      // so it's removed from every line of the code and from before the block
+      // (where it would add an empty line too)
+      let fenceStart = fence.index
+      while (
+        fenceStart > codeEnd &&
+        (markdown[fenceStart - 1] === " " || markdown[fenceStart - 1] === "\t")
+      ) {
+        fenceStart = fenceStart - 1
+      }
+      const indent = markdown.slice(fenceStart, fence.index)
+      const code = indent
+        ? fence[2].replace(new RegExp("^" + indent, "gm"), "")
+        : fence[2]
+      // the last line break of the code is found by hand, since a regex would look
+      // for it in the whole code
+      const lastBreak = code.lastIndexOf("\n")
+      codeBlocks.push(
+        lastBreak !== -1 && /^[ \t]*$/.test(code.slice(lastBreak + 1))
+          ? code.slice(0, lastBreak)
+          : code
+      )
+      withoutCode =
+        withoutCode +
+        markdown.slice(codeEnd, fenceStart) +
+        "%%CODELLAMABLOCK" +
+        (codeBlocks.length - 1) +
+        "%%"
     }
-
-    // the indentation of the fence (e.g. inside a list) isn't part of the code,
-    // so it's removed from every line of the code and from before the block
-    // (where it would add an empty line too)
-    const code = group.replace(new RegExp("^" + indent, "gm"), "")
-    codeBlocks.push(code.replace(/\n[ \t]*$/, ""))
-    return "%%CODELLAMABLOCK" + (codeBlocks.length - 1) + "%%"
-  })
+    codeEnd = CODE_BLOCK_REGEX.lastIndex
+  }
+  markdown = withoutCode + markdown.slice(codeEnd)
 
   // storing and removing all the inline code (so it's not touched by the
   // emphasis rules below, e.g. __init__ becoming <strong>init</strong>). it can
