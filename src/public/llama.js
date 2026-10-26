@@ -219,8 +219,15 @@ const reconcileNode = (parent, existingNode, newNode) => {
   }
 }
 
-const addPointer = (html) => {
+const addPointer = (html, isWritingCode) => {
   const pointer = '<div class="pointer"></div>'
+
+  // while a code block is being written (it's the end of the reply), the pointer
+  // goes at the end of its code instead of under the block
+  if (isWritingCode) {
+    const codeEnd = html.lastIndexOf("</code>")
+    return html.slice(0, codeEnd) + pointer + html.slice(codeEnd)
+  }
 
   // while a table is being written (it's the end of the reply), the pointer goes
   // at the end of the cell being written (the last one with content before the
@@ -372,10 +379,22 @@ const renderReply = () => {
   }
 
   const writingText = pending.slice(stableLength)
+
+  // a code block still being written (without its closing backticks yet) is the
+  // last one of the lines being written
+  let isWritingCode = false
+  let fenceIndex = writingText.indexOf("```")
+  while (fenceIndex !== -1) {
+    const codeBlock = getCodeBlock(writingText, fenceIndex)
+    isWritingCode = codeBlock.isOpen === true
+    fenceIndex = writingText.indexOf("```", codeBlock.end)
+  }
+
   patchDOM(
     lastReply,
     addPointer(
-      markdownToHTML(writingText.replace(/&/g, "&#38;").replace(/\</g, "&#60;"))
+      markdownToHTML(writingText.replace(/&/g, "&#38;").replace(/\</g, "&#60;")),
+      isWritingCode
     ),
     stableReplyNodes
   )
