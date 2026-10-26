@@ -12,7 +12,7 @@ let fetchController = null
 let isFocusEventHandled = false
 let reply = ""
 let stableReplyLength = 0
-let stableReplyHTML = ""
+let stableReplyNodes = 0
 let lastReply = null
 let lastPrompt = ""
 
@@ -158,14 +158,16 @@ const copyToClipboard = (element, button) => {
   }
 }
 
-const patchDOM = (target, newHTML) => {
+const patchDOM = (target, newHTML, start) => {
   const temp = document.createElement("div")
   temp.innerHTML = newHTML
-  reconcileChildren(target, temp)
+  reconcileChildren(target, temp, start)
 }
 
-const reconcileChildren = (existing, updated) => {
-  const existingChildren = Array.prototype.slice.call(existing.childNodes)
+const reconcileChildren = (existing, updated, start) => {
+  // the children before start (e.g. the lines of the reply that are already
+  // finished) are left as they are
+  const existingChildren = Array.prototype.slice.call(existing.childNodes, start)
   const updatedChildren = Array.prototype.slice.call(updated.childNodes)
 
   for (let i = 0; i < updatedChildren.length; i++) {
@@ -213,7 +215,7 @@ const reconcileNode = (parent, existingNode, newNode) => {
       }
     }
 
-    reconcileChildren(existingNode, newNode)
+    reconcileChildren(existingNode, newNode, 0)
   }
 }
 
@@ -343,27 +345,39 @@ const getStableLength = (text) => {
 }
 
 const renderReply = () => {
-  // the lines that can't change anymore are converted only once, so each chunk only
-  // converts (and looks for the place of the pointer in) the lines still being
-  // written, however long the reply is
+  // the lines that can't change anymore are converted and added to the page only
+  // once, so each chunk only converts (and looks for the place of the pointer in,
+  // and updates on the page) the lines still being written, however long the reply
+  // is
   const pending = reply.slice(stableReplyLength)
   const stableLength = getStableLength(pending)
 
   if (stableLength > 0) {
     const stableText = pending.slice(0, stableLength)
-    stableReplyHTML =
-      stableReplyHTML +
-      markdownToHTML(stableText.replace(/&/g, "&#38;").replace(/\</g, "&#60;"))
+    const temp = document.createElement("div")
+    temp.innerHTML = markdownToHTML(
+      stableText.replace(/&/g, "&#38;").replace(/\</g, "&#60;")
+    )
+
+    // the lines that just finished take the place of the lines being written,
+    // after the ones that finished before
+    while (lastReply.childNodes.length > stableReplyNodes) {
+      lastReply.removeChild(lastReply.lastChild)
+    }
+    stableReplyNodes = stableReplyNodes + temp.childNodes.length
+    while (temp.firstChild) {
+      lastReply.appendChild(temp.firstChild)
+    }
     stableReplyLength = stableReplyLength + stableLength
   }
 
   const writingText = pending.slice(stableLength)
   patchDOM(
     lastReply,
-    stableReplyHTML +
-      addPointer(
-        markdownToHTML(writingText.replace(/&/g, "&#38;").replace(/\</g, "&#60;"))
-      )
+    addPointer(
+      markdownToHTML(writingText.replace(/&/g, "&#38;").replace(/\</g, "&#60;"))
+    ),
+    stableReplyNodes
   )
 }
 
@@ -477,7 +491,7 @@ const ask = async (prompt, hidePrompt) => {
 
   reply = ""
   stableReplyLength = 0
-  stableReplyHTML = ""
+  stableReplyNodes = 0
 
   try {
     fetchController = new AbortController()
