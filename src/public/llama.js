@@ -237,7 +237,7 @@ const addPointer = (html, isWritingCode) => {
   // empty ones, or the first one when a row has just started) instead of under
   // the table. only a reply that ends with a table row can have it there, so the
   // other ones don't need the regex
-  if (!html.endsWith("</tr></tbody></table>")) {
+  if (html.slice(-21) !== "</tr></tbody></table>") {
     return html + pointer
   }
   const pointerInTable = html.replace(
@@ -259,7 +259,7 @@ const getCodeBlock = (text, start) => {
   if (
     backtick > start + 3 &&
     (lineBreak === -1 || backtick < lineBreak) &&
-    text.startsWith("```", backtick)
+    text.slice(backtick, backtick + 3) === "```"
   ) {
     return { inline: text.slice(start + 3, backtick), end: backtick + 3 }
   }
