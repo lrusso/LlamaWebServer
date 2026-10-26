@@ -13,6 +13,9 @@ let isFocusEventHandled = false
 let reply = ""
 let stableReplyLength = 0
 let stableReplyNodes = 0
+let renderedReplyLength = 0
+let replyFrame = null
+let replyFrameTime = 0
 let lastReply = null
 let lastPrompt = ""
 
@@ -400,6 +403,17 @@ const renderReply = () => {
   )
 }
 
+const renderReplyFrame = (time) => {
+  // while the reply is received, what arrived so far is shown up to 12 times per
+  // second (instead of once per chunk, which can be many more times)
+  if (time - replyFrameTime >= 1000 / 12 && renderedReplyLength !== reply.length) {
+    replyFrameTime = time
+    renderedReplyLength = reply.length
+    renderReply()
+  }
+  replyFrame = window.requestAnimationFrame(renderReplyFrame)
+}
+
 const ask = async (prompt, hidePrompt) => {
   const content = document.querySelector(".content")
   const inputTextbox = document.querySelector(".input_textbox")
@@ -511,6 +525,7 @@ const ask = async (prompt, hidePrompt) => {
   reply = ""
   stableReplyLength = 0
   stableReplyNodes = 0
+  renderedReplyLength = 0
 
   try {
     fetchController = new AbortController()
@@ -527,6 +542,8 @@ const ask = async (prompt, hidePrompt) => {
       const reader = responseAPI.body.getReader()
       const decoder = new TextDecoder()
 
+      replyFrame = window.requestAnimationFrame(renderReplyFrame)
+
       const readStream = new Promise((resolve) => {
         const read = () => {
           try {
@@ -534,20 +551,26 @@ const ask = async (prompt, hidePrompt) => {
               .read()
               .then(({ done, value }) => {
                 if (done) {
+                  // the last chunks are shown right away
+                  window.cancelAnimationFrame(replyFrame)
+                  if (renderedReplyLength !== reply.length) {
+                    renderReply()
+                  }
                   resolve()
                   return
                 }
                 // streaming, so a character split between two chunks isn't broken
                 reply = reply + decoder.decode(value, { stream: true })
-                renderReply()
 
                 read()
               })
               .catch((_err) => {
+                window.cancelAnimationFrame(replyFrame)
                 reply = ""
                 resolve()
               })
           } catch (err) {
+            window.cancelAnimationFrame(replyFrame)
             reply = ""
             resolve()
           }
