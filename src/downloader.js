@@ -47,6 +47,7 @@ const downloadModel = async (url) => {
     )
 
     let downloadedSize = 0
+    let shownPercentage = ""
     const reader = response.body.getReader()
 
     while (true) {
@@ -65,15 +66,21 @@ const downloadModel = async (url) => {
       downloadedSize += value.length
       const percentage = ((downloadedSize / totalSize) * 100).toFixed(2)
 
-      process.stdout.write(
-        "\rDownloading the AI model file... " +
-          percentage +
-          "% (" +
-          (downloadedSize / 1024 / 1024).toFixed(2) +
-          " MB / " +
-          (totalSize / 1024 / 1024).toFixed(2) +
-          " MB)"
-      )
+      // the progress is written only when the percentage changes, instead of
+      // with every piece of the file that arrives, plus once at the end, since
+      // the percentage already reaches 100.00 a bit before the last piece
+      if (percentage !== shownPercentage || downloadedSize === totalSize) {
+        shownPercentage = percentage
+        process.stdout.write(
+          "\rDownloading the AI model file... " +
+            percentage +
+            "% (" +
+            (downloadedSize / 1024 / 1024).toFixed(2) +
+            " MB / " +
+            (totalSize / 1024 / 1024).toFixed(2) +
+            " MB)"
+        )
+      }
     }
 
     // waiting for all the data to be written before giving the file its name
