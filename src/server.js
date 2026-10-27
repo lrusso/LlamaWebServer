@@ -110,7 +110,7 @@ await new Promise((resolve) => {
   portCheck.listen(serverPort, () => portCheck.close(resolve))
 })
 
-console.log("Loading AI model, please wait...")
+console.log("Loading " + modelFilename + ", please wait...")
 
 const llama = await getLlama({
   logLevel: LlamaLogLevel.error,
