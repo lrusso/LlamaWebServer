@@ -16,6 +16,7 @@ let stableReplyNodes = 0
 let renderedReplyLength = 0
 let replyFrame = null
 let replyFrameTime = 0
+let checkedReplyLength = 0
 let lastReply = null
 let lastPrompt = ""
 
@@ -187,6 +188,12 @@ const reconcileChildren = (existing, updated, start) => {
 }
 
 const reconcileNode = (parent, existingNode, newNode) => {
+  // a node that is already the same (e.g. a line or a button that didn't change) is
+  // left as it is, without comparing its attributes and children one by one
+  if (existingNode.isEqualNode(newNode)) {
+    return
+  }
+
   if (
     existingNode.nodeType !== newNode.nodeType ||
     existingNode.nodeName !== newNode.nodeName
@@ -359,8 +366,12 @@ const renderReply = () => {
   // once, so each chunk only converts (and looks for the place of the pointer in,
   // and updates on the page) the lines still being written, however long the reply
   // is
+  // a line can only be finished by a line break, so without a new one since the
+  // last time there are no new finished lines to look for
   const pending = reply.slice(stableReplyLength)
-  const stableLength = getStableLength(pending)
+  const stableLength =
+    reply.indexOf("\n", checkedReplyLength) === -1 ? 0 : getStableLength(pending)
+  checkedReplyLength = reply.length
 
   if (stableLength > 0) {
     const stableText = pending.slice(0, stableLength)
@@ -526,6 +537,7 @@ const ask = async (prompt, hidePrompt) => {
   stableReplyLength = 0
   stableReplyNodes = 0
   renderedReplyLength = 0
+  checkedReplyLength = 0
 
   try {
     fetchController = new AbortController()
