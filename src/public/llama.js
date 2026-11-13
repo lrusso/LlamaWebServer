@@ -1429,13 +1429,14 @@ window.addEventListener("load", () => {
 
     // the gear of the header opens the menu of themes: automatic, light or dark
     headerTheme.title = t("settings")
-    themeMenu.children[0].innerText = t("theme_auto")
-    themeMenu.children[1].innerText = t("theme_light")
-    themeMenu.children[2].innerText = t("theme_dark")
+    themeMenu.children[0].innerText = t("theme")
+    themeMenu.children[1].innerText = t("theme_auto")
+    themeMenu.children[2].innerText = t("theme_light")
+    themeMenu.children[3].innerText = t("theme_dark")
     headerTheme.addEventListener("click", () => {
       themeOverlay.classList.add("active")
       // the focus goes to the first option of the menu
-      themeMenu.children[0].focus()
+      themeMenu.children[1].focus()
     })
     // the menu goes away with a click or a tap anywhere, and with a scroll
     themeOverlay.addEventListener("click", closeThemeMenu)
@@ -1457,6 +1458,12 @@ window.addEventListener("load", () => {
     themeMenu.addEventListener("keydown", (event) => {
       if (event.key === "Enter") {
         event.target.click()
+      }
+    })
+    // the menu goes away when the focus leaves its options
+    themeMenu.addEventListener("focusout", (event) => {
+      if (!themeMenu.contains(event.relatedTarget)) {
+        closeThemeMenu()
       }
     })
 
