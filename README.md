@@ -23,11 +23,6 @@ This is a web server that lets you run GGUF models locally, such as `Llama`, `Ge
 - Browse to `http://localhost`
 - To stop the server, run `npm run stop`
 
-## How to force the light and dark modes
-
-- Browse to `http://localhost/?lightmode`
-- Browse to `http://localhost/?darkmode`
-
 ## How to set a custom context size
 
 - Edit the [server.js](https://github.com/lrusso/LlamaWebServer/blob/main/src/server.js#L15) file.
