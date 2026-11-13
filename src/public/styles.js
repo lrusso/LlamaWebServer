@@ -21,9 +21,9 @@ em{font-weight:bold}
 .theme_title:first-child{border-radius:10px 10px 0 0}
 .theme_option{position:relative;line-height:28px;padding:5px 15px 5px 40px;cursor:pointer;outline:0 solid}
 .theme_option::before{content:'';display:none;position:absolute;left:18px;top:50%;width:5px;height:10px;margin-top:-7px;border-style:solid;border-width:0 2px 2px 0;transform:rotate(45deg)}
-.theme_option:last-child{border-radius:0 0 10px 10px}
+[role=radiogroup]:last-child .theme_option:last-child{border-radius:0 0 10px 10px}
 .theme_option:focus-visible{outline-width:2px;outline-style:solid}
-.theme_overlay[data-theme=auto] [data-theme=auto]::before,.theme_overlay[data-theme=light] [data-theme=light]::before,.theme_overlay[data-theme=dark] [data-theme=dark]::before{display:block}
+.theme_option[aria-checked=true]::before{display:block}
 
 .content{display:block;position:fixed;top:65px;left:0;right:0;bottom:0;padding-left:25px;padding-right:25px;padding-top:10px;overflow-y:auto;overflow-x:hidden;overscroll-behavior:none;overflow-anchor:none}
 

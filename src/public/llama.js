@@ -119,6 +119,17 @@ const appendMessage = (className, innerHTML) => {
 
 const closeThemeMenu = () => {
   document.querySelector(".theme_overlay").classList.remove("active")
+  document.querySelector(".header_theme").setAttribute("aria-expanded", "false")
+}
+
+const checkThemeOption = (option) => {
+  // the chosen option of a group is the checked one, and a screen reader says it
+  const options = option.parentNode.children
+  for (let i = 0; i < options.length; i++) {
+    options[i].setAttribute("aria-checked", options[i] === option)
+  }
+  document.querySelector(".announcer").innerText =
+    option.parentNode.previousElementSibling.innerText + " " + option.innerText
 }
 
 const showToast = (text) => {
@@ -1417,14 +1428,15 @@ window.addEventListener("load", () => {
 
     // the gear of the header opens the menu of themes: automatic, light or dark
     headerTheme.title = t("settings")
-    themeMenu.children[0].innerText = t("theme")
-    themeMenu.children[1].innerText = t("theme_auto")
-    themeMenu.children[2].innerText = t("theme_light")
-    themeMenu.children[3].innerText = t("theme_dark")
+    document.getElementById("theme_title").innerText = t("theme")
+    themeMenu.querySelector("[data-theme=auto]").innerText = t("theme_auto")
+    themeMenu.querySelector("[data-theme=light]").innerText = t("theme_light")
+    themeMenu.querySelector("[data-theme=dark]").innerText = t("theme_dark")
     headerTheme.addEventListener("click", () => {
       themeOverlay.classList.add("active")
+      headerTheme.setAttribute("aria-expanded", "true")
       // the focus goes to the first option of the menu
-      themeMenu.children[1].focus()
+      themeMenu.querySelector(".theme_option").focus()
     })
     // the menu goes away with a click or a tap anywhere, and with a scroll
     themeOverlay.addEventListener("click", closeThemeMenu)
@@ -1433,6 +1445,9 @@ window.addEventListener("load", () => {
     content.addEventListener("scroll", closeThemeMenu)
     themeMenu.addEventListener("click", (event) => {
       const theme = event.target.getAttribute("data-theme")
+      if (!theme) {
+        return
+      }
       if (theme === "light") {
         styleNode.textContent = STYLES_LIGHT_MODE
       } else if (theme === "dark") {
@@ -1440,12 +1455,15 @@ window.addEventListener("load", () => {
       } else {
         styleNode.textContent = STYLES_ALL
       }
-      themeOverlay.setAttribute("data-theme", theme)
+      checkThemeOption(event.target)
     })
-    // enter on an option of the menu chooses it
+    // enter or space on an option of the menu chooses it, and escape closes the menu
     themeMenu.addEventListener("keydown", (event) => {
-      if (event.key === "Enter") {
+      if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault()
         event.target.click()
+      } else if (event.key === "Escape") {
+        closeThemeMenu()
       }
     })
     // the menu goes away when the focus leaves its options
