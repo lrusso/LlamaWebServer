@@ -33,10 +33,10 @@ em{font-weight:bold}
 .input_container{display:none;flex-grow:1;align-items:end;height:auto;margin:0 10px 10px 10px;padding:14px;border-radius:10px;box-shadow:0 5px 5px rgba(0,0,0,0.1)}
 .input_textbox{flex-grow:1;resize:none;outline:none;border:0;line-height:normal !important}
 .input_textbox:disabled{cursor:default}
-.input_send{display:block;margin-left:10px;margin-bottom:2px;cursor:default;padding:0;border:0;background:none;outline:0 solid}
+.input_send{display:block;margin:-10px -10px -8px 0;cursor:default;padding:10px;border:0;background:none;outline:0 solid;outline-offset:-10px}
 .input_send svg{display:block}
 .input_send.active{cursor:pointer}
-.input_send:focus{outline-width:2px;outline-style:solid;border-radius:2px}
+.input_send:focus{outline-width:2px;outline-style:solid;border-radius:12px}
 .input_send:disabled{pointer-events:none}
 
 .actions_container,.copy_container{display:flex;margin-bottom:3px}
