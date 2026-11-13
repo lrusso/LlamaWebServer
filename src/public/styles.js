@@ -11,9 +11,9 @@ em{font-weight:bold}
 .header_container{position:fixed;left:0;right:0;top:0;height:64px;z-index:990;display:flex;align-items:center}
 .header_image{float:left;margin-left:15px;margin-right:15px;border-radius:20px;width:40px;height:40px;background-image:url(favIcon192x192.png);background-size:40px;background-position:center center;background-repeat:no-repeat}
 .header_name{float:left}
-.header_theme{display:block;margin-left:auto;margin-right:15px;cursor:pointer;padding:0;border:0;background:none;outline:0 solid}
+.header_theme{display:block;margin-left:auto;margin-right:5px;cursor:pointer;padding:10px;border:0;background:none;outline:0 solid;outline-offset:-10px}
 .header_theme svg{display:block}
-.header_theme:focus{outline-width:2px;outline-style:solid;border-radius:2px}
+.header_theme:focus{outline-width:2px;outline-style:solid;border-radius:12px}
 .theme_overlay{display:none;position:fixed;left:0;right:0;top:0;bottom:0;z-index:995}
 .theme_overlay.active{display:block}
 .theme_menu{position:absolute;right:15px;top:54px;border-radius:10px;box-shadow:0 0 5px 5px rgba(0,0,0,0.1)}
