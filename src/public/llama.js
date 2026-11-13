@@ -26,6 +26,7 @@ const ICON_REGENERATE = () => {
   svg.setAttribute("width", "24")
   svg.setAttribute("height", "24")
   svg.setAttribute("viewBox", "0 0 24 24")
+  svg.setAttribute("aria-hidden", "true")
   const path = document.createElementNS("http://www.w3.org/2000/svg", "path")
   path.setAttribute(
     "d",
@@ -41,6 +42,7 @@ const ICON_COPY = () => {
   svg.setAttribute("width", "20")
   svg.setAttribute("height", "20")
   svg.setAttribute("viewBox", "0 0 24 24")
+  svg.setAttribute("aria-hidden", "true")
   const path = document.createElementNS("http://www.w3.org/2000/svg", "path")
   path.setAttribute(
     "d",
@@ -56,6 +58,7 @@ const ICON_EDIT = () => {
   svg.setAttribute("width", "24")
   svg.setAttribute("height", "24")
   svg.setAttribute("viewBox", "0 0 24 24")
+  svg.setAttribute("aria-hidden", "true")
   const path = document.createElementNS("http://www.w3.org/2000/svg", "path")
   path.setAttribute(
     "d",
@@ -71,6 +74,7 @@ const ICON_CANCEL = () => {
   svg.setAttribute("width", "24")
   svg.setAttribute("height", "24")
   svg.setAttribute("viewBox", "0 0 24 24")
+  svg.setAttribute("aria-hidden", "true")
   const path = document.createElementNS("http://www.w3.org/2000/svg", "path")
   path.setAttribute(
     "d",
@@ -86,6 +90,7 @@ const ICON_UPDATE = () => {
   svg.setAttribute("width", "24")
   svg.setAttribute("height", "24")
   svg.setAttribute("viewBox", "0 0 24 24")
+  svg.setAttribute("aria-hidden", "true")
   const path = document.createElementNS("http://www.w3.org/2000/svg", "path")
   path.setAttribute("d", "M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z")
   svg.appendChild(path)
@@ -105,6 +110,9 @@ const createComponent = (tag, className, innerHTML, innerText) => {
 const appendMessage = (className, innerHTML) => {
   const content = document.querySelector(".content")
   const message = createComponent("span", className, innerHTML)
+  // a screen reader says who wrote each message
+  message.setAttribute("role", "article")
+  message.setAttribute("aria-label", t("title"))
   content.appendChild(message)
   return message
 }
@@ -469,6 +477,9 @@ const ask = async (prompt, hidePrompt) => {
       buttonEdit.remove()
     }
 
+    promptContainer.setAttribute("role", "article")
+    promptContainer.setAttribute("aria-label", t("you"))
+
     promptContent.addEventListener("keydown", handlePromptKeydown)
     promptContent.addEventListener("input", handlePromptInput)
     promptContent.addEventListener("paste", handlePromptPaste)
@@ -533,6 +544,8 @@ const ask = async (prompt, hidePrompt) => {
   buttonEdit.style.cursor = "default"
 
   document.title = t("title") + " - " + t("thinking")
+  // a screen reader says that the reply is on its way
+  document.querySelector(".announcer").innerText = t("thinking")
 
   reply = ""
   stableReplyLength = 0
@@ -676,6 +689,7 @@ const handleReply = (content, reply, promptResult, prompt) => {
     // the reply was already converted while it was written, so switching to it
     // doesn't apply the markdown rules again (slow on phones with long replies)
     promptResult.innerHTML = renderedReplies[selectedReply]
+    document.querySelector(".announcer").innerText = promptResult.innerText
 
     inputTextbox.focus()
   })
@@ -750,6 +764,9 @@ const handleReply = (content, reply, promptResult, prompt) => {
 
   // the converted reply is kept for the next reply button
   renderedReplies.push(promptResult.innerHTML)
+
+  // a screen reader reads the finished reply
+  document.querySelector(".announcer").innerText = promptResult.innerText
 
   rendering = false
 }
@@ -1410,6 +1427,7 @@ window.addEventListener("load", () => {
     })
 
     appendMessage("reply", markdownToHTML(t("system_welcome")))
+    document.querySelector(".announcer").innerText = t("system_welcome")
 
     pleaseWait.style.display = "none"
     container.style.display = "block"

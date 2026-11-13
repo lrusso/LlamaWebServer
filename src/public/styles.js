@@ -59,6 +59,7 @@ hr{border:none;margin:10px 0}
 
 .toast{position:fixed;left:10px;bottom:10px;z-index:999;line-height:28px;padding:10px;border-radius:10px;box-shadow:0 0 5px 5px rgba(0,0,0,0.1);opacity:0;visibility:hidden;pointer-events:none;transition:opacity 0.3s,visibility 0.3s}
 .toast.active{opacity:1;visibility:visible}
+.announcer{position:fixed;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)}
 
 @media screen and (min-width:800px) {
   .content{padding-left:calc(15vw + 25px);padding-right:calc(15vw + 25px)}
