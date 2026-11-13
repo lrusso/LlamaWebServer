@@ -18,6 +18,10 @@ const APP_STRINGS = {
     update: "Update",
     send: "Send",
     you: "You",
+    settings: "Settings",
+    theme_auto: "Automatic",
+    theme_light: "Light",
+    theme_dark: "Dark",
   },
   es: {
     title: "Llama",
@@ -38,6 +42,10 @@ const APP_STRINGS = {
     update: "Actualizar",
     send: "Enviar",
     you: "T\xFA",
+    settings: "Ajustes",
+    theme_auto: "Autom\xE1tico",
+    theme_light: "Claro",
+    theme_dark: "Oscuro",
   },
 }
 

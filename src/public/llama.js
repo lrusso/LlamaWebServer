@@ -117,6 +117,10 @@ const appendMessage = (className, innerHTML) => {
   return message
 }
 
+const closeThemeMenu = () => {
+  document.querySelector(".theme_overlay").classList.remove("active")
+}
+
 const showToast = (text) => {
   const toast = document.querySelector(".toast")
 
@@ -1408,15 +1412,53 @@ window.addEventListener("load", () => {
     const requiredLightMode = currentURL.has("lightmode")
     const requiredDarkMode = currentURL.has("darkmode")
 
+    const headerTheme = document.querySelector(".header_theme")
+    const themeOverlay = document.querySelector(".theme_overlay")
+    const themeMenu = document.querySelector(".theme_menu")
     const styleNode = document.createElement("style")
     if (requiredLightMode) {
       styleNode.appendChild(document.createTextNode(STYLES_LIGHT_MODE))
+      themeOverlay.setAttribute("data-theme", "light")
     } else if (requiredDarkMode) {
       styleNode.appendChild(document.createTextNode(STYLES_DARK_MODE))
+      themeOverlay.setAttribute("data-theme", "dark")
     } else {
       styleNode.appendChild(document.createTextNode(STYLES_ALL))
     }
     document.head.appendChild(styleNode)
+
+    // the gear of the header opens the menu of themes: automatic, light or dark
+    headerTheme.title = t("settings")
+    themeMenu.children[0].innerText = t("theme_auto")
+    themeMenu.children[1].innerText = t("theme_light")
+    themeMenu.children[2].innerText = t("theme_dark")
+    headerTheme.addEventListener("click", () => {
+      themeOverlay.classList.add("active")
+      // the focus goes to the first option of the menu
+      themeMenu.children[0].focus()
+    })
+    // the menu goes away with a click or a tap anywhere, and with a scroll
+    themeOverlay.addEventListener("click", closeThemeMenu)
+    themeOverlay.addEventListener("wheel", closeThemeMenu)
+    themeOverlay.addEventListener("touchmove", closeThemeMenu)
+    content.addEventListener("scroll", closeThemeMenu)
+    themeMenu.addEventListener("click", (event) => {
+      const theme = event.target.getAttribute("data-theme")
+      if (theme === "light") {
+        styleNode.textContent = STYLES_LIGHT_MODE
+      } else if (theme === "dark") {
+        styleNode.textContent = STYLES_DARK_MODE
+      } else {
+        styleNode.textContent = STYLES_ALL
+      }
+      themeOverlay.setAttribute("data-theme", theme)
+    })
+    // enter on an option of the menu chooses it
+    themeMenu.addEventListener("keydown", (event) => {
+      if (event.key === "Enter") {
+        event.target.click()
+      }
+    })
 
     // the system prompt goes with the date of today, since the model can't know it
     // (e.g. "You are a useful AI assistant. Today is Sun Oct 25 2026.")
