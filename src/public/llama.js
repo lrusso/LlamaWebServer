@@ -1408,23 +1408,11 @@ window.addEventListener("load", () => {
       }
     })
 
-    const currentURL = new URL(window.location.href).searchParams
-    const requiredLightMode = currentURL.has("lightmode")
-    const requiredDarkMode = currentURL.has("darkmode")
-
     const headerTheme = document.querySelector(".header_theme")
     const themeOverlay = document.querySelector(".theme_overlay")
     const themeMenu = document.querySelector(".theme_menu")
     const styleNode = document.createElement("style")
-    if (requiredLightMode) {
-      styleNode.appendChild(document.createTextNode(STYLES_LIGHT_MODE))
-      themeOverlay.setAttribute("data-theme", "light")
-    } else if (requiredDarkMode) {
-      styleNode.appendChild(document.createTextNode(STYLES_DARK_MODE))
-      themeOverlay.setAttribute("data-theme", "dark")
-    } else {
-      styleNode.appendChild(document.createTextNode(STYLES_ALL))
-    }
+    styleNode.appendChild(document.createTextNode(STYLES_ALL))
     document.head.appendChild(styleNode)
 
     // the gear of the header opens the menu of themes: automatic, light or dark
