@@ -93,7 +93,7 @@ em{color:#000}
 .header_image{background-color:#FFF;border:1px solid #E3E4E6}
 .header_name{color:#000}
 .header_theme{fill:#000}
-.header_theme:focus{outline-color:#000}
+.header_theme:focus{outline-color:#C8C8C8}
 .theme_menu{background-color:#FFF;color:#000}
 .theme_option:hover{background-color:#F0F2F5}
 .theme_option:focus-visible{outline-color:#C8C8C8}
@@ -105,7 +105,7 @@ em{color:#000}
 .input_textbox::placeholder{color:rgba(0,0,0,0.4);opacity:1}
 .input_send{fill:#C8C8C8}
 .input_send.active{fill:#000}
-.input_send:focus{outline-color:#000}
+.input_send:focus{outline-color:#C8C8C8}
 
 .action_button{background-color:#FFF;color:#C8C8C8}
 .action_button:focus{outline-color:#C8C8C8}
